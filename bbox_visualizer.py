@@ -29,6 +29,7 @@ def draw_rectangle(img, bbox, bbox_color=(255, 255, 255), thickness=3):
 def add_label_to_rectangle(img,
                            label,
                            bbox,
+                           draw_bg=True,
                            text_bg_color=(255, 255, 255),
                            text_color=(0, 0, 0),
                            top=True):
@@ -42,6 +43,8 @@ def add_label_to_rectangle(img,
         the text (label) to be written
     bbox : list
         a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    draw_bg : bool, optional
+        if True, draws the background of the text, else just the text is written, by default True
     text_bg_color : tuple, optional
         the background color of the label that is filled, by default (255, 255, 255)
     text_color : tuple, optional
@@ -59,15 +62,17 @@ def add_label_to_rectangle(img,
 
     if top:
         label_bg = [bbox[0], bbox[1], bbox[0] + text_width[0], bbox[1] - 30]
-        cv2.rectangle(img, (label_bg[0], label_bg[1]),
-                      (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
+        if draw_bg:
+            cv2.rectangle(img, (label_bg[0], label_bg[1]),
+                        (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
         cv2.putText(img, label, (bbox[0] + 5, bbox[1] - 5),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
     else:
         label_bg = [bbox[0], bbox[1], bbox[0] + text_width[0], bbox[1] + 30]
-        cv2.rectangle(img, (label_bg[0], label_bg[1]),
-                      (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
+        if draw_bg:
+            cv2.rectangle(img, (label_bg[0], label_bg[1]),
+                        (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
         cv2.putText(img, label, (bbox[0] + 5, bbox[1] - 5 + 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
@@ -77,6 +82,7 @@ def add_label_to_rectangle(img,
 def draw_flag_with_label(img,
                       label,
                       bbox,
+                      write_label=True,
                       line_color=(255, 255, 255),
                       text_bg_color=(255, 255, 255),
                       text_color=(0, 0, 0)):
@@ -90,6 +96,8 @@ def draw_flag_with_label(img,
         label that is written inside the flag
     bbox : list
         a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    write_label : bool, optional
+        if True, writes the label, otherwise, it's just a vertical line, by default True
     line_color : tuple, optional
         the color of the pole of the flag, by default (255, 255, 255)
     text_bg_color : tuple, optional
@@ -116,22 +124,24 @@ def draw_flag_with_label(img,
 
     # write label
 
-    text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
-    label_bg = [
-        start_point[0], start_point[1], start_point[0] + text_width[0],
-        start_point[1] + 30
-    ]
-    cv2.rectangle(img, (label_bg[0], label_bg[1]),
-                  (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
-    cv2.putText(img, label, (start_point[0] + 5, start_point[1] - 5 + 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+    if write_label:
+        text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
+        label_bg = [
+            start_point[0], start_point[1], start_point[0] + text_width[0],
+            start_point[1] + 30
+        ]
+        cv2.rectangle(img, (label_bg[0], label_bg[1]),
+                    (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
+        cv2.putText(img, label, (start_point[0] + 5, start_point[1] - 5 + 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
     return img
 
 
-def draw_rectangle_overlay(img,
+def draw_rectangle_overlay_with_label(img,
                            label,
                            bbox,
+                           write_label = True,
                            bbox_color=(255, 255, 255),
                            text_color=(0, 0, 0),
                            alpha=0.5):
@@ -157,7 +167,8 @@ def draw_rectangle_overlay(img,
     cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color,
                   -1)
     cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-    cv2.putText(output, label, (bbox[0] + 5, bbox[1] - 5 + 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+    if write_label:
+        cv2.putText(output, label, (bbox[0] + 5, bbox[1] - 5 + 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
     return output

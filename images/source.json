@@ -1,0 +1,38 @@
+{
+  "version": "3.16.1",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "person",
+      "line_color": null,
+      "fill_color": null,
+      "points": [
+        [
+          1353.9166666666667,
+          849.75
+        ],
+        [
+          1603.9166666666667,
+          1751.8333333333335
+        ]
+      ],
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "lineColor": [
+    0,
+    255,
+    0,
+    128
+  ],
+  "fillColor": [
+    255,
+    0,
+    0,
+    128
+  ],
+  "imagePath": "source.jpg",
+  "imageHeight": 2000,
+  "imageWidth": 3000
+}
