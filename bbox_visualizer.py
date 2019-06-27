@@ -1,7 +1,7 @@
 import cv2
 
 
-def draw_rectangle(img, bbox, bbox_color=(255, 255, 255), thickness=3):
+def draw_rectangle(img, bbox, bbox_color=(255, 255, 255), thickness=3, is_opaque=False, alpha=0.5):
     """Draws the rectangle around the object
     
     Parameters
@@ -14,17 +14,27 @@ def draw_rectangle(img, bbox, bbox_color=(255, 255, 255), thickness=3):
         the color of the box, by default (255,255,255)
     thickness : int, optional
         thickness of the outline of the box, by default 3
+    is_opaque : bool, optional
+        determines if the rectangle should be semi-transparent or not, by default False
+    alpha : float, optional
+        strenght of the opacity, by default 0.5
     
     Returns
     -------
     ndarray
         the image with the bounding box drawn
     """
-
-    cv2.rectangle(img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color,
+    output = img.copy()
+    if not is_opaque:
+        cv2.rectangle(output, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color,
                   thickness)
-    return img
+    else:
+        overlay = img.copy()
+        cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color,
+                  -1)
+        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 
+    return output
 
 def add_label_to_rectangle(img,
                            label,
@@ -136,39 +146,3 @@ def draw_flag_with_label(img,
                     cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
     return img
-
-
-def draw_rectangle_overlay_with_label(img,
-                           label,
-                           bbox,
-                           write_label = True,
-                           bbox_color=(255, 255, 255),
-                           text_color=(0, 0, 0),
-                           alpha=0.5):
-    """draws a semi-transparent overlay on the bounding box and writes the label inside the overlay
-    
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the overlay is drawn
-    bbox : list
-        a list containing x_min, y_min, x_max and y_max of the rectangle positions
-    label : str
-        label that is written on the top left corner of the overlay (inside)
-    bbox_color : tuple, optional
-        the color of the bounding box overlay, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the text (label) to be written, by default (0, 0, 0)
-    alpha : float, optional
-        sets the opacity of the bounding box, by default 0.5
-    """
-    overlay = img.copy()
-    output = img.copy()
-    cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color,
-                  -1)
-    cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-    if write_label:
-        cv2.putText(output, label, (bbox[0] + 5, bbox[1] - 5 + 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
-
-    return output
