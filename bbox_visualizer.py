@@ -121,6 +121,8 @@ def add_T_label_to_rectangle(img,
                       text_bg_color, -1)
     cv2.putText(img, label, (x_left + 5, y_bottom - 7),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+    
+    return img
 
 
 def draw_flag_with_label(img,
