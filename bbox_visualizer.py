@@ -23,6 +23,7 @@ def draw_rectangle(img,
         if False, draws a solid rectangular outline. Else, a filled rectangle which is semi transparent, by default False
     alpha : float, optional
         strength of the opacity, by default 0.5
+
     Returns
     -------
     ndarray
@@ -102,6 +103,28 @@ def add_T_label_to_rectangle(img,
                              draw_bg=True,
                              text_bg_color=(255, 255, 255),
                              text_color=(0, 0, 0)):
+    """adds a T label to the rectangle, originating from the top of the rectangle
+    
+    Parameters
+    ----------
+    img : ndarray
+        the image on which the T label is to be written/drawn, preferably the image with the rectangular bounding box drawn
+    label : str
+        the text (label) to be written
+    bbox : list
+        a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    draw_bg : bool, optional
+        if True, draws the background of the text, else just the text is written, by default True
+    text_bg_color : tuple, optional
+        the background color of the label that is filled, by default (255, 255, 255)
+    text_color : tuple, optional
+        color of the text (label) to be written, by default (0, 0, 0)
+    
+    Returns
+    -------
+    ndarray
+        the image with the T label drawn/written
+    """
 
     text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
     text_height = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][1]
@@ -121,7 +144,7 @@ def add_T_label_to_rectangle(img,
                       text_bg_color, -1)
     cv2.putText(img, label, (x_left + 5, y_bottom - 7),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
-    
+
     return img
 
 
@@ -137,7 +160,7 @@ def draw_flag_with_label(img,
     Parameters
     ----------
     img : ndarray
-        the image on which the overlay is to be drawn
+        the image on which the flag is to be drawn
     label : str
         label that is written inside the flag
     bbox : list
@@ -182,4 +205,154 @@ def draw_flag_with_label(img,
         cv2.putText(img, label, (start_point[0] + 5, start_point[1] - 5 + 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
 
+    return img
+
+
+# THE FOLLOWING ARE OPTIONAL FUNCTIONS THAT CAN BE USED FOR DRAWING OR LABELLING MULTIPLE OBJECTS IN THE SAME
+# IMAGE. IN ORDER TO HAVE FULL CONTROL OF YOUR VISUALIZATIONS IT IS ADVISABLE TO USE THE ABOVE FUNCTIONS IN FOR LOOPS
+# INSTEAD OF THE FUNCTIONS BELOW
+
+
+def draw_rectangles(img,
+                    bboxes,
+                    bbox_color=(255, 255, 255),
+                    thickness=3,
+                    is_opaque=False,
+                    alpha=0.5):
+    """draws multiple rectangles
+    
+    img : ndarray
+        the actual image
+    bboxes : list
+        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
+    bbox_color : tuple, optional
+        the color of the boxes, by default (255,255,255)
+    thickness : int, optional
+        thickness of the outline of the boxes, by default 3
+    is_opaque : bool, optional
+        if False, draws solid rectangular outlines for rectangles. Else, filled rectangles which are semi transparent, by default False
+    alpha : float, optional
+        strength of the opacity, by default 0.5
+    Returns
+    -------
+    ndarray
+        the image with the bounding boxes drawn
+    """
+
+    for bbox in bboxes:
+        img = draw_rectangle(img, bbox, bbox_color, thickness, is_opaque,
+                             alpha)
+    return img
+
+
+def add_labels_to_rectangles(img,
+                             labels,
+                             bboxes,
+                             draw_bg=True,
+                             text_bg_color=(255, 255, 255),
+                             text_color=(0, 0, 0),
+                             top=True):
+    """add labels, inside or outside the rectangles
+    
+    Parameters
+    ----------
+    img : ndarray
+        the image on which the labels are to be written, preferably the image with the rectangular bounding boxes drawn
+    labels : list
+        a list of string of the texts (labels) to be written
+    bboxes : list
+        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
+    draw_bg : bool, optional
+        if True, draws the background of the texts, else just the texts are written, by default True
+    text_bg_color : tuple, optional
+        the background color of the labels that are filled, by default (255, 255, 255)
+    text_color : tuple, optional
+        color of the texts (labels) to be written, by default (0, 0, 0)
+    top : bool, optional
+        if True, writes the labels on top of the bounding boxes, else inside, by default True
+    
+    Returns
+    -------
+    ndarray
+        the image with the labels written
+    """
+
+    for label, bbox in zip(labels, bboxes):
+        img = add_label_to_rectangle(img, label, bbox, draw_bg, text_bg_color,
+                                     text_color, top)
+
+    return img
+
+
+def add_T_labels_to_rectangles(img,
+                               labels,
+                               bboxes,
+                               draw_bg=True,
+                               text_bg_color=(255, 255, 255),
+                               text_color=(0, 0, 0)):
+    """adds T labels to the rectangles, each originating from the top of the rectangle
+    
+    Parameters
+    ----------
+    img : ndarray
+        the image on which the T labels are to be written/drawn, preferably the image with the rectangular bounding boxes drawn
+    labels : list
+        the texts (labels) to be written
+    bboxes : list
+        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
+    draw_bg : bool, optional
+        if True, draws the background of the texts, else just the texts are written, by default True
+    text_bg_color : tuple, optional
+        the background color of the labels that are filled, by default (255, 255, 255)
+    text_color : tuple, optional
+        color of the texts (labels) to be written, by default (0, 0, 0)
+    
+    Returns
+    -------
+    ndarray
+        the image with the T labels drawn/written
+    """
+
+    for label, bbox in zip(labels, bboxes):
+        add_T_label_to_rectangle(img, label, bbox, draw_bg, text_bg_color,
+                                 text_color)
+
+    return img
+
+
+def draw_flags_with_labels(img,
+                           labels,
+                           bboxes,
+                           write_label=True,
+                           line_color=(255, 255, 255),
+                           text_bg_color=(255, 255, 255),
+                           text_color=(0, 0, 0)):
+    """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
+    
+    Parameters
+    ----------
+    img : ndarray
+        the image on which the flags are to be drawn
+    labels : list
+        labels that are written inside the flags
+    bbox : list
+        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
+    write_label : bool, optional
+        if True, writes the labels, otherwise, it's just a vertical line for each object, by default True
+    line_color : tuple, optional
+        the color of the pole of the flags, by default (255, 255, 255)
+    text_bg_color : tuple, optional
+        the background color of the labels that are filled, by default (255, 255, 255)
+    text_color : tuple, optional
+        color of the texts (labels) to be written, by default (0, 0, 0)
+    
+    Returns
+    -------
+    ndarray
+        the image with flags drawn and the labels written in the flags
+    """
+
+    for label, bbox in zip(labels, bboxes):
+        img = draw_flag_with_label(img, label, bbox, write_label, line_color,
+                                   text_bg_color, text_color)
     return img
