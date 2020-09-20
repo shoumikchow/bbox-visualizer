@@ -44,13 +44,13 @@ def draw_rectangle(img,
     return output
 
 
-def add_label_to_rectangle(img,
-                           label,
-                           bbox,
-                           draw_bg=True,
-                           text_bg_color=(255, 255, 255),
-                           text_color=(0, 0, 0),
-                           top=True):
+def add_label(img,
+              label,
+              bbox,
+              draw_bg=True,
+              text_bg_color=(255, 255, 255),
+              text_color=(0, 0, 0),
+              top=True):
     """adds label, inside or outside the rectangle
     
     Parameters
@@ -97,12 +97,12 @@ def add_label_to_rectangle(img,
     return img
 
 
-def add_T_label_to_rectangle(img,
-                             label,
-                             bbox,
-                             draw_bg=True,
-                             text_bg_color=(255, 255, 255),
-                             text_color=(0, 0, 0)):
+def add_T_label(img,
+                label,
+                bbox,
+                draw_bg=True,
+                text_bg_color=(255, 255, 255),
+                text_color=(0, 0, 0)):
     """adds a T label to the rectangle, originating from the top of the rectangle
     
     Parameters
@@ -148,13 +148,13 @@ def add_T_label_to_rectangle(img,
     return img
 
 
-def draw_flag_with_label(img,
-                         label,
-                         bbox,
-                         write_label=True,
-                         line_color=(255, 255, 255),
-                         text_bg_color=(255, 255, 255),
-                         text_color=(0, 0, 0)):
+def draw_flag(img,
+              label,
+              bbox,
+              write_label=True,
+              line_color=(255, 255, 255),
+              text_bg_color=(255, 255, 255),
+              text_color=(0, 0, 0)):
     """draws a pole from the middle of the object that is to be labeled and adds the label to the flag
     
     Parameters
@@ -245,13 +245,13 @@ def draw_rectangles(img,
     return img
 
 
-def add_labels_to_rectangles(img,
-                             labels,
-                             bboxes,
-                             draw_bg=True,
-                             text_bg_color=(255, 255, 255),
-                             text_color=(0, 0, 0),
-                             top=True):
+def add_multiple_labels(img,
+                        labels,
+                        bboxes,
+                        draw_bg=True,
+                        text_bg_color=(255, 255, 255),
+                        text_color=(0, 0, 0),
+                        top=True):
     """add labels, inside or outside the rectangles
     
     Parameters
@@ -278,18 +278,18 @@ def add_labels_to_rectangles(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        img = add_label_to_rectangle(img, label, bbox, draw_bg, text_bg_color,
-                                     text_color, top)
+        img = add_label(img, label, bbox, draw_bg, text_bg_color, text_color,
+                        top)
 
     return img
 
 
-def add_T_labels_to_rectangles(img,
-                               labels,
-                               bboxes,
-                               draw_bg=True,
-                               text_bg_color=(255, 255, 255),
-                               text_color=(0, 0, 0)):
+def add_multiple_T_labels(img,
+                          labels,
+                          bboxes,
+                          draw_bg=True,
+                          text_bg_color=(255, 255, 255),
+                          text_color=(0, 0, 0)):
     """adds T labels to the rectangles, each originating from the top of the rectangle
     
     Parameters
@@ -314,19 +314,18 @@ def add_T_labels_to_rectangles(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        add_T_label_to_rectangle(img, label, bbox, draw_bg, text_bg_color,
-                                 text_color)
+        add_T_label(img, label, bbox, draw_bg, text_bg_color, text_color)
 
     return img
 
 
-def draw_flags_with_labels(img,
-                           labels,
-                           bboxes,
-                           write_label=True,
-                           line_color=(255, 255, 255),
-                           text_bg_color=(255, 255, 255),
-                           text_color=(0, 0, 0)):
+def draw_multiple_flags_with_labels(img,
+                                    labels,
+                                    bboxes,
+                                    write_label=True,
+                                    line_color=(255, 255, 255),
+                                    text_bg_color=(255, 255, 255),
+                                    text_color=(0, 0, 0)):
     """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
     
     Parameters
@@ -353,6 +352,6 @@ def draw_flags_with_labels(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        img = draw_flag_with_label(img, label, bbox, write_label, line_color,
-                                   text_bg_color, text_color)
+        img = draw_flag(img, label, bbox, write_label, line_color,
+                        text_bg_color, text_color)
     return img
