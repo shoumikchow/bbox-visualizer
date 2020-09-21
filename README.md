@@ -2,6 +2,9 @@
 
 This is a simple script which has different functions that lets users draw different types of visualizations. Useful for instances when visualizing objects after object detection.
 
+* Free software: MIT license
+* Documentation: https://bbox-visualizer.readthedocs.io.
+
 #### Photo by Joshua Earle on Unsplash
 
 |                                                 **image**                                                  |                                         **function**                                         |
@@ -21,3 +24,9 @@ This is a simple script which has different functions that lets users draw diffe
 * draw_multiple_flags(..., labels, bboxes, ...)
 
 `bboxes` and `labels` are lists in the above examples.
+
+
+Credits
+-------
+
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
