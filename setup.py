@@ -4,8 +4,8 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
@@ -34,7 +34,8 @@ setup(
     description="Different ways of visualizing objects given bounding box data",
     install_requires=requirements,
     license="MIT license",
-    long_description=readme + '\n\n' + history,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     include_package_data=True,
     keywords='bbox_visualizer',
     name='bbox_visualizer',
