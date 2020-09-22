@@ -1,4 +1,4 @@
-# Bbox-Visualizer
+# Bbox_Visualizer
 
 This is a simple script which has different functions that lets users draw different types of visualizations. Useful for instances when visualizing objects after object detection.
 
