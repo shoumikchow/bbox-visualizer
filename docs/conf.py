@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'bbox-visualizer'
+project = 'bbox_visualizer'
 copyright = "2020, Shoumik Sharar Chowdhury"
 author = "Shoumik Sharar Chowdhury"
 
@@ -128,7 +128,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'bbox_visualizer.tex',
-     'bbox-visualizer Documentation',
+     'bbox_visualizer Documentation',
      'Shoumik Sharar Chowdhury', 'manual'),
 ]
 
@@ -139,7 +139,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'bbox_visualizer',
-     'bbox-visualizer Documentation',
+     'bbox_visualizer Documentation',
      [author], 1)
 ]
 
@@ -151,7 +151,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'bbox_visualizer',
-     'bbox-visualizer Documentation',
+     'bbox_visualizer Documentation',
      author,
      'bbox_visualizer',
      'One line description of project.',

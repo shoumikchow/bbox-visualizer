@@ -1,4 +1,4 @@
-Welcome to bbox-visualizer's documentation!
+Welcome to bbox_visualizer's documentation!
 ======================================
 
 .. toctree::
