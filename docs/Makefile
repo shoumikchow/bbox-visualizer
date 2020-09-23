@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = python3 -msphinx
+SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = bbox-visualizer
 SOURCEDIR     = .
 BUILDDIR      = _build
@@ -18,3 +18,6 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+autodoc:
+	sphinx-apidoc -f -n -o . ../bbox_visualizer/
