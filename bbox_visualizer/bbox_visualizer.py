@@ -213,7 +213,7 @@ def draw_flag(img,
 # INSTEAD OF THE FUNCTIONS BELOW
 
 
-def draw_rectangles(img,
+def draw_multiple_rectangles(img,
                     bboxes,
                     bbox_color=(255, 255, 255),
                     thickness=3,

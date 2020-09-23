@@ -18,7 +18,7 @@ This is a simple script which has different functions that lets users draw diffe
 
 ## There are *optional* functions that can draw multiple bounding boxes and/or write multiple labels on the same image, but it is advisable to use the above functions in a loop in order to have full control over your visualizations. Nonetheless, the optional functions are as follows:
 
-* draw_rectangles(..., bboxes, ...)
+* draw_multiple_rectangles(..., bboxes, ...)
 * add_multiple_labels(..., labels, bboxes, ...)
 * add_multiple_T_labels(..., labels, bboxes, ...)
 * draw_multiple_flags(..., labels, bboxes, ...)
