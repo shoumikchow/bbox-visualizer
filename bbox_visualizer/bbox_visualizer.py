@@ -319,13 +319,13 @@ def add_multiple_T_labels(img,
     return img
 
 
-def draw_multiple_flags_with_labels(img,
-                                    labels,
-                                    bboxes,
-                                    write_label=True,
-                                    line_color=(255, 255, 255),
-                                    text_bg_color=(255, 255, 255),
-                                    text_color=(0, 0, 0)):
+def draw_multiple_flags(img,
+                        labels,
+                        bboxes,
+                        write_label=True,
+                        line_color=(255, 255, 255),
+                        text_bg_color=(255, 255, 255),
+                        text_color=(0, 0, 0)):
     """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
 
     Parameters
