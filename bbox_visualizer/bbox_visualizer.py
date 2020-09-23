@@ -8,7 +8,7 @@ def draw_rectangle(img,
                    is_opaque=False,
                    alpha=0.5):
     """Draws the rectangle around the object
-    
+
     Parameters
     ----------
     img : ndarray
@@ -52,7 +52,7 @@ def add_label(img,
               text_color=(0, 0, 0),
               top=True):
     """adds label, inside or outside the rectangle
-    
+
     Parameters
     ----------
     img : ndarray
@@ -69,7 +69,7 @@ def add_label(img,
         color of the text (label) to be written, by default (0, 0, 0)
     top : bool, optional
         if True, writes the label on top of the bounding box, else inside, by default True
-    
+
     Returns
     -------
     ndarray
@@ -104,7 +104,7 @@ def add_T_label(img,
                 text_bg_color=(255, 255, 255),
                 text_color=(0, 0, 0)):
     """adds a T label to the rectangle, originating from the top of the rectangle
-    
+
     Parameters
     ----------
     img : ndarray
@@ -119,7 +119,7 @@ def add_T_label(img,
         the background color of the label that is filled, by default (255, 255, 255)
     text_color : tuple, optional
         color of the text (label) to be written, by default (0, 0, 0)
-    
+
     Returns
     -------
     ndarray
@@ -156,7 +156,7 @@ def draw_flag(img,
               text_bg_color=(255, 255, 255),
               text_color=(0, 0, 0)):
     """draws a pole from the middle of the object that is to be labeled and adds the label to the flag
-    
+
     Parameters
     ----------
     img : ndarray
@@ -173,7 +173,7 @@ def draw_flag(img,
         the background color of the label that is filled, by default (255, 255, 255)
     text_color : tuple, optional
         color of the text (label) to be written, by default (0, 0, 0)
-    
+
     Returns
     -------
     ndarray
@@ -220,7 +220,7 @@ def draw_rectangles(img,
                     is_opaque=False,
                     alpha=0.5):
     """draws multiple rectangles
-    
+
     img : ndarray
         the actual image
     bboxes : list
@@ -253,7 +253,7 @@ def add_multiple_labels(img,
                         text_color=(0, 0, 0),
                         top=True):
     """add labels, inside or outside the rectangles
-    
+
     Parameters
     ----------
     img : ndarray
@@ -270,7 +270,7 @@ def add_multiple_labels(img,
         color of the texts (labels) to be written, by default (0, 0, 0)
     top : bool, optional
         if True, writes the labels on top of the bounding boxes, else inside, by default True
-    
+
     Returns
     -------
     ndarray
@@ -291,7 +291,7 @@ def add_multiple_T_labels(img,
                           text_bg_color=(255, 255, 255),
                           text_color=(0, 0, 0)):
     """adds T labels to the rectangles, each originating from the top of the rectangle
-    
+
     Parameters
     ----------
     img : ndarray
@@ -306,7 +306,7 @@ def add_multiple_T_labels(img,
         the background color of the labels that are filled, by default (255, 255, 255)
     text_color : tuple, optional
         color of the texts (labels) to be written, by default (0, 0, 0)
-    
+
     Returns
     -------
     ndarray
@@ -327,7 +327,7 @@ def draw_multiple_flags_with_labels(img,
                                     text_bg_color=(255, 255, 255),
                                     text_color=(0, 0, 0)):
     """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
-    
+
     Parameters
     ----------
     img : ndarray
@@ -344,7 +344,7 @@ def draw_multiple_flags_with_labels(img,
         the background color of the labels that are filled, by default (255, 255, 255)
     text_color : tuple, optional
         color of the texts (labels) to be written, by default (0, 0, 0)
-    
+
     Returns
     -------
     ndarray
