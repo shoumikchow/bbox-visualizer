@@ -19,9 +19,9 @@ Project Info
 .. toctree::
    :maxdepth: 2
    
-   contributing
-   authors
-   history
+   CONTRIBUTING
+   HISTORY
+   AUTHORS
 
 Indices and tables
 ==================
