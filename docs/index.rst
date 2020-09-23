@@ -10,7 +10,7 @@ bbox-visualizer helps you easily draw bounding boxes with their corresponding la
    :caption: Contents:
 
    installation
-   methods
+   functions
 
 
 Project Info

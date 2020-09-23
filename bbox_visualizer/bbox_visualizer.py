@@ -233,6 +233,7 @@ def draw_multiple_rectangles(img,
         if False, draws solid rectangular outlines for rectangles. Else, filled rectangles which are semi transparent, by default False
     alpha : float, optional
         strength of the opacity, by default 0.5
+
     Returns
     -------
     ndarray
