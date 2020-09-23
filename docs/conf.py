@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'bbox_visualizer'
+project = 'bbox-visualizer'
 copyright = "2020, Shoumik Sharar Chowdhury"
 author = "Shoumik Sharar Chowdhury"
 

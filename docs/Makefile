@@ -3,8 +3,8 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = bbox_visualizer
+SPHINXBUILD   = python3 -msphinx
+SPHINXPROJ    = bbox-visualizer
 SOURCEDIR     = .
 BUILDDIR      = _build
 
