@@ -9,7 +9,7 @@ This is a simple script which has different functions that lets users draw diffe
 
 |                                                 **image**                                                  |                                         **function**                                         |
 | :--------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
-|               ![bbox with label on top](images/bbox_top.jpg "Bouding box with label on top")               |                 draw_rectangle(img, bbox, ...)<br>add_label(img, label, bbox, top=True, ...)                 |c
+|               ![bbox with label on top](images/bbox_top.jpg "Bouding box with label on top")               |                 draw_rectangle(img, bbox, ...)<br>add_label(img, label, bbox, top=True, ...)                 |
 |             ![bbox with label inside](images/bbox_inside.jpg "Bouding box with label inside")              |                draw_rectangle(img, bbox, ...)<br>add_label(img, label, bbox, top=False, ...)                 |
 |                  ![bbox with T label](images/bbox_T.jpg "Bouding box with label inside")                   |                     draw_rectangle(img, bbox, ...)<br>add_T_label(img, label, bbox, ...)                     |
 | ![label with flag](images/flag.jpg "Label that looks like a flag, pole originates from inside the object") |                                  draw_flag(img, label, bbox)                                   |

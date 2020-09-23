@@ -1,1 +1,4 @@
-.. include:: ../CONTRIBUTING.rst
+CONTRIBUTING
+============
+
+.. mdinclude:: ../CONTRIBUTING.md
