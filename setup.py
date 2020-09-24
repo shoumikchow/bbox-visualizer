@@ -12,9 +12,9 @@ with open('HISTORY.md') as history_file:
 
 requirements = [ ]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = []
 
-test_requirements = ['pytest>=3', ]
+test_requirements = []
 
 setup(
     author="Shoumik Sharar Chowdhury",
@@ -41,7 +41,6 @@ setup(
     name='bbox_visualizer',
     packages=find_packages(include=['bbox_visualizer', 'bbox_visualizer.*']),
     setup_requires=setup_requirements,
-    test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/shoumikchow/bbox_visualizer',
     version='0.1.0',
