@@ -79,7 +79,7 @@ Ready to contribute? Here's how to set up `bbox_visualizer` for local developmen
 5. When you're done making changes, check that your changes pass flake8::
 
     ```bash
-    flake8 bbox_visualizer
+    flake8 bbox_visualizer demo
     ```
 
    To get flake8, just pip install int into your virtualenv.

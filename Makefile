@@ -48,7 +48,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 bbox_visualizer
+	flake8 bbox_visualizer demo
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/bbox_visualizer.rst
