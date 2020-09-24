@@ -18,6 +18,11 @@ for shape in annotation['shapes']:
     bboxes.append(mins + maxs)
 
 img_with_boxes = bbv.draw_multiple_rectangles(img, bboxes)
-img_with_boxes = bbv.add_multiple_labels(img, labels, bboxes)
+img_with_boxes = bbv.add_multiple_labels(img_with_boxes, labels, bboxes)
+
+img_with_flags = bbv.draw_multiple_flags_with_labels(img, labels, bboxes)
+
 plt.imshow(img_with_boxes)
+plt.show()
+plt.imshow(img_with_flags)
 plt.show()

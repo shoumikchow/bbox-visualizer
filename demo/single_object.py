@@ -18,6 +18,7 @@ img_with_box_2 = img_with_box.copy()
 
 img_label = bbv.add_label(img_with_box, label, bbox)
 img_T_label = bbv.add_T_label(img_with_box_2, label, bbox)
+
 img_flag = bbv.draw_flag_with_label(img, label, bbox)
 
 plt.imshow(img_label)
