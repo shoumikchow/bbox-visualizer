@@ -4,8 +4,8 @@ import bbox_visualizer as bbv
 import cv2
 import matplotlib.pyplot as plt
 
-img = cv2.imread('../images/source_1.jpg')
-annotation = json.load(open('../images/source_1.json'))
+img = cv2.imread('../images/source_single.jpg')
+annotation = json.load(open('../images/source_single.json'))
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 points = annotation['shapes'][0]['points']

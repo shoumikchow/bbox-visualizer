@@ -353,6 +353,6 @@ def draw_multiple_flags_with_labels(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        img = draw_flag(img, label, bbox, write_label, line_color,
+        img = draw_flag_with_label(img, label, bbox, write_label, line_color,
                         text_bg_color, text_color)
     return img

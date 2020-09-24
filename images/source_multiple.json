@@ -1,0 +1,33 @@
+{
+  "shapes": [
+    {
+      "label": "person",
+      "points": [
+        [
+          719,
+          597
+        ],
+        [
+          1067,
+          1502
+        ]
+      ]
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          1225,
+          535
+        ],
+        [
+          1669,
+          1573
+        ]
+      ]
+    }
+  ],
+  "imagePath": "source_multiple.jpg",
+  "imageHeight": 1600,
+  "imageWidth": 2400
+}
