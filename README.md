@@ -15,7 +15,7 @@ This is a simple script which has different functions that lets users draw diffe
 
 |                                                 **image**                                                  |                                         **function**                                         |
 | :--------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
-|               ![bbox with label on top](images/bbox_top.jpg =600 "Bouding box with label on top")               |                 bbv.draw_rectangle(img, bbox, ...)<br>add_label(img, label, bbox, top=True, ...)                 |
+|               ![bbox with label on top](images/bbox_top.jpg =600x "Bouding box with label on top")               |                 bbv.draw_rectangle(img, bbox, ...)<br>add_label(img, label, bbox, top=True, ...)                 |
 |             ![bbox with label inside](images/bbox_inside.jpg "Bouding box with label inside")              |                bbv.draw_rectangle(img, bbox, ...)<br>add_label(img, label, bbox, top=False, ...)                 |
 |                  ![bbox with T label](images/bbox_T.jpg "Bouding box with label inside")                   |                     bbv.draw_rectangle(img, bbox, ...)<br>add_T_label(img, label, bbox, ...)                     |
 | ![label with flag](images/flag.jpg "Label that looks like a flag, pole originates from inside the object") |                                  bbv.draw_flag_with_label(img, label, bbox)                                   |
