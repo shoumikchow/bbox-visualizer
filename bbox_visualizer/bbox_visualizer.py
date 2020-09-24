@@ -214,11 +214,11 @@ def draw_flag(img,
 
 
 def draw_multiple_rectangles(img,
-                    bboxes,
-                    bbox_color=(255, 255, 255),
-                    thickness=3,
-                    is_opaque=False,
-                    alpha=0.5):
+                             bboxes,
+                             bbox_color=(255, 255, 255),
+                             thickness=3,
+                             is_opaque=False,
+                             alpha=0.5):
     """draws multiple rectangles
 
     img : ndarray

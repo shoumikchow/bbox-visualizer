@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 with open('HISTORY.md') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = []
 
 setup_requirements = []
 

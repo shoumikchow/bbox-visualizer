@@ -50,7 +50,6 @@ clean-test: ## remove test and coverage artifacts
 lint: ## check style with flake8
 	flake8 bbox_visualizer
 
-
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/bbox_visualizer.rst
 	rm -f docs/modules.rst
