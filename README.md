@@ -42,7 +42,7 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 `bboxes` and `labels` are lists in the above examples.
 
 
-Credits
--------
+### Credits
+
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
