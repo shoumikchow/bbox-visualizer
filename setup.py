@@ -42,7 +42,7 @@ setup(
     packages=find_packages(include=['bbox_visualizer', 'bbox_visualizer.*']),
     setup_requires=setup_requirements,
     tests_require=test_requirements,
-    url='https://github.com/shoumikchow/bbox_visualizer',
+    url='https://github.com/shoumikchow/bbox-visualizer',
     version='0.1.0',
     zip_safe=False,
 )

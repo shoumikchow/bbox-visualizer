@@ -4,18 +4,18 @@
       "label": "person",
       "points": [
         [
-          1353.9166666666667,
-          849.75
+          1353,
+          849
         ],
         [
-          1603.9166666666667,
-          1751.8333333333335
+          1603,
+          1751
         ]
       ],
       "shape_type": "rectangle"
     }
   ],
-  "imagePath": "source.jpg",
+  "imagePath": "source1.jpg",
   "imageHeight": 2000,
   "imageWidth": 3000
 }

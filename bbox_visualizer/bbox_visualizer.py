@@ -148,13 +148,13 @@ def add_T_label(img,
     return img
 
 
-def draw_flag(img,
-              label,
-              bbox,
-              write_label=True,
-              line_color=(255, 255, 255),
-              text_bg_color=(255, 255, 255),
-              text_color=(0, 0, 0)):
+def draw_flag_with_label(img,
+                         label,
+                         bbox,
+                         write_label=True,
+                         line_color=(255, 255, 255),
+                         text_bg_color=(255, 255, 255),
+                         text_color=(0, 0, 0)):
     """draws a pole from the middle of the object that is to be labeled and adds the label to the flag
 
     Parameters
@@ -320,13 +320,13 @@ def add_multiple_T_labels(img,
     return img
 
 
-def draw_multiple_flags(img,
-                        labels,
-                        bboxes,
-                        write_label=True,
-                        line_color=(255, 255, 255),
-                        text_bg_color=(255, 255, 255),
-                        text_color=(0, 0, 0)):
+def draw_multiple_flags_with_labels(img,
+                                    labels,
+                                    bboxes,
+                                    write_label=True,
+                                    line_color=(255, 255, 255),
+                                    text_bg_color=(255, 255, 255),
+                                    text_color=(0, 0, 0)):
     """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
 
     Parameters
