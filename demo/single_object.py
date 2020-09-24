@@ -2,7 +2,6 @@ import json
 
 import bbox_visualizer as bbv
 import cv2
-import matplotlib.pyplot as plt
 
 img = cv2.imread('../images/source_single.jpg')
 annotation = json.load(open('../images/source_single.json'))
@@ -20,10 +19,3 @@ img_label = bbv.add_label(img_with_box, label, bbox)
 img_T_label = bbv.add_T_label(img_with_box_2, label, bbox)
 
 img_flag = bbv.draw_flag_with_label(img, label, bbox)
-
-plt.imshow(img_label)
-plt.show()
-plt.imshow(img_T_label)
-plt.show()
-plt.imshow(img_flag)
-plt.show()
