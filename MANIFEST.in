@@ -1,6 +1,6 @@
-include AUTHORS.rst
-include CONTRIBUTING.rst
-include HISTORY.rst
+include AUTHORS.md
+include CONTRIBUTING.md
+include HISTORY.md
 include LICENSE
 include README.md
 

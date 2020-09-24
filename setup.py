@@ -12,9 +12,9 @@ with open('HISTORY.md') as history_file:
 
 requirements = [ ]
 
-setup_requirements = [ ]
+setup_requirements = ['pytest-runner', ]
 
-test_requirements = [ ]
+test_requirements = ['pytest>=3', ]
 
 setup(
     author="Shoumik Sharar Chowdhury",
