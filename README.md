@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://badge.fury.io/py/bbox-visualizer.svg)](https://pypi.org/project/bbox-visualizer/0.1.0/)
 
-This is a simple library which has different functions that lets users draw different types of visualizations. Useful for visualizing objects after object detection.
+This package helps users draw bounding boxes around objects, without doing the clumsy math that you'd need to do for positioning the labels. It also has a few different types of visualizations you can use for labeling objects after identifying them.
 
 The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 
