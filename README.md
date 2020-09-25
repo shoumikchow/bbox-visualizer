@@ -1,5 +1,9 @@
 # bbox-visualizer
 
+[![Documentation Status](https://readthedocs.org/projects/bbox-visualizer/badge/?version=latest)](https://bbox-visualizer.readthedocs.io/en/latest/?badge=latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI version](https://badge.fury.io/py/bbox-visualizer.svg)](https://pypi.org/project/bbox-visualizer/0.1.0/)
+
 This is a simple library which has different functions that lets users draw different types of visualizations. Useful for visualizing objects after object detection.
 
 The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
@@ -42,7 +46,7 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 `bboxes` and `labels` are lists in the above examples.
 
 
-### Credits
+#### Credits
 
 
 This package was created with Cookiecutter and the `audreyr/cookiecutter-pypackage` project template.
