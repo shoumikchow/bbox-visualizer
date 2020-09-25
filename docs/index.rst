@@ -16,7 +16,7 @@ Usage
    :caption: Contents:
 
    installation
-   functions
+   modules
 
 
 Project Info
