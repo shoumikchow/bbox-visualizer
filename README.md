@@ -1,12 +1,15 @@
-# Bbox_Visualizer
+# bbox-visualizer
 
-This is a simple library which has different functions that lets users draw different types of visualizations. Useful for instances when visualizing objects after object detection.
+This is a simple library which has different functions that lets users draw different types of visualizations. Useful for visualizing objects after object detection.
 
 The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 
 * Documentation: https://bbox-visualizer.readthedocs.io.
 * Free software: MIT license
 
+
+## Installation:
+    pip install bbox-visualizer
 
 ## Usage:
     
@@ -23,11 +26,11 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 
 |                                                 **image**                                                  |                                                    **function**                                                    |
 |:----------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------:|
-|               ![bbox with label on top](images/bbox_top.jpg "Bouding box with label on top")               |                  bbv.draw_rectangle(img, bbox)<br>add_label(img, label, bbox, top=True)                  |
-|             ![bbox with label inside](images/bbox_inside.jpg "Bouding box with label inside")              |                 bbv.draw_rectangle(img, bbox)<br>add_label(img, label, bbox, top=False)                  |
-|                  ![bbox with T label](images/bbox_T.jpg "Bouding box with label inside")                   |                      bbv.draw_rectangle(img, bbox)<br>add_T_label(img, label, bbox)                      |
+|               ![bbox with label on top](images/bbox_top.jpg "Bouding box with label on top")               |                  bbv.draw_rectangle(img, bbox)<br>bbv.add_label(img, label, bbox, top=True)                  |
+|                  ![bbox with T label](images/bbox_T.jpg "Bouding box with label inside")                   |                      bbv.draw_rectangle(img, bbox)<br>bbv.add_T_label(img, label, bbox)                      |
 | ![label with flag](images/flag.jpg "Label that looks like a flag, pole originates from inside the object") |                                     bbv.draw_flag_with_label(img, label, bbox)                                     |
-|      ![label with opaque overlay](images/overlay.jpg "Opaque bounding box with label inside the box")      | bbv.draw_rectangle(image, bbox, is_opaque=True)<br>add_label(img, label, bbox, draw_bg=False, top=False) |
+|             ![bbox with label inside](images/bbox_inside.jpg "Bouding box with label inside")              |                 bbv.draw_rectangle(img, bbox)<br>bbv.add_label(img, label, bbox, top=False)                  |
+|      ![label with opaque overlay](images/overlay.jpg "Opaque bounding box with label inside the box")      | bbv.draw_rectangle(image, bbox, is_opaque=True)<br>bbv.add_label(img, label, bbox, draw_bg=False, top=False) |
 |      ![multiple bbox](images/bbox_multiple.jpg "Multiple bounding boxes")      | bbv.draw_multiple_rectangles(img, bboxes)<br>bbv.add_multiple_labels(img, labels, bboxes) |
 |      ![multiple flags](images/bbox_multiple_flags.jpg "Multiple flags")      | bbv.draw_multiple_flags_with_labels(img, labels, bboxes) |
 |      ![multiple T bbox](images/bbox_multiple_T.jpg "Multiple bounding boxes with T labels")      | bbv.draw_multiple_rectangles(img, bboxes)<br>bbv.add_multiple_T_labels(img, labels, bboxes) |
