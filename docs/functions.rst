@@ -1,5 +1,5 @@
-Modules
-=======
+Functions
+=========
 
 
 .. automodule:: bbox_visualizer.bbox_visualizer
