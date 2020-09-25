@@ -19,10 +19,7 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 ![cover](images/cover.jpg)
 
 
-
-
-
-#### Photo by [Joshua Earle](https://unsplash.com/@joshuaearle), [Jonas Weckschmied](https://unsplash.com/@jweckschmied) and [Sherzod Max](https://unsplash.com/@sherzodmax) on [Unsplash](https://unsplash.com).  
+#### Photos by [Joshua Earle](https://unsplash.com/@joshuaearle), [Jonas Weckschmied](https://unsplash.com/@jweckschmied) and [Sherzod Max](https://unsplash.com/@sherzodmax) on [Unsplash](https://unsplash.com).  
 
 |                                                 **image**                                                  |                                                    **function**                                                    |
 |:----------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------:|
