@@ -54,6 +54,8 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/bbox_visualizer.rst
 	rm -f docs/modules.rst
 	sphinx-apidoc -o docs/ bbox_visualizer
+	rm -f docs/bbox_visualizer.rst
+	rm -f docs/modules.rst
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
