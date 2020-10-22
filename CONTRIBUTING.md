@@ -82,7 +82,7 @@ Ready to contribute? Here's how to set up `bbox_visualizer` for local developmen
     flake8 bbox_visualizer demo
     ```
 
-   To get flake8, just pip install int into your virtualenv.
+   To get flake8, just pip install it into your virtualenv.
 
 6. Commit your changes and push your branch to GitHub::
 

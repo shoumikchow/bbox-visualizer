@@ -46,6 +46,12 @@ Once you have a copy of the source, you can install it with:
 
     $ python setup.py install
 
+or 
+
+.. code-block:: console
+
+    $ pip install . --user
+
 
 .. _Github repo: https://github.com/shoumikchow/bbox-visualizer
 .. _tarball: https://github.com/shoumikchow/bbox-visualizer/tarball/master
