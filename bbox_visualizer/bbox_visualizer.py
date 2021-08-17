@@ -1,5 +1,9 @@
 import cv2
 
+# declaring variables for font specifications
+font = cv2.FONT_HERSHEY_SIMPLEX
+font_scale = int(input("Enter label height: "))
+font_thickness = int(input("Enter label thickness: "))
 
 def draw_rectangle(img,
                    bbox,
@@ -7,6 +11,7 @@ def draw_rectangle(img,
                    thickness=3,
                    is_opaque=False,
                    alpha=0.5):
+
     """Draws the rectangle around the object
 
     Parameters
@@ -51,6 +56,7 @@ def add_label(img,
               text_bg_color=(255, 255, 255),
               text_color=(0, 0, 0),
               top=True):
+
     """adds label, inside or outside the rectangle
 
     Parameters
@@ -76,23 +82,23 @@ def add_label(img,
         the image with the label written
     """
 
-    text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
+    (label_width, label_height), baseline = cv2.getTextSize(label, font, font_scale, font_thickness)
 
     if top:
-        label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] - 30]
+        label_bg = [bbox[0], bbox[1], bbox[0] + label_width, bbox[1] - label_height - (15 * font_scale)]
         if draw_bg:
             cv2.rectangle(img, (label_bg[0], label_bg[1]),
                           (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
-        cv2.putText(img, label, (bbox[0] + 5, bbox[1] - 5),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+        cv2.putText(img, label, (bbox[0] + 5, bbox[1] - (15 * font_scale)), font,
+                    font_scale, text_color, font_thickness)
 
     else:
-        label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] + 30]
+        label_bg = [bbox[0], bbox[1], bbox[0] + label_width, bbox[1] + label_height + (15 * font_scale)]
         if draw_bg:
             cv2.rectangle(img, (label_bg[0], label_bg[1]),
                           (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
-        cv2.putText(img, label, (bbox[0] + 5, bbox[1] - 5 + 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+        cv2.putText(img, label, (bbox[0] + 5, bbox[1] + (16 * font_scale) + (4 * font_thickness)), font,
+                    font_scale, text_color, font_thickness)
 
     return img
 
@@ -103,6 +109,7 @@ def add_T_label(img,
                 draw_bg=True,
                 text_bg_color=(255, 255, 255),
                 text_color=(0, 0, 0)):
+
     """adds a T label to the rectangle, originating from the top of the rectangle
 
     Parameters
@@ -126,8 +133,7 @@ def add_T_label(img,
         the image with the T label drawn/written
     """
 
-    text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
-    text_height = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][1]
+    (label_width, label_height), baseline = cv2.getTextSize(label, font, font_scale, font_thickness)
 
     # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
@@ -136,14 +142,14 @@ def add_T_label(img,
 
     # draw rectangle with label
     y_bottom = y_top
-    y_top = y_bottom - text_height - 5
-    x_left = x_center - (text_width // 2) - 5
-    x_right = x_center + (text_width // 2) + 5
+    y_top = y_bottom - label_height - 5
+    x_left = x_center - (label_width // 2) - 5
+    x_right = x_center + (label_width // 2) + 5
     if draw_bg:
-        cv2.rectangle(img, (x_left, y_top - 3), (x_right, y_bottom),
+        cv2.rectangle(img, (x_left, y_top - 30), (x_right, y_bottom),
                       text_bg_color, -1)
-    cv2.putText(img, label, (x_left + 5, y_bottom - 7),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+    cv2.putText(img, label, (x_left + 5, y_bottom - (8 * font_scale)),
+                font, font_scale, text_color, font_thickness)
 
     return img
 
@@ -155,6 +161,7 @@ def draw_flag_with_label(img,
                          line_color=(255, 255, 255),
                          text_bg_color=(255, 255, 255),
                          text_color=(0, 0, 0)):
+
     """draws a pole from the middle of the object that is to be labeled and adds the label to the flag
 
     Parameters
@@ -180,8 +187,9 @@ def draw_flag_with_label(img,
         the image with flag drawn and the label written in the flag
     """
 
-    # draw vertical line
+    (label_width, label_height), baseline = cv2.getTextSize(label, font, font_scale, font_thickness)
 
+    # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
     y_bottom = int((bbox[1] * .75 + bbox[3] * .25))
     y_top = bbox[1] - (y_bottom - bbox[1])
@@ -192,18 +200,15 @@ def draw_flag_with_label(img,
     cv2.line(img, start_point, end_point, line_color, 3)
 
     # write label
-
     if write_label:
-        text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1,
-                                     2)[0][0]
         label_bg = [
-            start_point[0], start_point[1], start_point[0] + text_width,
-            start_point[1] + 30
+            start_point[0], start_point[1], start_point[0] + label_width,
+            start_point[1] - label_height - (10 * font_scale)
         ]
         cv2.rectangle(img, (label_bg[0], label_bg[1]),
                       (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
-        cv2.putText(img, label, (start_point[0] + 5, start_point[1] - 5 + 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 2)
+        cv2.putText(img, label, (start_point[0] + 7, start_point[1] - (13 * font_scale) + 20),
+                    font, font_scale, text_color, font_thickness)
 
     return img
 
@@ -219,6 +224,7 @@ def draw_multiple_rectangles(img,
                              thickness=3,
                              is_opaque=False,
                              alpha=0.5):
+
     """draws multiple rectangles
 
     img : ndarray
@@ -253,6 +259,7 @@ def add_multiple_labels(img,
                         text_bg_color=(255, 255, 255),
                         text_color=(0, 0, 0),
                         top=True):
+
     """add labels, inside or outside the rectangles
 
     Parameters
@@ -291,6 +298,7 @@ def add_multiple_T_labels(img,
                           draw_bg=True,
                           text_bg_color=(255, 255, 255),
                           text_color=(0, 0, 0)):
+
     """adds T labels to the rectangles, each originating from the top of the rectangle
 
     Parameters
@@ -327,6 +335,7 @@ def draw_multiple_flags_with_labels(img,
                                     line_color=(255, 255, 255),
                                     text_bg_color=(255, 255, 255),
                                     text_color=(0, 0, 0)):
+
     """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
 
     Parameters
