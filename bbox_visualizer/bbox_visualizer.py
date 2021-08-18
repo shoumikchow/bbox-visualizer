@@ -1,5 +1,37 @@
 import cv2
 
+def check_and_modify_bbox(bbox, img_size, margin = 0):
+    """
+    Checks if the bounding box is inside the given image.
+    If not, the coordinates are trimmed inorder to fit inside the image.
+    
+    Trimming criteria:
+        - for xmin and ymin:
+            - xmin and ymin are trimmed to 0, if their value is negative i.e. out of the
+            scope of image.
+        - for xmax and ymax:
+            - xmax and ymax are trimmed to image_width and image_height respectivel
+    
+
+    Parameters
+    ----------
+    bbox : list
+        a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    img_size: tuple
+        a tuple containing image width, image height and color channel.
+    margin: integer (default = 0)
+        space between edge of the image and bounding box incase the box is trimmed such that
+        it's size is exactly as the image.
+
+    Returns
+    -------
+    list
+        bounding box coordinates (xmin, ymin, xmax, ymax)
+    """
+    bbox = [value if value > 0 else margin for value in bbox]
+    bbox[2] = bbox[2] if bbox[2] < img_size[1] else img_size[1] - margin
+    bbox[3] = bbox[3] if bbox[3] < img_size[0] else img_size[0] - margin
+    return bbox
 
 def draw_rectangle(img,
                    bbox,
@@ -29,7 +61,7 @@ def draw_rectangle(img,
     ndarray
         the image with the bounding box drawn
     """
-
+    bbox = check_and_modify_bbox(bbox, img.shape)
     output = img.copy()
     if not is_opaque:
         cv2.rectangle(output, (bbox[0], bbox[1]), (bbox[2], bbox[3]),
@@ -51,7 +83,9 @@ def add_label(img,
               text_bg_color=(255, 255, 255),
               text_color=(0, 0, 0),
               top=True):
-    """adds label, inside or outside the rectangle
+    """
+    adds label, inside or outside the rectangle.
+    if label cannot be drawn on outside of the box, it puts label inside the box.
 
     Parameters
     ----------
@@ -76,8 +110,9 @@ def add_label(img,
         the image with the label written
     """
     text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
-
-    if top:
+    text_height = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][1]
+    
+    if top and bbox[1] - text_height > text_height:
         label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] - 30]
         if draw_bg:
             cv2.rectangle(img, (label_bg[0], label_bg[1]),
