@@ -75,7 +75,6 @@ def add_label(img,
     ndarray
         the image with the label written
     """
-
     text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
 
     if top:
@@ -131,12 +130,18 @@ def add_T_label(img,
 
     # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
-    y_top = bbox[1] - 50
-    cv2.line(img, (x_center, bbox[1]), (x_center, y_top), text_bg_color, 3)
+    line_top = y_top = bbox[1] - 50
+    
 
     # draw rectangle with label
     y_bottom = y_top
     y_top = y_bottom - text_height - 5
+    
+    if y_top < 0:
+        print("[INFO] Labelling style 'T' going out of frame. Falling back to normal labeling.")
+        return add_label(img, label, bbox)
+    
+    cv2.line(img, (x_center, bbox[1]), (x_center, line_top), text_bg_color, 3)
     x_left = x_center - (text_width // 2) - 5
     x_right = x_center + (text_width // 2) + 5
     if draw_bg:
@@ -185,6 +190,10 @@ def draw_flag_with_label(img,
     x_center = (bbox[0] + bbox[2]) // 2
     y_bottom = int((bbox[1] * .75 + bbox[3] * .25))
     y_top = bbox[1] - (y_bottom - bbox[1])
+    if y_top < 0:
+        print("[INFO] Labelling style 'Flag' going out of frame. Falling back to normal labeling.")
+        img = draw_rectangle(img, bbox, bbox_color=line_color)
+        return add_label(img, label, bbox)
 
     start_point = (x_center, y_top)
     end_point = (x_center, y_bottom)
@@ -239,7 +248,6 @@ def draw_multiple_rectangles(img,
     ndarray
         the image with the bounding boxes drawn
     """
-
     for bbox in bboxes:
         img = draw_rectangle(img, bbox, bbox_color, thickness, is_opaque,
                              alpha)
