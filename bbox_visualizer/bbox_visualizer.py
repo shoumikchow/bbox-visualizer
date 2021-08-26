@@ -1,5 +1,5 @@
 import cv2
-
+import numpy as np
 
 def draw_rectangle(img,
                    bbox,
@@ -35,12 +35,17 @@ def draw_rectangle(img,
         cv2.rectangle(output, (bbox[0], bbox[1]), (bbox[2], bbox[3]),
                       bbox_color, thickness)
     else:
-        overlay = img.copy()
 
-        cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]),
-                      bbox_color, -1)
-        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
+        #instead of copying the whole image, We can crop the rectangle from the original image
+        
+        sub_img = output[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+        rect = np.ones(sub_img.shape, dtype=np.uint8) * 255
+        res = cv2.addWeighted(sub_img, alpha, rect,1-alpha, 1.0)
 
+        
+        output[bbox[1]:bbox[3], bbox[0]:bbox[2]] = res
+
+        
     return output
 
 
