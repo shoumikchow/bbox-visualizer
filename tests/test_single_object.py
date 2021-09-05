@@ -3,8 +3,8 @@ import json
 import bbox_visualizer as bbv
 import cv2
 
-img = cv2.imread('test_images/source_bird.jpg')
-annotation = json.load(open('test_images/source_bird.json'))
+img = cv2.imread('../images/test_images/source_bird.jpg')
+annotation = json.load(open('../images/test_images/source_bird.json'))
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 points = annotation['shapes'][0]['points']
