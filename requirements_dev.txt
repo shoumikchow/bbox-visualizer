@@ -1,6 +1,6 @@
 pip==21.1
 bump2version==0.5.11
-wheel==0.33.6
+wheel==0.38.1
 flake8==3.7.8
 Sphinx==1.8.5
 twine==1.14.0
