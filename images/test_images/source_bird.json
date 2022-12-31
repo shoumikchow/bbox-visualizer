@@ -1,0 +1,16 @@
+{
+  "shapes": [
+    {
+      "label": "bird",
+      "points": [
+        [470, 30],
+        [655, 200]
+      ],
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "source_bird.jpg",
+  "imageHeight": 900,
+  "imageWidth": 675
+}

@@ -1,0 +1,56 @@
+{
+	"shapes": [
+    {
+      "label": "cat1",
+      "points": [
+        [30, 119],
+        [180, 268]
+      ]
+    },
+    {
+      "label": "cat2",
+      "points": [
+        [123, 43],
+        [294, 208]
+      ]
+    },
+    {
+      "label": "cat3",
+      "points": [
+        [306, 15],
+        [485, 183]
+      ]
+    },
+    {
+      "label": "cat4",
+      "points": [
+        [513, 78],
+        [664, 237]
+      ]
+    },
+    {
+      "label": "cat5",
+      "points": [
+        [674, 51],
+        [852, 215]
+      ]
+    },
+    {
+      "label": "cat6",
+      "points": [
+        [452, 173],
+        [628, 349]
+      ]
+    },
+    {
+      "label": "cat7",
+      "points": [
+        [220, 351],
+        [384, 533]
+      ]
+    }
+  ],
+	"imagePath": "source_multiple_cats.jpg",
+	"imageHeight": 937,
+	"imageWidth": 600
+}
