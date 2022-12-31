@@ -1,6 +1,5 @@
 import cv2
 
-
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
@@ -32,7 +31,6 @@ def draw_rectangle(img,
     ndarray
         the image with the bounding box drawn
     """
-
     output = img.copy()
     if not is_opaque:
         cv2.rectangle(output, (bbox[0], bbox[1]), (bbox[2], bbox[3]),
