@@ -262,6 +262,8 @@ def draw_multiple_rectangles(img,
 def add_multiple_labels(img,
                         labels,
                         bboxes,
+                        size=1,
+                        thickness=2,
                         draw_bg=True,
                         text_bg_color=(255, 255, 255),
                         text_color=(0, 0, 0),
@@ -290,9 +292,8 @@ def add_multiple_labels(img,
     ndarray
         the image with the labels written
     """
-
     for label, bbox in zip(labels, bboxes):
-        img = add_label(img, label, bbox, draw_bg, text_bg_color, text_color,
+        img = add_label(img, label, bbox, size, thickness, draw_bg, text_bg_color, text_color,
                         top)
 
     return img
