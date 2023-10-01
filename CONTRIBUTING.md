@@ -54,45 +54,62 @@ If you are proposing a feature:
 Ready to contribute? Here's how to set up `bbox_visualizer` for local development.
 
 1. Fork the `bbox_visualizer` repo on GitHub.
-2. Clone your fork locally::
+2. Clone your fork locally:
 
-    ```bash
-    git clone git@github.com:your_name_here/bbox_visualizer.git
-    ```
+```bash
+git clone git@github.com:your_name_here/bbox_visualizer.git
+```
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+3. Add remote branch:
 
-    ```bash
-    mkvirtualenv bbox_visualizer
-    cd bbox_visualizer/
-    python setup.py develop
-    ```
+```bash
+git remote add upstream https://github.com/shoumikchow/bbox-visualizer.git
+```
 
-4. Create a branch for local development::
+4. Create branch developement:
 
-    ```bash
-    git checkout -b name-of-your-bugfix-or-feature
-    ```
+```bash
+git checkout -b dev
+```
 
-   Now you can make your changes locally.
+5. Update your branch remote dev the origin dev:
 
-5. When you're done making changes, check that your changes pass flake8::
+```bash
+git pull --rebase upstream dev  
+```
 
-    ```bash
-    flake8 bbox_visualizer demo
-    ```
+6. Create new branch from this branch dev:
 
+```bash
+git checkout -b <name_your_branch>-issue
+```
+
+7. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+
+```bash
+mkvirtualenv bbox_visualizer
+cd bbox_visualizer/
+python setup.py develop
+```
+
+8. When you're done making changes, check that your changes pass flake8::
+
+```bash
+flake8 bbox_visualizer demo
+```
    To get flake8, just pip install it into your virtualenv.
 
-6. Commit your changes and push your branch to GitHub::
+9. Commit your changes and push your branch to GitHub::
 
-    ```bash
-    git add .
-    git commit -m "Your detailed description of your changes."
-    git push origin name-of-your-bugfix-or-feature
-    ```
+```bash
+git add .
+git commit -m "Your detailed description of your changes."
+# Pull all updates in dev, organize your timeline
+git pull --rebase upstream dev
+git push origin name-of-your-bugfix-or-feature
+```
 
-7. Submit a pull request through the GitHub website.
+Submit a pull request through the GitHub website.
 
 ### Pull Request Guidelines
 
