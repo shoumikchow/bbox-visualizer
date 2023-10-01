@@ -1,14 +1,15 @@
 import cv2
-
+import numpy as np
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
-def draw_rectangle(img,
-                   bbox,
-                   bbox_color=(255, 255, 255),
-                   thickness=3,
-                   is_opaque=False,
-                   alpha=0.5):
+def draw_rectangle(img: np.ndarray,
+                   bbox: list,
+                   bbox_color: tuple = (255, 255, 255),
+                   thickness: int = 3,
+                   is_opaque: bool = False,
+                   alpha: float = 0.5
+                   ) -> np.ndarray:
     """Draws the rectangle around the object
 
     Parameters

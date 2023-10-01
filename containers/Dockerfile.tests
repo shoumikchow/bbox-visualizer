@@ -3,6 +3,7 @@ FROM python:3.9-slim
 WORKDIR /bbox_visualizer
 
 RUN apt-get update -y && \
+    apt-get install ffmpeg libsm6 libxext6 -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY /requirements_test.txt /bbox_visualizer

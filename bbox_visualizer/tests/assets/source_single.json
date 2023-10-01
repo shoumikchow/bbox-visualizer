@@ -1,0 +1,22 @@
+{
+  "shapes": [
+    {
+      "label": "person",
+      "points": [
+        [
+          1348,
+          860
+        ],
+        [
+          1617,
+          1758
+        ]
+      ],
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "source_single.jpg",
+  "imageHeight": 2000,
+  "imageWidth": 3000
+}
