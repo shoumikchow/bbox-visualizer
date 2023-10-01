@@ -84,7 +84,7 @@ def add_label(img,
         the image with the label written
     """
 
-    (label_width, label_height), baseline = cv2.getTextSize(label, font, size, thickness)
+    (label_width, label_height), baseline = cv2.getTextSize(label, font, float(size), thickness)
 
     if top:
         label_bg = [bbox[0], bbox[1], bbox[0] + label_width, bbox[1] - label_height - (15 * size)]
@@ -138,6 +138,7 @@ def add_T_label(img,
     """
 
     (label_width, label_height), baseline = cv2.getTextSize(label, font, size, thickness)
+
     # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
     y_top = bbox[1] - 50
@@ -330,7 +331,7 @@ def add_multiple_T_labels(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        add_T_label(img, label, bbox, draw_bg, text_bg_color, text_color)
+        add_T_label(img, label, bbox, draw_bg=draw_bg, text_bg_color=text_bg_color, text_color=text_color)
 
     return img
 
@@ -368,6 +369,13 @@ def draw_multiple_flags_with_labels(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        img = draw_flag_with_label(img, label, bbox, write_label, line_color,
-                                   text_bg_color, text_color)
+        img = draw_flag_with_label(
+            img,
+            label,
+            bbox,
+            write_label=write_label,
+            line_color=line_color,
+            text_bg_color=text_bg_color,
+            text_color=text_color
+            )
     return img

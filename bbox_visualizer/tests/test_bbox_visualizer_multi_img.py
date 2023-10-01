@@ -45,7 +45,7 @@ def test_add_multiple_labels():
     assert isinstance(img_with_boxes, np.ndarray)
 
 
-"""def test_add_multiple_T_labels():
+def test_add_multiple_T_labels():
     labels = []
     bboxes = []
     for shape in ANNOTATION['shapes']:
@@ -57,7 +57,7 @@ def test_add_multiple_labels():
     assert isinstance(img_with_boxes, np.ndarray)
 
     img_with_boxes = bbv.add_multiple_T_labels(img_with_boxes, labels, bboxes)
-    assert isinstance(img_with_boxes, np.ndarray)"""
+    assert isinstance(img_with_boxes, np.ndarray)
 
 
 def test_draw_multiple_flags_with_labels():
