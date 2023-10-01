@@ -84,6 +84,12 @@ img_with_boxes = bbv.add_multiple_labels(img_with_boxes, labels, bboxes)
   <a href="https://bbox-visualizer.readthedocs.io/en/latest/"><img src="images/cover.jpg" alt="bbox" height='300px' width='500px'></a>
 </p>
 
+### Notebooks examples
+
+You can also test the tool using one of our notebooks.
+
+- [Single Label](https://github.com/shoumikchow/bbox-visualizer/blob/dev/examples/single_object_example.ipynb)
+- [Multi Label](https://github.com/shoumikchow/bbox-visualizer/blob/dev/examples/multiple_objects_example.ipynb)
 
 ## Function labels 
 
