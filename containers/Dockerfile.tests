@@ -1,0 +1,15 @@
+FROM python:3.9-slim
+
+WORKDIR /bbox_visualizer
+
+RUN apt-get update -y && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY /requirements_test.txt /bbox_visualizer
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip3 install -r requirements_test.txt
+
+COPY /bbox_visualizer /bbox_visualizer
+
+ENTRYPOINT [ "pytest", "-v"]
