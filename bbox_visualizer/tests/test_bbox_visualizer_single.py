@@ -24,3 +24,42 @@ def test_draw_rectangle():
     bbox = [xmin, ymin, xmax, ymax]
     img_with_box = bbv.draw_rectangle(IMG, bbox)
     assert isinstance(img_with_box, np.ndarray)
+
+
+def test_add_label():
+    points = ANNOTATION['shapes'][0]['points']
+    label = ANNOTATION['shapes'][0]['label']
+    (xmin, ymin), (xmax, ymax) = points
+    bbox = [xmin, ymin, xmax, ymax]
+    img_with_box = bbv.draw_rectangle(IMG, bbox)
+
+    assert isinstance(img_with_box, np.ndarray)
+
+    img_label = bbv.add_label(img_with_box, label, bbox)
+
+    assert isinstance(img_label, np.ndarray)
+
+
+def test_add_T_label():
+    points = ANNOTATION['shapes'][0]['points']
+    label = ANNOTATION['shapes'][0]['label']
+    (xmin, ymin), (xmax, ymax) = points
+    bbox = [xmin, ymin, xmax, ymax]
+    img_with_box = bbv.draw_rectangle(IMG, bbox)
+
+    assert isinstance(img_with_box, np.ndarray)
+
+    img_label = bbv.add_T_label(img_with_box, label, bbox)
+
+    assert isinstance(img_label, np.ndarray)
+
+
+def test_add_flag_label():
+    points = ANNOTATION['shapes'][0]['points']
+    label = ANNOTATION['shapes'][0]['label']
+    (xmin, ymin), (xmax, ymax) = points
+    bbox = [xmin, ymin, xmax, ymax]
+
+    img_flag_label = bbv.draw_flag_with_label(IMG, label, bbox)
+
+    assert isinstance(img_flag_label, np.ndarray)
