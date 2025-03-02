@@ -329,7 +329,9 @@ def add_multiple_T_labels(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        add_T_label(img, label, bbox, draw_bg, text_bg_color, text_color)
+        img = add_T_label(img, label, bbox, size=1, thickness=2,
+                       draw_bg=draw_bg, text_bg_color=text_bg_color,
+                       text_color=text_color)
 
     return img
 
@@ -349,12 +351,12 @@ def draw_multiple_flags_with_labels(img,
         the image on which the flags are to be drawn
     labels : list
         labels that are written inside the flags
-    bbox : list
+    bboxes : list
         a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
     write_label : bool, optional
-        if True, writes the labels, otherwise, it's just a vertical line for each object, by default True
+        if True, writes the labels, otherwise, they're just vertical lines, by default True
     line_color : tuple, optional
-        the color of the pole of the flags, by default (255, 255, 255)
+        the color of the poles of the flags, by default (255, 255, 255)
     text_bg_color : tuple, optional
         the background color of the labels that are filled, by default (255, 255, 255)
     text_color : tuple, optional
@@ -367,6 +369,9 @@ def draw_multiple_flags_with_labels(img,
     """
 
     for label, bbox in zip(labels, bboxes):
-        img = draw_flag_with_label(img, label, bbox, write_label, line_color,
-                                   text_bg_color, text_color)
+        img = draw_flag_with_label(img, label, bbox, size=1, thickness=2,
+                                write_label=write_label, line_color=line_color,
+                                text_bg_color=text_bg_color,
+                                text_color=text_color)
+
     return img
