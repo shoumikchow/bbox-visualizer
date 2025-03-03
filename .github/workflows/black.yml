@@ -2,13 +2,37 @@ name: Lint
 
 on: [push, pull_request]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: psf/black@stable
         with:
-          options: "--check --verbose"
-          src: "./bbox_visualizer/bbox_visualizer.py ./tests/test_bbox_visualizer.py"
-          use_pyproject: true 
+          ref: ${{ github.head_ref }}
+          
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install Black
+        run: pip install black
+        
+      - name: Run Black
+        run: black bbox_visualizer/bbox_visualizer.py tests/test_bbox_visualizer.py
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "style: format code with Black"
+          title: "style: format code with Black"
+          body: |
+            Auto-formatted code with Black.
+            
+            This PR was automatically created by the Black formatting GitHub Action.
+          branch: format-code-with-black
+          delete-branch: true 
