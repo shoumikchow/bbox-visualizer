@@ -30,6 +30,7 @@ jobs:
           uv pip install pytest
           pytest
 
+
   build:
     needs: test
     runs-on: ubuntu-latest
