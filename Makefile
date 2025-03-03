@@ -47,8 +47,14 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint: ## check style with flake8
-	flake8 bbox_visualizer demo
+lint: ## check style with ruff
+	uv pip run ruff check bbox_visualizer demo tests examples
+
+format: ## format code with black
+	uv pip run black bbox_visualizer demo tests examples
+
+test: ## run tests with pytest
+	uv pip run pytest
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/bbox_visualizer.rst
@@ -63,13 +69,15 @@ docs: ## generate Sphinx HTML documentation, including API docs
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-release: dist ## package and upload a release
-	twine upload dist/*
+build: clean ## builds source and wheel package
+	uv pip run python -m build
 
-dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
+release: build ## package and upload a release
+	uv pip run python -m twine check dist/*
+	uv pip run python -m twine upload dist/*
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	uv pip install .
+
+dev-install: clean ## install the package in development mode with all extras
+	uv pip install -e ".[dev]"

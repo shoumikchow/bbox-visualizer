@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/bbox-visualizer/badge/?version=latest)](https://bbox-visualizer.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI version](https://badge.fury.io/py/bbox-visualizer.svg)](https://pypi.org/project/bbox-visualizer/0.1.0/)
+[![PyPI version](https://badge.fury.io/py/bbox-visualizer.svg)](https://pypi.org/project/bbox-visualizer/0.2.0/)
 [![Downloads](https://pepy.tech/badge/bbox-visualizer)](https://pepy.tech/project/bbox-visualizer)
 
 This package helps users draw bounding boxes around objects, without doing the clumsy math that you'd need to do for positioning the labels. It also has a few different types of visualizations you can use for labeling objects after identifying them.
