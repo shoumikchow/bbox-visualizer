@@ -22,11 +22,14 @@ jobs:
           
       - name: Install build dependencies
         run: |
-          uv venv
+          uv venv .venv
+          source .venv/bin/activate
           uv pip install build hatchling
           
       - name: Build package
-        run: uv pip run python -m build
+        run: |
+          source .venv/bin/activate
+          python -m build
         
       - name: Store dist artifacts
         uses: actions/upload-artifact@v4
