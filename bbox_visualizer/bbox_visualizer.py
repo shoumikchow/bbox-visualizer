@@ -1,6 +1,8 @@
 import cv2
 import logging
 
+font = cv2.FONT_HERSHEY_SIMPLEX
+
 
 def check_and_modify_bbox(bbox, img_size, margin=0):
     """
@@ -62,6 +64,7 @@ def draw_rectangle(
         the image with the bounding box drawn
     """
     bbox = check_and_modify_bbox(bbox, img.shape)
+
     output = img.copy()
     if not is_opaque:
         cv2.rectangle(
@@ -80,6 +83,8 @@ def add_label(
     img,
     label,
     bbox,
+    size=1,
+    thickness=2,
     draw_bg=True,
     text_bg_color=(255, 255, 255),
     text_color=(0, 0, 0),
@@ -89,6 +94,7 @@ def add_label(
     adds label, inside or outside the rectangle.
     if label cannot be drawn on outside of the box, it puts label inside the box.
 
+
     Parameters
     ----------
     img : ndarray
@@ -97,6 +103,10 @@ def add_label(
         the text (label) to be written
     bbox : list
         a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    size : int, optional
+        size of the label, by default 1
+    thickness : int, optional
+        thickness of the label, by default 2
     draw_bg : bool, optional
         if True, draws the background of the text, else just the text is written, by default True
     text_bg_color : tuple, optional
@@ -111,55 +121,35 @@ def add_label(
     ndarray
         the image with the label written
     """
-    text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
-    text_height = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][1]
+
+
+    (text_width, text_height), baseline = cv2.getTextSize(label, font, size, thickness)
 
     if top and bbox[1] - text_height > text_height:
-        label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] - 30]
+        label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] - text_height - (15 * size)]
         if draw_bg:
-            cv2.rectangle(
-                img,
-                (label_bg[0], label_bg[1]),
-                (label_bg[2] + 5, label_bg[3]),
-                text_bg_color,
-                -1,
-            )
-        cv2.putText(
-            img,
-            label,
-            (bbox[0] + 5, bbox[1] - 5),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            text_color,
-            2,
-        )
-
+            cv2.rectangle(img, (label_bg[0], label_bg[1]),
+                          (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
+            
+        cv2.putText(img, label, (bbox[0] + 5, bbox[1] - (15 * size)), font, size, text_color, thickness)
     else:
-        label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] + 30]
+        label_bg = [bbox[0], bbox[1], bbox[0] + label_width, bbox[1] + label_height + (15 * size)]
         if draw_bg:
-            cv2.rectangle(
-                img,
-                (label_bg[0], label_bg[1]),
-                (label_bg[2] + 5, label_bg[3]),
-                text_bg_color,
-                -1,
-            )
-        cv2.putText(
-            img,
-            label,
-            (bbox[0] + 5, bbox[1] - 5 + 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            text_color,
-            2,
-        )
 
+            cv2.rectangle(img, (label_bg[0], label_bg[1]),
+                          (label_bg[2] + 5, label_bg[3]), text_bg_color, -1)
+        cv2.putText(img, label, (bbox[0] + 5, bbox[1] + (16 * size) + (4 * thickness)), font, size, text_color, thickness)
     return img
 
+def add_T_label(img,
+                label,
+                bbox,
+                size=1,
+                thickness=2,
+                draw_bg=True,
+                text_bg_color=(255, 255, 255),
+                text_color=(0, 0, 0)):
 
-def add_T_label(
-    img, label, bbox, draw_bg=True, text_bg_color=(255, 255, 255), text_color=(0, 0, 0)
-):
     """adds a T label to the rectangle, originating from the top of the rectangle
 
     Parameters
@@ -170,6 +160,10 @@ def add_T_label(
         the text (label) to be written
     bbox : list
         a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    size : int, optional
+        size of the label, by default 1
+    thickness : int, optional
+        thickness of the label, by default 2
     draw_bg : bool, optional
         if True, draws the background of the text, else just the text is written, by default True
     text_bg_color : tuple, optional
@@ -183,9 +177,7 @@ def add_T_label(
         the image with the T label drawn/written
     """
 
-    text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
-    text_height = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][1]
-
+    (label_width, label_height), baseline = cv2.getTextSize(label, font, size, thickness)
     # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
     line_top = y_top = bbox[1] - 50
@@ -204,29 +196,27 @@ def add_T_label(
     x_left = x_center - (text_width // 2) - 5
     x_right = x_center + (text_width // 2) + 5
     if draw_bg:
-        cv2.rectangle(img, (x_left, y_top - 3), (x_right, y_bottom), text_bg_color, -1)
-    cv2.putText(
-        img,
-        label,
-        (x_left + 5, y_bottom - 7),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        1,
-        text_color,
-        2,
+        cv2.rectangle(img, (x_left, y_top - 30), (x_right, y_bottom),
+                      text_bg_color, -1)
+    cv2.putText(img, label, (x_left + 5, y_bottom - (8 * size)),
+                font, size, text_color, thickness)
     )
+
 
     return img
 
 
-def draw_flag_with_label(
-    img,
-    label,
-    bbox,
-    write_label=True,
-    line_color=(255, 255, 255),
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-):
+def draw_flag_with_label(img,
+                         label,
+                         bbox,
+                         size=1,
+                         thickness=2,
+                         write_label=True,
+                         line_color=(255, 255, 255),
+                         text_bg_color=(255, 255, 255),
+                         text_color=(0, 0, 0),
+                         ):
+
     """draws a pole from the middle of the object that is to be labeled and adds the label to the flag
 
     Parameters
@@ -237,6 +227,10 @@ def draw_flag_with_label(
         label that is written inside the flag
     bbox : list
         a list containing x_min, y_min, x_max and y_max of the rectangle positions
+    size : int, optional
+        size of the label, by default 1
+    thickness : int, optional
+        thickness of the label, by default 2
     write_label : bool, optional
         if True, writes the label, otherwise, it's just a vertical line, by default True
     line_color : tuple, optional
@@ -253,6 +247,7 @@ def draw_flag_with_label(
     """
 
     # draw vertical line
+    (label_width, label_height), baseline = cv2.getTextSize(label, font, size, thickness)
 
     x_center = (bbox[0] + bbox[2]) // 2
     y_bottom = int((bbox[1] * 0.75 + bbox[3] * 0.25))
@@ -272,6 +267,7 @@ def draw_flag_with_label(
     # write label
 
     if write_label:
+
         text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
         label_bg = [
             start_point[0],
@@ -290,10 +286,7 @@ def draw_flag_with_label(
             img,
             label,
             (start_point[0] + 5, start_point[1] - 5 + 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            text_color,
-            2,
+            font, size, text_color, thickness
         )
 
     return img
@@ -332,15 +325,16 @@ def draw_multiple_rectangles(
     return img
 
 
-def add_multiple_labels(
-    img,
-    labels,
-    bboxes,
-    draw_bg=True,
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-    top=True,
-):
+def add_multiple_labels(img,
+                        labels,
+                        bboxes,
+                        size=1,
+                        thickness=2,
+                        draw_bg=True,
+                        text_bg_color=(255, 255, 255),
+                        text_color=(0, 0, 0),
+                        top=True):
+
     """add labels, inside or outside the rectangles
 
     Parameters
@@ -365,10 +359,9 @@ def add_multiple_labels(
     ndarray
         the image with the labels written
     """
-
     for label, bbox in zip(labels, bboxes):
-        img = add_label(img, label, bbox, draw_bg, text_bg_color, text_color, top)
-
+        img = add_label(img, label, bbox, size, thickness, draw_bg, text_bg_color, text_color,
+                        top)
     return img
 
 
@@ -404,7 +397,9 @@ def add_multiple_T_labels(
     """
 
     for label, bbox in zip(labels, bboxes):
-        add_T_label(img, label, bbox, draw_bg, text_bg_color, text_color)
+        img = add_T_label(img, label, bbox, size=1, thickness=2,
+                       draw_bg=draw_bg, text_bg_color=text_bg_color,
+                       text_color=text_color)
 
     return img
 
@@ -426,12 +421,12 @@ def draw_multiple_flags_with_labels(
         the image on which the flags are to be drawn
     labels : list
         labels that are written inside the flags
-    bbox : list
+    bboxes : list
         a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
     write_label : bool, optional
-        if True, writes the labels, otherwise, it's just a vertical line for each object, by default True
+        if True, writes the labels, otherwise, they're just vertical lines, by default True
     line_color : tuple, optional
-        the color of the pole of the flags, by default (255, 255, 255)
+        the color of the poles of the flags, by default (255, 255, 255)
     text_bg_color : tuple, optional
         the background color of the labels that are filled, by default (255, 255, 255)
     text_color : tuple, optional
@@ -444,7 +439,10 @@ def draw_multiple_flags_with_labels(
     """
 
     for label, bbox in zip(labels, bboxes):
-        img = draw_flag_with_label(
-            img, label, bbox, write_label, line_color, text_bg_color, text_color
-        )
+
+        img = draw_flag_with_label(img, label, bbox, size=1, thickness=2,
+                                write_label=write_label, line_color=line_color,
+                                text_bg_color=text_bg_color,
+                                text_color=text_color)
+
     return img

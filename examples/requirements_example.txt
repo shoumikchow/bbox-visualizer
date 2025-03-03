@@ -1,0 +1,4 @@
+opencv-python>=4.1.0.25
+notebook==7.2.2
+bbox-visualizer==0.1.0
+matplotlib==3.8.0
