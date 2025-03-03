@@ -7,9 +7,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def check_and_modify_bbox(
-    bbox: List[int],
-    img_size: Tuple[int, int, int],
-    margin: int = 0
+    bbox: List[int], img_size: Tuple[int, int, int], margin: int = 0
 ) -> List[int]:
     """Checks and adjusts bounding box coordinates to fit within image boundaries.
 
@@ -37,7 +35,7 @@ def draw_rectangle(
     bbox_color: Tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
-    alpha: float = 0.5
+    alpha: float = 0.5,
 ) -> np.ndarray:
     """Draws a rectangle around an object in the image.
 
@@ -105,7 +103,7 @@ def add_label(
         # Calculate background rectangle dimensions
         bg_width = text_width + 2 * padding
         bg_height = text_height + 2 * padding
-        
+
         # Calculate background rectangle position
         bg_x1 = bbox[0]
         bg_y1 = bbox[1] - bg_height  # Removed the gap by removing (5 * size)
@@ -138,7 +136,7 @@ def add_label(
         # Calculate background rectangle dimensions
         bg_width = text_width + 2 * padding
         bg_height = text_height + 2 * padding
-        
+
         # Calculate background rectangle position
         bg_x1 = bbox[0]
         bg_y1 = bbox[1]
@@ -203,7 +201,7 @@ def add_T_label(
         label, font, size, thickness
     )
     padding = 5  # Padding around text
-    
+
     # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
     line_top = y_top = bbox[1] - 50
@@ -219,11 +217,11 @@ def add_T_label(
         return add_label(img, label, bbox)
 
     cv2.line(img, (x_center, bbox[1]), (x_center, line_top), text_bg_color, 3)
-    
+
     # Calculate background rectangle dimensions
     bg_width = label_width + 2 * padding
     bg_height = label_height + 2 * padding
-    
+
     # Calculate background rectangle position
     bg_x1 = x_center - (bg_width // 2)
     bg_y1 = y_top
@@ -336,7 +334,7 @@ def draw_multiple_rectangles(
     bbox_color: Tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
-    alpha: float = 0.5
+    alpha: float = 0.5,
 ) -> np.ndarray:
     """Draws multiple rectangles on the image.
 
