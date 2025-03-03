@@ -17,14 +17,17 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          uv --version  # Verify installation
           
       - name: Install dependencies
         run: |
-          uv venv
-          . .venv/bin/activate
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install --upgrade pip
           uv pip install pytest opencv-python numpy
           uv pip install -e .
           
       - name: Run tests
         run: |
-          uv python -m pytest tests/ 
+          source .venv/bin/activate
+          python -m pytest tests/ 
