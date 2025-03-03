@@ -1,4 +1,4 @@
-name: Linthttps://github.com/shoumikchow/bbox-visualizer/pull/34/conflict?name=.github%252Fworkflows%252Fblack.yml&base_oid=8dbdb03a0f3c4d41b7135253ebeeaa0845a4b889&head_oid=277ad307e92b68c3a855728a7f11aeda4c5ed629
+name: Format
 
 on: [push, pull_request]
 
