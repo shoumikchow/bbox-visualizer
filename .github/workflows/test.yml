@@ -1,0 +1,33 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          uv --version  # Verify installation
+          
+      - name: Install dependencies
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install --upgrade pip
+          uv pip install pytest pytest-cov opencv-python numpy
+          uv pip install -e .
+          
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          python -m pytest tests/ 
