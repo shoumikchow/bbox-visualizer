@@ -133,7 +133,7 @@ def add_label(
             
         cv2.putText(img, label, (bbox[0] + 5, bbox[1] - (15 * size)), font, size, text_color, thickness)
     else:
-        label_bg = [bbox[0], bbox[1], bbox[0] + label_width, bbox[1] + label_height + (15 * size)]
+        label_bg = [bbox[0], bbox[1], bbox[0] + text_width, bbox[1] + text_height + (15 * size)]
         if draw_bg:
 
             cv2.rectangle(img, (label_bg[0], label_bg[1]),
@@ -184,7 +184,7 @@ def add_T_label(img,
 
     # draw rectangle with label
     y_bottom = y_top
-    y_top = y_bottom - text_height - 5
+    y_top = y_bottom - label_height - 5
 
     if y_top < 0:
         logging.warning(
@@ -193,14 +193,14 @@ def add_T_label(img,
         return add_label(img, label, bbox)
 
     cv2.line(img, (x_center, bbox[1]), (x_center, line_top), text_bg_color, 3)
-    x_left = x_center - (text_width // 2) - 5
-    x_right = x_center + (text_width // 2) + 5
+    x_left = x_center - (label_width // 2) - 5
+    x_right = x_center + (label_width // 2) + 5
     if draw_bg:
         cv2.rectangle(img, (x_left, y_top - 30), (x_right, y_bottom),
                       text_bg_color, -1)
     cv2.putText(img, label, (x_left + 5, y_bottom - (8 * size)),
                 font, size, text_color, thickness)
-    )
+    
 
 
     return img
