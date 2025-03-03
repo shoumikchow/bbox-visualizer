@@ -1,36 +1,29 @@
 import cv2
 import logging
+from typing import List, Tuple
+import numpy as np
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
-def check_and_modify_bbox(bbox, img_size, margin=0):
-    """
-    Checks if the bounding box is inside the given image.
-    If not, the coordinates are trimmed inorder to fit inside the image.
+def check_and_modify_bbox(
+    bbox: List[int],
+    img_size: Tuple[int, int, int],
+    margin: int = 0
+) -> List[int]:
+    """Checks and adjusts bounding box coordinates to fit within image boundaries.
 
-    Trimming criteria:
-        - for xmin and ymin:
-            - xmin and ymin are trimmed to 0, if their value is negative i.e. out of the
-            scope of image.
-        - for xmax and ymax:
-            - xmax and ymax are trimmed to image_width and image_height respectivel
+    Trimming rules:
+        - xmin/ymin: Set to margin if negative
+        - xmax/ymax: Set to image width/height - margin if exceeds image size
 
+    Args:
+        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        img_size: Tuple of (height, width, channels)
+        margin: Minimum distance from image edges (default: 0)
 
-    Parameters
-    ----------
-    bbox : list
-        a list containing x_min, y_min, x_max and y_max of the rectangle positions
-    img_size: tuple
-        a tuple containing image width, image height and color channel.
-    margin: integer (default = 0)
-        space between edge of the image and bounding box incase the box is trimmed such that
-        it's size is exactly as the image.
-
-    Returns
-    -------
-    list
-        bounding box coordinates (xmin, ymin, xmax, ymax)
+    Returns:
+        Adjusted bounding box coordinates [x_min, y_min, x_max, y_max]
     """
     bbox = [value if value > 0 else margin for value in bbox]
     bbox[2] = bbox[2] if bbox[2] < img_size[1] else img_size[1] - margin
@@ -39,29 +32,25 @@ def check_and_modify_bbox(bbox, img_size, margin=0):
 
 
 def draw_rectangle(
-    img, bbox, bbox_color=(255, 255, 255), thickness=3, is_opaque=False, alpha=0.5
-):
-    """Draws the rectangle around the object
+    img: np.ndarray,
+    bbox: List[int],
+    bbox_color: Tuple[int, int, int] = (255, 255, 255),
+    thickness: int = 3,
+    is_opaque: bool = False,
+    alpha: float = 0.5
+) -> np.ndarray:
+    """Draws a rectangle around an object in the image.
 
-    Parameters
-    ----------
-    img : ndarray
-        the actual image
-    bbox : list
-        a list containing x_min, y_min, x_max and y_max of the rectangle positions
-    bbox_color : tuple, optional
-        the color of the box, by default (255,255,255)
-    thickness : int, optional
-        thickness of the outline of the box, by default 3
-    is_opaque : bool, optional
-        if False, draws a solid rectangular outline. Else, a filled rectangle which is semi transparent, by default False
-    alpha : float, optional
-        strength of the opacity, by default 0.5
+    Args:
+        img: Input image array
+        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox_color: BGR color tuple for the box (default: white)
+        thickness: Line thickness in pixels (default: 3)
+        is_opaque: If True, draws filled rectangle with transparency (default: False)
+        alpha: Transparency level for filled rectangles (default: 0.5)
 
-    Returns
-    -------
-    ndarray
-        the image with the bounding box drawn
+    Returns:
+        Image with drawn rectangle
     """
     bbox = check_and_modify_bbox(bbox, img.shape)
 
@@ -80,48 +69,35 @@ def draw_rectangle(
 
 
 def add_label(
-    img,
-    label,
-    bbox,
-    size=1,
-    thickness=2,
-    draw_bg=True,
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-    top=True,
-):
+    img: np.ndarray,
+    label: str,
+    bbox: List[int],
+    size: float = 1,
+    thickness: int = 2,
+    draw_bg: bool = True,
+    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
+    text_color: Tuple[int, int, int] = (0, 0, 0),
+    top: bool = True,
+) -> np.ndarray:
+    """Adds a label to a bounding box, either above or inside it.
+
+    If there isn't enough space above the box, the label is placed inside.
+    The label has an optional background rectangle for better visibility.
+
+    Args:
+        img: Input image array
+        label: Text to display
+        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        size: Font size multiplier (default: 1)
+        thickness: Text thickness in pixels (default: 2)
+        draw_bg: Whether to draw background rectangle (default: True)
+        text_bg_color: BGR color tuple for text background (default: white)
+        text_color: BGR color tuple for text (default: black)
+        top: If True, place label above box; if False, inside (default: True)
+
+    Returns:
+        Image with added label
     """
-    adds label, inside or outside the rectangle.
-    if label cannot be drawn on outside of the box, it puts label inside the box.
-
-
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the label is to be written, preferably the image with the rectangular bounding box drawn
-    label : str
-        the text (label) to be written
-    bbox : list
-        a list containing x_min, y_min, x_max and y_max of the rectangle positions
-    size : int, optional
-        size of the label, by default 1
-    thickness : int, optional
-        thickness of the label, by default 2
-    draw_bg : bool, optional
-        if True, draws the background of the text, else just the text is written, by default True
-    text_bg_color : tuple, optional
-        the background color of the label that is filled, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the text (label) to be written, by default (0, 0, 0)
-    top : bool, optional
-        if True, writes the label on top of the bounding box, else inside, by default True
-
-    Returns
-    -------
-    ndarray
-        the image with the label written
-    """
-
     (text_width, text_height), baseline = cv2.getTextSize(label, font, size, thickness)
     padding = 5  # Padding around text
 
@@ -195,42 +171,34 @@ def add_label(
 
 
 def add_T_label(
-    img,
-    label,
-    bbox,
-    size=1,
-    thickness=2,
-    draw_bg=True,
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-):
-    """adds a T label to the rectangle, originating from the top of the rectangle
+    img: np.ndarray,
+    label: str,
+    bbox: List[int],
+    size: float = 1,
+    thickness: int = 2,
+    draw_bg: bool = True,
+    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
+    text_color: Tuple[int, int, int] = (0, 0, 0),
+) -> np.ndarray:
+    """Adds a T-shaped label with a vertical line connecting to the bounding box.
 
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the T label is to be written/drawn, preferably the image with the rectangular bounding box drawn
-    label : str
-        the text (label) to be written
-    bbox : list
-        a list containing x_min, y_min, x_max and y_max of the rectangle positions
-    size : int, optional
-        size of the label, by default 1
-    thickness : int, optional
-        thickness of the label, by default 2
-    draw_bg : bool, optional
-        if True, draws the background of the text, else just the text is written, by default True
-    text_bg_color : tuple, optional
-        the background color of the label that is filled, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the text (label) to be written, by default (0, 0, 0)
+    The label consists of a vertical line extending from the top of the box
+    and a horizontal label at the top. Falls back to regular label if there isn't
+    enough space above the box.
 
-    Returns
-    -------
-    ndarray
-        the image with the T label drawn/written
+    Args:
+        img: Input image array
+        label: Text to display
+        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        size: Font size multiplier (default: 1)
+        thickness: Text thickness in pixels (default: 2)
+        draw_bg: Whether to draw background rectangle (default: True)
+        text_bg_color: BGR color tuple for text background (default: white)
+        text_color: BGR color tuple for text (default: black)
+
+    Returns:
+        Image with added T-shaped label
     """
-
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -283,45 +251,36 @@ def add_T_label(
 
 
 def draw_flag_with_label(
-    img,
-    label,
-    bbox,
-    size=1,
-    thickness=2,
-    write_label=True,
-    line_color=(255, 255, 255),
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-):
-    """draws a pole from the middle of the object that is to be labeled and adds the label to the flag
+    img: np.ndarray,
+    label: str,
+    bbox: List[int],
+    size: float = 1,
+    thickness: int = 2,
+    write_label: bool = True,
+    line_color: Tuple[int, int, int] = (255, 255, 255),
+    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
+    text_color: Tuple[int, int, int] = (0, 0, 0),
+) -> np.ndarray:
+    """Draws a flag-like label with a vertical line and text box.
 
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the flag is to be drawn
-    label : str
-        label that is written inside the flag
-    bbox : list
-        a list containing x_min, y_min, x_max and y_max of the rectangle positions
-    size : int, optional
-        size of the label, by default 1
-    thickness : int, optional
-        thickness of the label, by default 2
-    write_label : bool, optional
-        if True, writes the label, otherwise, it's just a vertical line, by default True
-    line_color : tuple, optional
-        the color of the pole of the flag, by default (255, 255, 255)
-    text_bg_color : tuple, optional
-        the background color of the label that is filled, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the text (label) to be written, by default (0, 0, 0)
+    The flag consists of a vertical line extending from the middle of the box
+    and a horizontal label at the top. Falls back to regular label if there isn't
+    enough space above the box.
 
-    Returns
-    -------
-    ndarray
-        the image with flag drawn and the label written in the flag
+    Args:
+        img: Input image array
+        label: Text to display
+        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        size: Font size multiplier (default: 1)
+        thickness: Text thickness in pixels (default: 2)
+        write_label: Whether to draw the text label (default: True)
+        line_color: BGR color tuple for the vertical line (default: white)
+        text_bg_color: BGR color tuple for text background (default: white)
+        text_color: BGR color tuple for text (default: black)
+
+    Returns:
+        Image with added flag label
     """
-
     # draw vertical line
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
@@ -343,9 +302,7 @@ def draw_flag_with_label(
     cv2.line(img, start_point, end_point, line_color, 3)
 
     # write label
-
     if write_label:
-
         text_width = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0][0]
         label_bg = [
             start_point[0],
@@ -373,33 +330,26 @@ def draw_flag_with_label(
     return img
 
 
-# THE FOLLOWING ARE OPTIONAL FUNCTIONS THAT CAN BE USED FOR DRAWING OR LABELLING MULTIPLE OBJECTS IN THE SAME
-# IMAGE. IN ORDER TO HAVE FULL CONTROL OF YOUR VISUALIZATIONS IT IS ADVISABLE TO USE THE ABOVE FUNCTIONS IN FOR LOOPS
-# INSTEAD OF THE FUNCTIONS BELOW
-
-
 def draw_multiple_rectangles(
-    img, bboxes, bbox_color=(255, 255, 255), thickness=3, is_opaque=False, alpha=0.5
-):
-    """draws multiple rectangles
+    img: np.ndarray,
+    bboxes: List[List[int]],
+    bbox_color: Tuple[int, int, int] = (255, 255, 255),
+    thickness: int = 3,
+    is_opaque: bool = False,
+    alpha: float = 0.5
+) -> np.ndarray:
+    """Draws multiple rectangles on the image.
 
-    img : ndarray
-        the actual image
-    bboxes : list
-        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
-    bbox_color : tuple, optional
-        the color of the boxes, by default (255,255,255)
-    thickness : int, optional
-        thickness of the outline of the boxes, by default 3
-    is_opaque : bool, optional
-        if False, draws solid rectangular outlines for rectangles. Else, filled rectangles which are semi transparent, by default False
-    alpha : float, optional
-        strength of the opacity, by default 0.5
+    Args:
+        img: Input image array
+        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        bbox_color: BGR color tuple for the boxes (default: white)
+        thickness: Line thickness in pixels (default: 3)
+        is_opaque: If True, draws filled rectangles with transparency (default: False)
+        alpha: Transparency level for filled rectangles (default: 0.5)
 
-    Returns
-    -------
-    ndarray
-        the image with the bounding boxes drawn
+    Returns:
+        Image with all rectangles drawn
     """
     for bbox in bboxes:
         img = draw_rectangle(img, bbox, bbox_color, thickness, is_opaque, alpha)
@@ -407,39 +357,31 @@ def draw_multiple_rectangles(
 
 
 def add_multiple_labels(
-    img,
-    labels,
-    bboxes,
-    size=1,
-    thickness=2,
-    draw_bg=True,
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-    top=True,
-):
-    """add labels, inside or outside the rectangles
+    img: np.ndarray,
+    labels: List[str],
+    bboxes: List[List[int]],
+    size: float = 1,
+    thickness: int = 2,
+    draw_bg: bool = True,
+    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
+    text_color: Tuple[int, int, int] = (0, 0, 0),
+    top: bool = True,
+) -> np.ndarray:
+    """Adds multiple labels to their corresponding bounding boxes.
 
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the labels are to be written, preferably the image with the rectangular bounding boxes drawn
-    labels : list
-        a list of string of the texts (labels) to be written
-    bboxes : list
-        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
-    draw_bg : bool, optional
-        if True, draws the background of the texts, else just the texts are written, by default True
-    text_bg_color : tuple, optional
-        the background color of the labels that are filled, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the texts (labels) to be written, by default (0, 0, 0)
-    top : bool, optional
-        if True, writes the labels on top of the bounding boxes, else inside, by default True
+    Args:
+        img: Input image array
+        labels: List of text labels
+        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        size: Font size multiplier (default: 1)
+        thickness: Text thickness in pixels (default: 2)
+        draw_bg: Whether to draw background rectangles (default: True)
+        text_bg_color: BGR color tuple for text backgrounds (default: white)
+        text_color: BGR color tuple for text (default: black)
+        top: If True, place labels above boxes; if False, inside (default: True)
 
-    Returns
-    -------
-    ndarray
-        the image with the labels written
+    Returns:
+        Image with all labels added
     """
     for label, bbox in zip(labels, bboxes):
         img = add_label(
@@ -449,36 +391,26 @@ def add_multiple_labels(
 
 
 def add_multiple_T_labels(
-    img,
-    labels,
-    bboxes,
-    draw_bg=True,
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-):
-    """adds T labels to the rectangles, each originating from the top of the rectangle
+    img: np.ndarray,
+    labels: List[str],
+    bboxes: List[List[int]],
+    draw_bg: bool = True,
+    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
+    text_color: Tuple[int, int, int] = (0, 0, 0),
+) -> np.ndarray:
+    """Adds multiple T-shaped labels to their corresponding bounding boxes.
 
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the T labels are to be written/drawn, preferably the image with the rectangular bounding boxes drawn
-    labels : list
-        the texts (labels) to be written
-    bboxes : list
-        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
-    draw_bg : bool, optional
-        if True, draws the background of the texts, else just the texts are written, by default True
-    text_bg_color : tuple, optional
-        the background color of the labels that are filled, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the texts (labels) to be written, by default (0, 0, 0)
+    Args:
+        img: Input image array
+        labels: List of text labels
+        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        draw_bg: Whether to draw background rectangles (default: True)
+        text_bg_color: BGR color tuple for text backgrounds (default: white)
+        text_color: BGR color tuple for text (default: black)
 
-    Returns
-    -------
-    ndarray
-        the image with the T labels drawn/written
+    Returns:
+        Image with all T-shaped labels added
     """
-
     for label, bbox in zip(labels, bboxes):
         img = add_T_label(
             img,
@@ -495,41 +427,29 @@ def add_multiple_T_labels(
 
 
 def draw_multiple_flags_with_labels(
-    img,
-    labels,
-    bboxes,
-    write_label=True,
-    line_color=(255, 255, 255),
-    text_bg_color=(255, 255, 255),
-    text_color=(0, 0, 0),
-):
-    """draws poles from the middle of the objects that are to be labeled and adds the labels to the flags
+    img: np.ndarray,
+    labels: List[str],
+    bboxes: List[List[int]],
+    write_label: bool = True,
+    line_color: Tuple[int, int, int] = (255, 255, 255),
+    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
+    text_color: Tuple[int, int, int] = (0, 0, 0),
+) -> np.ndarray:
+    """Adds multiple flag-like labels to their corresponding bounding boxes.
 
-    Parameters
-    ----------
-    img : ndarray
-        the image on which the flags are to be drawn
-    labels : list
-        labels that are written inside the flags
-    bboxes : list
-        a list of lists, each inner list containing x_min, y_min, x_max and y_max of the rectangle positions
-    write_label : bool, optional
-        if True, writes the labels, otherwise, they're just vertical lines, by default True
-    line_color : tuple, optional
-        the color of the poles of the flags, by default (255, 255, 255)
-    text_bg_color : tuple, optional
-        the background color of the labels that are filled, by default (255, 255, 255)
-    text_color : tuple, optional
-        color of the texts (labels) to be written, by default (0, 0, 0)
+    Args:
+        img: Input image array
+        labels: List of text labels
+        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        write_label: Whether to draw the text labels (default: True)
+        line_color: BGR color tuple for the vertical lines (default: white)
+        text_bg_color: BGR color tuple for text backgrounds (default: white)
+        text_color: BGR color tuple for text (default: black)
 
-    Returns
-    -------
-    ndarray
-        the image with flags drawn and the labels written in the flags
+    Returns:
+        Image with all flag labels added
     """
-
     for label, bbox in zip(labels, bboxes):
-
         img = draw_flag_with_label(
             img,
             label,
