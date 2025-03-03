@@ -11,5 +11,4 @@ jobs:
         with:
           options: "--check --verbose"
           src: "./bbox_visualizer/bbox_visualizer.py ./tests/test_bbox_visualizer.py"
-          version: "~= 24.1"
           use_pyproject: true 
