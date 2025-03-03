@@ -21,7 +21,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. Ubuntu]
- - Version [e.g. 0.1.0]
+ - Version [e.g. 0.2.0]
 
 
 **Additional context**

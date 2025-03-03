@@ -1,0 +1,120 @@
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bbox_visualizer"
+version = "0.2.0"
+description = "Different ways of visualizing objects given bounding box data"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    { name = "Shoumik Sharar Chowdhury", email = "shoumikchow@gmail.com" },
+]
+keywords = ["bbox_visualizer", "computer-vision", "bounding-box", "visualization"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = [
+    "opencv-python>=4.1.0.25",
+    "numpy>=1.19.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.0.3",
+    "hatch>=1.7.0",
+    "twine>=4.0.2",
+    "pytest>=7.4.0",
+    "pytest-cov>=6.0.0",
+    "black>=24.1.1",
+    "ruff>=0.2.1",
+    "Sphinx>=7.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/shoumikchow/bbox-visualizer"
+Repository = "https://github.com/shoumikchow/bbox-visualizer"
+Documentation = "https://bbox-visualizer.readthedocs.io"
+Changelog = "https://github.com/shoumikchow/bbox-visualizer/blob/main/HISTORY.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["bbox_visualizer"]
+
+[tool.hatch.build]
+include = [
+    "LICENSE",
+    "README.md",
+    "HISTORY.md",
+    "AUTHORS.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "bbox_visualizer/**/*.py",
+    "tests/**/*.py",
+    "docs/**/*.rst",
+    "docs/conf.py",
+    "docs/Makefile",
+    "docs/make.bat",
+    "examples/**/*.py",
+    "examples/**/*.jpg",
+    "examples/**/*.png",
+    "images/**/*.jpg",
+    "images/**/*.png",
+]
+exclude = [
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "docs/_build",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=bbox_visualizer"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+# A regex preceded with ^/ will apply only to files and directories
+# in the root of the project.
+^/docs/
+'''
+
+[tool.ruff]
+# Enable pycodestyle ('E'), Pyflakes ('F'), 
+# flake8-bugbear ('B'), isort ('I')
+select = ["E", "F", "B", "I"]
+ignore = ["E501"]  # Line length is handled by black
+line-length = 88  # Match black's line length
+target-version = "py38"
+exclude = [
+    "docs/*",
+    "build/*",
+    ".git",
+    ".venv",
+]
+
+# Allow autofix behavior for specific rules
+[tool.ruff.lint]
+fixable = ["I001"]  # Import sorting
+unfixable = []
+
+# Ignore `E402` (import violations) in all `__init__.py` files
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["E402"]
+
+[tool.ruff.isort]
+known-first-party = ["bbox_visualizer"] 

@@ -22,16 +22,15 @@ Usage
     :members:
 
 
-
 Project Info
 ------------
 
 .. toctree::
    :maxdepth: 2
    
-   CONTRIBUTING
-   HISTORY
-   AUTHORS
+   ../CONTRIBUTING
+   ../HISTORY
+   ../AUTHORS
 
 Indices and tables
 ==================
