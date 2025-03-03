@@ -24,7 +24,7 @@ jobs:
           uv venv .venv
           source .venv/bin/activate
           uv pip install --upgrade pip
-          uv pip install pytest opencv-python numpy
+          uv pip install pytest pytest-cov opencv-python numpy
           uv pip install -e .
           
       - name: Run tests
