@@ -123,52 +123,69 @@ def add_label(
     """
 
     (text_width, text_height), baseline = cv2.getTextSize(label, font, size, thickness)
+    padding = 5  # Padding around text
 
     if top and bbox[1] - text_height > text_height:
-        label_bg = [
-            bbox[0],
-            bbox[1],
-            bbox[0] + text_width,
-            bbox[1] - text_height - (15 * size),
-        ]
+        # Calculate background rectangle dimensions
+        bg_width = text_width + 2 * padding
+        bg_height = text_height + 2 * padding
+        
+        # Calculate background rectangle position
+        bg_x1 = bbox[0]
+        bg_y1 = bbox[1] - bg_height  # Removed the gap by removing (5 * size)
+        bg_x2 = bg_x1 + bg_width
+        bg_y2 = bg_y1 + bg_height
+
         if draw_bg:
             cv2.rectangle(
                 img,
-                (label_bg[0], label_bg[1]),
-                (label_bg[2] + 5, label_bg[3]),
+                (bg_x1, bg_y1),
+                (bg_x2, bg_y2),
                 text_bg_color,
                 -1,
             )
 
+        # Center text in background rectangle
+        text_x = bg_x1 + (bg_width - text_width) // 2
+        text_y = bg_y1 + (bg_height + text_height) // 2
+
         cv2.putText(
             img,
             label,
-            (bbox[0] + 5, bbox[1] - (15 * size)),
+            (text_x, text_y),
             font,
             size,
             text_color,
             thickness,
         )
     else:
-        label_bg = [
-            bbox[0],
-            bbox[1],
-            bbox[0] + text_width,
-            bbox[1] + text_height + (15 * size),
-        ]
-        if draw_bg:
+        # Calculate background rectangle dimensions
+        bg_width = text_width + 2 * padding
+        bg_height = text_height + 2 * padding
+        
+        # Calculate background rectangle position
+        bg_x1 = bbox[0]
+        bg_y1 = bbox[1]
+        bg_x2 = bg_x1 + bg_width
+        bg_y2 = bg_y1 + bg_height
 
+        if draw_bg:
             cv2.rectangle(
                 img,
-                (label_bg[0], label_bg[1]),
-                (label_bg[2] + 5, label_bg[3]),
+                (bg_x1, bg_y1),
+                (bg_x2, bg_y2),
                 text_bg_color,
                 -1,
             )
+
+        # Center text in background rectangle
+        text_x = bg_x1 + (bg_width - text_width) // 2
+        text_y = bg_y1 + (bg_height + text_height) // 2
+
         cv2.putText(
             img,
             label,
-            (bbox[0] + 5, bbox[1] + (16 * size) + (4 * thickness)),
+            (text_x, text_y),
             font,
             size,
             text_color,
@@ -217,13 +234,15 @@ def add_T_label(
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
+    padding = 5  # Padding around text
+    
     # draw vertical line
     x_center = (bbox[0] + bbox[2]) // 2
     line_top = y_top = bbox[1] - 50
 
     # draw rectangle with label
     y_bottom = y_top
-    y_top = y_bottom - label_height - 5
+    y_top = y_bottom - label_height - 2 * padding
 
     if y_top < 0:
         logging.warning(
@@ -232,14 +251,28 @@ def add_T_label(
         return add_label(img, label, bbox)
 
     cv2.line(img, (x_center, bbox[1]), (x_center, line_top), text_bg_color, 3)
-    x_left = x_center - (label_width // 2) - 5
-    x_right = x_center + (label_width // 2) + 5
+    
+    # Calculate background rectangle dimensions
+    bg_width = label_width + 2 * padding
+    bg_height = label_height + 2 * padding
+    
+    # Calculate background rectangle position
+    bg_x1 = x_center - (bg_width // 2)
+    bg_y1 = y_top
+    bg_x2 = bg_x1 + bg_width
+    bg_y2 = bg_y1 + bg_height
+
     if draw_bg:
-        cv2.rectangle(img, (x_left, y_top - 30), (x_right, y_bottom), text_bg_color, -1)
+        cv2.rectangle(img, (bg_x1, bg_y1), (bg_x2, bg_y2), text_bg_color, -1)
+
+    # Center text in background rectangle
+    text_x = bg_x1 + (bg_width - label_width) // 2
+    text_y = bg_y1 + (bg_height + label_height) // 2
+
     cv2.putText(
         img,
         label,
-        (x_left + 5, y_bottom - (8 * size)),
+        (text_x, text_y),
         font,
         size,
         text_color,
