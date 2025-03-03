@@ -1,4 +1,4 @@
-name: Lint
+name: Linthttps://github.com/shoumikchow/bbox-visualizer/pull/34/conflict?name=.github%252Fworkflows%252Fblack.yml&base_oid=8dbdb03a0f3c4d41b7135253ebeeaa0845a4b889&head_oid=277ad307e92b68c3a855728a7f11aeda4c5ed629
 
 on: [push, pull_request]
 
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          fetch-depth: 0
           
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -23,9 +23,18 @@ jobs:
         run: pip install black
         
       - name: Run Black
+        id: black
+        continue-on-error: true
+        run: |
+          black --check bbox_visualizer/bbox_visualizer.py tests/test_bbox_visualizer.py
+          echo "has_changes=$?" >> $GITHUB_OUTPUT
+
+      - name: Format with Black if needed
+        if: steps.black.outputs.has_changes == '1'
         run: black bbox_visualizer/bbox_visualizer.py tests/test_bbox_visualizer.py
         
       - name: Create Pull Request
+        if: steps.black.outputs.has_changes == '1'
         uses: peter-evans/create-pull-request@v5
         with:
           commit-message: "style: format code with Black"
@@ -35,4 +44,6 @@ jobs:
             
             This PR was automatically created by the Black formatting GitHub Action.
           branch: format-code-with-black
-          delete-branch: true 
+          base: main
+          delete-branch: true
+          token: ${{ secrets.GITHUB_TOKEN }} 
