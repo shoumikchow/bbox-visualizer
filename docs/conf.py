@@ -173,9 +173,20 @@ autodoc_default_options = {
     'members': True,
     'member-order': 'bysource',
     'special-members': '__init__',
-    'undoc-members': True,
-    'exclude-members': '__weakref__'
+    'undoc-members': False,
+    'exclude-members': '__weakref__',
+    'private-members': False,
+    'show-inheritance': True
 }
+
+# Don't show type hints in the signature - they're already in the parameter list
+autodoc_typehints = 'description'
+
+# Don't show the module name in the function/class signature
+add_module_names = False
+
+# Sort members by source order
+autodoc_member_order = 'bysource'
 
 
 

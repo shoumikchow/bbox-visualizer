@@ -6,10 +6,12 @@ import numpy as np
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
-def check_and_modify_bbox(
+def _check_and_modify_bbox(
     bbox: List[int], img_size: Tuple[int, int, int], margin: int = 0
 ) -> List[int]:
-    """Checks and adjusts bounding box coordinates to fit within image boundaries.
+    """Internal function to check and adjust bounding box coordinates.
+
+    .. private::
 
     Trimming rules:
         - xmin/ymin: Set to margin if negative
@@ -50,7 +52,7 @@ def draw_rectangle(
     Returns:
         Image with drawn rectangle
     """
-    bbox = check_and_modify_bbox(bbox, img.shape)
+    bbox = _check_and_modify_bbox(bbox, img.shape)
 
     output = img.copy()
     if not is_opaque:
