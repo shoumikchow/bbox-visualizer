@@ -1,11 +1,8 @@
-"""bbox-visualizer - Different ways of visualizing objects given bounding box data."""
+"""Core functionality for bbox-visualizer."""
 
-from ._version import __version__
-from .core import (
-    draw_rectangle,
-    draw_multiple_rectangles,
-    add_label,
-    add_multiple_labels,
+from .rectangle import draw_rectangle, draw_multiple_rectangles
+from .labels import add_label, add_multiple_labels
+from .flags import (
     add_T_label,
     add_multiple_T_labels,
     draw_flag_with_label,
@@ -13,7 +10,6 @@ from .core import (
 )
 
 __all__ = [
-    "__version__",
     "draw_rectangle",
     "draw_multiple_rectangles",
     "add_label",
@@ -23,6 +19,3 @@ __all__ = [
     "draw_flag_with_label",
     "draw_multiple_flags_with_labels",
 ]
-
-__author__ = """Shoumik Sharar Chowdhury"""
-__email__ = "shoumikchow@gmail.com"
