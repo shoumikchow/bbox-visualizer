@@ -1,173 +1,15 @@
+"""Functions for drawing flag and T-shaped labels."""
+
 import cv2
 import logging
-from typing import List, Tuple
 import numpy as np
+from typing import List, Tuple
+
+from ._utils import _check_and_modify_bbox, validate_bbox, validate_color
+from .rectangle import draw_rectangle
+from .labels import add_label
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-
-
-def _check_and_modify_bbox(
-    bbox: List[int], img_size: Tuple[int, int, int], margin: int = 0
-) -> List[int]:
-    """Internal function to check and adjust bounding box coordinates.
-
-    .. private::
-
-    Trimming rules:
-        - xmin/ymin: Set to margin if negative
-        - xmax/ymax: Set to image width/height - margin if exceeds image size
-
-    Args:
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
-        img_size: Tuple of (height, width, channels)
-        margin: Minimum distance from image edges (default: 0)
-
-    Returns:
-        Adjusted bounding box coordinates [x_min, y_min, x_max, y_max]
-    """
-    bbox = [value if value > 0 else margin for value in bbox]
-    bbox[2] = bbox[2] if bbox[2] < img_size[1] else img_size[1] - margin
-    bbox[3] = bbox[3] if bbox[3] < img_size[0] else img_size[0] - margin
-    return bbox
-
-
-def draw_rectangle(
-    img: np.ndarray,
-    bbox: List[int],
-    bbox_color: Tuple[int, int, int] = (255, 255, 255),
-    thickness: int = 3,
-    is_opaque: bool = False,
-    alpha: float = 0.5,
-) -> np.ndarray:
-    """Draws a rectangle around an object in the image.
-
-    Args:
-        img: Input image array
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
-        bbox_color: BGR color tuple for the box (default: white)
-        thickness: Line thickness in pixels (default: 3)
-        is_opaque: If True, draws filled rectangle with transparency (default: False)
-        alpha: Transparency level for filled rectangles (default: 0.5)
-
-    Returns:
-        Image with drawn rectangle
-    """
-    bbox = _check_and_modify_bbox(bbox, img.shape)
-
-    output = img.copy()
-    if not is_opaque:
-        cv2.rectangle(
-            output, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, thickness
-        )
-    else:
-        overlay = img.copy()
-
-        cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, -1)
-        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-
-    return output
-
-
-def add_label(
-    img: np.ndarray,
-    label: str,
-    bbox: List[int],
-    size: float = 1,
-    thickness: int = 2,
-    draw_bg: bool = True,
-    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
-    text_color: Tuple[int, int, int] = (0, 0, 0),
-    top: bool = True,
-) -> np.ndarray:
-    """Adds a label to a bounding box, either above or inside it.
-
-    If there isn't enough space above the box, the label is placed inside.
-    The label has an optional background rectangle for better visibility.
-
-    Args:
-        img: Input image array
-        label: Text to display
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
-        size: Font size multiplier (default: 1)
-        thickness: Text thickness in pixels (default: 2)
-        draw_bg: Whether to draw background rectangle (default: True)
-        text_bg_color: BGR color tuple for text background (default: white)
-        text_color: BGR color tuple for text (default: black)
-        top: If True, place label above box; if False, inside (default: True)
-
-    Returns:
-        Image with added label
-    """
-    (text_width, text_height), baseline = cv2.getTextSize(label, font, size, thickness)
-    padding = 5  # Padding around text
-
-    if top and bbox[1] - text_height > text_height:
-        # Calculate background rectangle dimensions
-        bg_width = text_width + 2 * padding
-        bg_height = text_height + 2 * padding
-
-        # Calculate background rectangle position
-        bg_x1 = bbox[0]
-        bg_y1 = bbox[1] - bg_height  # Removed the gap by removing (5 * size)
-        bg_x2 = bg_x1 + bg_width
-        bg_y2 = bg_y1 + bg_height
-
-        if draw_bg:
-            cv2.rectangle(
-                img,
-                (bg_x1, bg_y1),
-                (bg_x2, bg_y2),
-                text_bg_color,
-                -1,
-            )
-
-        # Center text in background rectangle
-        text_x = bg_x1 + (bg_width - text_width) // 2
-        text_y = bg_y1 + (bg_height + text_height) // 2
-
-        cv2.putText(
-            img,
-            label,
-            (text_x, text_y),
-            font,
-            size,
-            text_color,
-            thickness,
-        )
-    else:
-        # Calculate background rectangle dimensions
-        bg_width = text_width + 2 * padding
-        bg_height = text_height + 2 * padding
-
-        # Calculate background rectangle position
-        bg_x1 = bbox[0]
-        bg_y1 = bbox[1]
-        bg_x2 = bg_x1 + bg_width
-        bg_y2 = bg_y1 + bg_height
-
-        if draw_bg:
-            cv2.rectangle(
-                img,
-                (bg_x1, bg_y1),
-                (bg_x2, bg_y2),
-                text_bg_color,
-                -1,
-            )
-
-        # Center text in background rectangle
-        text_x = bg_x1 + (bg_width - text_width) // 2
-        text_y = bg_y1 + (bg_height + text_height) // 2
-
-        cv2.putText(
-            img,
-            label,
-            (text_x, text_y),
-            font,
-            size,
-            text_color,
-            thickness,
-        )
-    return img
 
 
 def add_T_label(
@@ -199,6 +41,9 @@ def add_T_label(
     Returns:
         Image with added T-shaped label
     """
+    validate_color(text_bg_color)
+    validate_color(text_color)
+    bbox = _check_and_modify_bbox(bbox, img.shape)
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -281,7 +126,10 @@ def draw_flag_with_label(
     Returns:
         Image with added flag label
     """
-    # draw vertical line
+    validate_color(line_color)
+    validate_color(text_bg_color)
+    validate_color(text_color)
+    bbox = _check_and_modify_bbox(bbox, img.shape)
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -330,66 +178,6 @@ def draw_flag_with_label(
     return img
 
 
-def draw_multiple_rectangles(
-    img: np.ndarray,
-    bboxes: List[List[int]],
-    bbox_color: Tuple[int, int, int] = (255, 255, 255),
-    thickness: int = 3,
-    is_opaque: bool = False,
-    alpha: float = 0.5,
-) -> np.ndarray:
-    """Draws multiple rectangles on the image.
-
-    Args:
-        img: Input image array
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
-        bbox_color: BGR color tuple for the boxes (default: white)
-        thickness: Line thickness in pixels (default: 3)
-        is_opaque: If True, draws filled rectangles with transparency (default: False)
-        alpha: Transparency level for filled rectangles (default: 0.5)
-
-    Returns:
-        Image with all rectangles drawn
-    """
-    for bbox in bboxes:
-        img = draw_rectangle(img, bbox, bbox_color, thickness, is_opaque, alpha)
-    return img
-
-
-def add_multiple_labels(
-    img: np.ndarray,
-    labels: List[str],
-    bboxes: List[List[int]],
-    size: float = 1,
-    thickness: int = 2,
-    draw_bg: bool = True,
-    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
-    text_color: Tuple[int, int, int] = (0, 0, 0),
-    top: bool = True,
-) -> np.ndarray:
-    """Adds multiple labels to their corresponding bounding boxes.
-
-    Args:
-        img: Input image array
-        labels: List of text labels
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
-        size: Font size multiplier (default: 1)
-        thickness: Text thickness in pixels (default: 2)
-        draw_bg: Whether to draw background rectangles (default: True)
-        text_bg_color: BGR color tuple for text backgrounds (default: white)
-        text_color: BGR color tuple for text (default: black)
-        top: If True, place labels above boxes; if False, inside (default: True)
-
-    Returns:
-        Image with all labels added
-    """
-    for label, bbox in zip(labels, bboxes):
-        img = add_label(
-            img, label, bbox, size, thickness, draw_bg, text_bg_color, text_color, top
-        )
-    return img
-
-
 def add_multiple_T_labels(
     img: np.ndarray,
     labels: List[str],
@@ -411,6 +199,13 @@ def add_multiple_T_labels(
     Returns:
         Image with all T-shaped labels added
     """
+    if not bboxes or not labels:
+        raise ValueError("Lists of bounding boxes and labels cannot be empty")
+    if len(bboxes) != len(labels):
+        raise ValueError("Number of bounding boxes must match number of labels")
+
+    validate_color(text_bg_color)
+    validate_color(text_color)
     for label, bbox in zip(labels, bboxes):
         img = add_T_label(
             img,
@@ -449,6 +244,14 @@ def draw_multiple_flags_with_labels(
     Returns:
         Image with all flag labels added
     """
+    if not bboxes or not labels:
+        raise ValueError("Lists of bounding boxes and labels cannot be empty")
+    if len(bboxes) != len(labels):
+        raise ValueError("Number of bounding boxes must match number of labels")
+
+    validate_color(line_color)
+    validate_color(text_bg_color)
+    validate_color(text_color)
     for label, bbox in zip(labels, bboxes):
         img = draw_flag_with_label(
             img,
