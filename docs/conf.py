@@ -31,7 +31,14 @@ import bbox_visualizer
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'recommonmark', 'sphinx.ext.autosectionlabel', 'sphinx.ext.napoleon']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
+    'sphinx_autodoc_typehints',
+    'myst_parser',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -47,8 +54,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'bbox-visualizer'
-copyright = "2020, Shoumik Sharar Chowdhury"
-author = "Shoumik Sharar Chowdhury"
+copyright = '2024, Shoumik Sharar Chowdhury'
+author = 'Shoumik Sharar Chowdhury'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -64,7 +71,7 @@ release = bbox_visualizer.__version__
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -94,7 +101,7 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
 
 #
 autosectionlabel_prefix_document = True
@@ -160,6 +167,15 @@ texinfo_documents = [
      'One line description of project.',
      'Miscellaneous'),
 ]
+
+# Auto-generate API documentation
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
+}
 
 
 

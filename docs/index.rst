@@ -1,36 +1,19 @@
-bbox-visualizer:
-================
-.. role:: python(code)
-   :language: python
+Welcome to bbox-visualizer's documentation!
+=====================================
 
-bbox-visualizer helps you easily draw bounding boxes with their corresponding labels after detecting them using any object detection method. The bounding boxes are expected to be in the format :python:`(xmin, ymin, xmax, ymax)`.
-
+bbox-visualizer is a Python package that provides different ways to visualize objects given bounding box data.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   readme
    installation
-
-Usage
------
-.. code-block:: python
-
-   import bbox_visualizer as bbv
-
-.. automodule:: bbox_visualizer.bbox_visualizer
-    :members:
-
-
-Project Info
-------------
-
-.. toctree::
-   :maxdepth: 2
-   
-   ../CONTRIBUTING
-   ../HISTORY
-   ../AUTHORS
+   usage
+   api
+   contributing
+   authors
+   history
 
 Indices and tables
 ==================
