@@ -5,7 +5,7 @@ import logging
 import numpy as np
 from typing import List, Tuple
 
-from ._utils import _check_and_modify_bbox, validate_bbox, validate_color
+from ._utils import _check_and_modify_bbox, _validate_bbox, _validate_color
 from .rectangle import draw_rectangle
 from .labels import add_label
 
@@ -41,8 +41,8 @@ def add_T_label(
     Returns:
         Image with added T-shaped label
     """
-    validate_color(text_bg_color)
-    validate_color(text_color)
+    _validate_color(text_bg_color)
+    _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape)
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
@@ -126,9 +126,9 @@ def draw_flag_with_label(
     Returns:
         Image with added flag label
     """
-    validate_color(line_color)
-    validate_color(text_bg_color)
-    validate_color(text_color)
+    _validate_color(line_color)
+    _validate_color(text_bg_color)
+    _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape)
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
@@ -204,8 +204,8 @@ def add_multiple_T_labels(
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
 
-    validate_color(text_bg_color)
-    validate_color(text_color)
+    _validate_color(text_bg_color)
+    _validate_color(text_color)
     for label, bbox in zip(labels, bboxes):
         img = add_T_label(
             img,
@@ -249,9 +249,9 @@ def draw_multiple_flags_with_labels(
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
 
-    validate_color(line_color)
-    validate_color(text_bg_color)
-    validate_color(text_color)
+    _validate_color(line_color)
+    _validate_color(text_bg_color)
+    _validate_color(text_color)
     for label, bbox in zip(labels, bboxes):
         img = draw_flag_with_label(
             img,

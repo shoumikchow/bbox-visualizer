@@ -1,10 +1,10 @@
-"""Functions for drawing labels."""
+"""Functions for adding text labels to bounding boxes."""
 
 import cv2
 import numpy as np
 from typing import List, Tuple
 
-from ._utils import _check_and_modify_bbox, validate_bbox, validate_color
+from ._utils import _check_and_modify_bbox, _validate_bbox, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -39,8 +39,8 @@ def add_label(
     Returns:
         Image with added label
     """
-    validate_color(text_bg_color)
-    validate_color(text_color)
+    _validate_color(text_bg_color)
+    _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape)
 
     (text_width, text_height), baseline = cv2.getTextSize(label, font, size, thickness)
@@ -147,8 +147,8 @@ def add_multiple_labels(
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
 
-    validate_color(text_bg_color)
-    validate_color(text_color)
+    _validate_color(text_bg_color)
+    _validate_color(text_color)
     for label, bbox in zip(labels, bboxes):
         img = add_label(
             img, label, bbox, size, thickness, draw_bg, text_bg_color, text_color, top

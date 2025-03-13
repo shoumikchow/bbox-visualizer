@@ -3,7 +3,7 @@
 from typing import List, Tuple
 
 
-def validate_bbox(bbox: List[int]) -> None:
+def _validate_bbox(bbox: List[int]) -> None:
     """Validate bounding box format and values.
 
     Args:
@@ -24,7 +24,7 @@ def validate_bbox(bbox: List[int]) -> None:
         )
 
 
-def validate_color(color: Tuple[int, int, int]) -> None:
+def _validate_color(color: Tuple[int, int, int]) -> None:
     """Validate BGR color values.
 
     Args:
@@ -56,7 +56,7 @@ def _check_and_modify_bbox(
     Returns:
         Adjusted bounding box coordinates [x_min, y_min, x_max, y_max]
     """
-    validate_bbox(bbox)
+    _validate_bbox(bbox)
     bbox = [value if value > 0 else margin for value in bbox]
     bbox[2] = bbox[2] if bbox[2] < img_size[1] else img_size[1] - margin
     bbox[3] = bbox[3] if bbox[3] < img_size[0] else img_size[0] - margin
