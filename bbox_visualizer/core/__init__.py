@@ -1,21 +1,21 @@
 """Core functionality for bbox-visualizer."""
 
-from .rectangle import draw_rectangle, draw_multiple_rectangles
-from .labels import add_label, add_multiple_labels
 from .flags import (
-    add_T_label,
     add_multiple_T_labels,
+    add_T_label,
     draw_flag_with_label,
     draw_multiple_flags_with_labels,
 )
+from .labels import add_label, add_multiple_labels
+from .rectangle import draw_multiple_rectangles, draw_rectangle
 
 __all__ = [
-    "draw_rectangle",
-    "draw_multiple_rectangles",
-    "add_label",
-    "add_multiple_labels",
     "add_T_label",
+    "add_label",
     "add_multiple_T_labels",
+    "add_multiple_labels",
     "draw_flag_with_label",
     "draw_multiple_flags_with_labels",
+    "draw_multiple_rectangles",
+    "draw_rectangle",
 ]

@@ -1,10 +1,11 @@
 """Functions for adding text labels to bounding boxes."""
 
-import cv2
-import numpy as np
 from typing import List, Tuple
 
-from ._utils import _check_and_modify_bbox, _validate_bbox, _validate_color
+import cv2
+import numpy as np
+
+from ._utils import _check_and_modify_bbox, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 

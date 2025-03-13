@@ -1,13 +1,14 @@
 """Functions for drawing flag and T-shaped labels."""
 
-import cv2
 import logging
-import numpy as np
 from typing import List, Tuple
 
-from ._utils import _check_and_modify_bbox, _validate_bbox, _validate_color
-from .rectangle import draw_rectangle
+import cv2
+import numpy as np
+
+from ._utils import _check_and_modify_bbox, _validate_color
 from .labels import add_label
+from .rectangle import draw_rectangle
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -135,7 +136,7 @@ def draw_flag_with_label(
     )
 
     x_center = (bbox[0] + bbox[2]) // 2
-    y_bottom = int((bbox[1] * 0.75 + bbox[3] * 0.25))
+    y_bottom = int(bbox[1] * 0.75 + bbox[3] * 0.25)
     y_top = bbox[1] - (y_bottom - bbox[1])
     if y_top < 0:
         logging.warning(

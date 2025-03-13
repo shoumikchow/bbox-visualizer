@@ -1,10 +1,11 @@
 """Functions for drawing rectangles on images."""
 
-import cv2
-import numpy as np
 from typing import List, Tuple
 
-from ._utils import _check_and_modify_bbox, _validate_bbox, _validate_color
+import cv2
+import numpy as np
+
+from ._utils import _check_and_modify_bbox, _validate_color
 
 
 def draw_rectangle(

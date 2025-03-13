@@ -1,7 +1,9 @@
-import pytest
-import numpy as np
 import logging
-from bbox_visualizer.core import rectangle, labels, flags
+
+import numpy as np
+import pytest
+
+from bbox_visualizer.core import flags, labels, rectangle
 
 
 @pytest.fixture

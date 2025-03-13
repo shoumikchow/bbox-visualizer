@@ -7,18 +7,21 @@ This script shows how to:
 """
 
 import json
-import bbox_visualizer as bbv
+
 import cv2
+
+import bbox_visualizer as bbv
+
 
 def main():
     # Load image and annotation
-    img = cv2.imread('../images/test_images/source_bird.jpg')
+    img = cv2.imread("../images/test_images/source_bird.jpg")
     if img is None:
         print("Error: Could not load image. Please check the path.")
         return
-        
+
     try:
-        annotation = json.load(open('../images/test_images/source_bird.json'))
+        annotation = json.load(open("../images/test_images/source_bird.json"))
     except FileNotFoundError:
         print("Error: Could not load annotation file. Please check the path.")
         return
@@ -27,8 +30,8 @@ def main():
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # Extract bounding box and label from annotation
-    points = annotation['shapes'][0]['points']
-    label = annotation['shapes'][0]['label']
+    points = annotation["shapes"][0]["points"]
+    label = annotation["shapes"][0]["label"]
     (xmin, ymin), (xmax, ymax) = points
     bbox = [xmin, ymin, xmax, ymax]
 
@@ -36,7 +39,6 @@ def main():
     img_with_box = bbv.draw_rectangle(img, bbox)
     img_with_box_2 = img_with_box.copy()
 
-    img_label = bbv.add_label(img_with_box, label, bbox)
     img_T_label = bbv.add_T_label(img_with_box_2, label, bbox)
     img_flag = bbv.draw_flag_with_label(img, label, bbox)
 
@@ -49,5 +51,6 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 if __name__ == "__main__":
-    main() 
+    main()
