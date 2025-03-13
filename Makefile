@@ -48,10 +48,10 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style and lint with ruff
-	uv pip run ruff check bbox_visualizer demo tests examples
+	uv run ruff check bbox_visualizer tests examples
 
 format: ## format code with ruff
-	uv pip run ruff format bbox_visualizer demo tests examples
+	uv run ruff format bbox_visualizer tests examples
 
 test: ## run tests with pytest
 	uv pip run pytest

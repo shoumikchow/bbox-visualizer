@@ -38,7 +38,6 @@ dev = [
     "hatch>=1.7.0",
     "twine>=4.0.2",
     "pytest>=7.4.0",
-    "pytest-cov>=6.0.0",
     "ruff>=0.2.1",
 ]
 
@@ -85,7 +84,6 @@ exclude = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=bbox_visualizer"
 testpaths = ["tests"]
 
 [tool.ruff]
