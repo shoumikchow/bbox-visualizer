@@ -12,13 +12,9 @@ The package is organized into several modules for different visualization needs:
    :maxdepth: 2
    :caption: Contents:
 
-   readme
    installation
    usage
    api
-   contributing
-   authors
-   history
 
 Indices and tables
 ==================
