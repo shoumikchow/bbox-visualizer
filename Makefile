@@ -47,11 +47,11 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint: ## check style with ruff
+lint: ## check style and lint with ruff
 	uv pip run ruff check bbox_visualizer demo tests examples
 
-format: ## format code with black
-	uv pip run black bbox_visualizer demo tests examples
+format: ## format code with ruff
+	uv pip run ruff format bbox_visualizer demo tests examples
 
 test: ## run tests with pytest
 	uv pip run pytest
@@ -81,3 +81,16 @@ install: clean ## install the package to the active Python's site-packages
 
 dev-install: clean ## install the package in development mode with all extras
 	uv pip install -e ".[dev]"
+
+bump-version: ## Bump version in both files (Usage: make bump-version NEW_VERSION=0.2.1)
+	@if [ "$(NEW_VERSION)" = "" ]; then \
+		echo "Please provide NEW_VERSION (e.g. make bump-version NEW_VERSION=0.2.1)"; \
+		exit 1; \
+	fi
+	sed -i '' 's/version = "[0-9.]*"/version = "$(NEW_VERSION)"/' pyproject.toml
+	sed -i '' 's/__version__ = "[0-9.]*"/__version__ = "$(NEW_VERSION)"/' bbox_visualizer/_version.py
+	git add pyproject.toml bbox_visualizer/_version.py
+	git commit -m "Bump version to $(NEW_VERSION)"
+	git tag v$(NEW_VERSION)
+	git push origin v$(NEW_VERSION)
+	git push origin

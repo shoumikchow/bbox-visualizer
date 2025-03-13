@@ -39,7 +39,6 @@ dev = [
     "twine>=4.0.2",
     "pytest>=7.4.0",
     "pytest-cov>=6.0.0",
-    "black>=24.1.1",
     "ruff>=0.2.1",
 ]
 
@@ -55,7 +54,7 @@ docs = [
 Homepage = "https://github.com/shoumikchow/bbox-visualizer"
 Repository = "https://github.com/shoumikchow/bbox-visualizer"
 Documentation = "https://bbox-visualizer.readthedocs.io"
-Changelog = "https://github.com/shoumikchow/bbox-visualizer/blob/main/HISTORY.md"
+Changelog = "https://github.com/shoumikchow/bbox-visualizer/releases"
 
 [tool.hatch.build.targets.wheel]
 packages = ["bbox_visualizer"]
@@ -64,7 +63,6 @@ packages = ["bbox_visualizer"]
 include = [
     "LICENSE",
     "README.md",
-    "HISTORY.md",
     "AUTHORS.md",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
@@ -90,22 +88,9 @@ exclude = [
 addopts = "--cov=bbox_visualizer"
 testpaths = ["tests"]
 
-[tool.black]
-line-length = 88
-target-version = ["py38", "py39", "py310", "py311", "py312"]
-include = '\.pyi?$'
-extend-exclude = '''
-# A regex preceded with ^/ will apply only to files and directories
-# in the root of the project.
-^/docs/
-'''
-
 [tool.ruff]
-# Enable pycodestyle ('E'), Pyflakes ('F'), 
-# flake8-bugbear ('B'), isort ('I')
-select = ["E", "F", "B", "I"]
-ignore = ["E501"]  # Line length is handled by black
-line-length = 88  # Match black's line length
+# General settings that apply to all Ruff functionality
+line-length = 88
 target-version = "py38"
 exclude = [
     "docs/*",
@@ -114,14 +99,36 @@ exclude = [
     ".venv",
 ]
 
-# Allow autofix behavior for specific rules
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
 [tool.ruff.lint]
-fixable = ["I001"]  # Import sorting
+# All the rules that were previously enabled plus additional useful ones
+select = [
+    "E",   # pycodestyle
+    "F",   # Pyflakes
+    "B",   # flake8-bugbear
+    "I",   # isort
+    "W",   # pycodestyle warnings
+    "C90", # mccabe
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "E501",  # Line length is handled by formatter
+    "N802",  # Function name should be lowercase
+    "N806",  # Variable name should be lowercase
+    "N816",  # Variable in global scope should not be mixedCase
+]
+fixable = ["ALL"]
 unfixable = []
 
 # Ignore `E402` (import violations) in all `__init__.py` files
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["E402"]
+per-file-ignores = { "__init__.py" = ["E402"] }
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["bbox_visualizer"] 
