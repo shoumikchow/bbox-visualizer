@@ -65,6 +65,8 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/bbox_visualizer.rst
+docs/modules.rst
 
 # PyBuilder
 target/

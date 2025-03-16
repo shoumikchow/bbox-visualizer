@@ -1,0 +1,86 @@
+/* Custom styles for bbox-visualizer documentation */
+
+/* Make the main content wider */
+.wy-nav-content {
+    max-width: 1000px !important;
+}
+
+/* Improve code block appearance */
+div[class^="highlight"] pre {
+    line-height: 1.5;
+    padding: 12px 15px;
+    border-radius: 4px;
+}
+
+/* Better heading styles */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+h1 {
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid #eaecef;
+}
+
+/* Improve table styles */
+table.docutils {
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+table.docutils td, table.docutils th {
+    padding: 8px 12px !important;
+}
+
+/* Better admonition (note, warning, etc.) styling */
+.admonition {
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.admonition-title {
+    padding: 8px 12px !important;
+}
+
+/* Improve function/class signature appearance */
+dl.py.method, dl.py.function, dl.py.class {
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #e1e4e5;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+
+/* Better parameter list styling */
+dl.field-list > dt {
+    padding: 6px 10px;
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+/* Improve navigation sidebar */
+.wy-menu-vertical li.current > a {
+    background: #e3efff !important;
+}
+
+.wy-menu-vertical li.current {
+    background: #f3f6f9;
+}
+
+/* Better code signature colors */
+.sig-name {
+    color: #2980b9 !important;
+}
+
+.sig-param {
+    color: #3c3c3c !important;
+}
+
+/* Improve search box appearance */
+.wy-side-nav-search input[type="text"] {
+    border-radius: 4px;
+    box-shadow: none;
+    border: 1px solid #e1e4e5;
+} 

@@ -36,9 +36,19 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.autosectionlabel',
     'sphinx_autodoc_typehints',
+    'sphinx.ext.todo',
     'myst_parser',
 ]
+
+# Intersphinx configuration
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
+    'opencv': ('https://docs.opencv.org/4.x/', None),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -54,7 +64,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'bbox-visualizer'
-copyright = '2024, Shoumik Sharar Chowdhury'
+copyright = '2025, Shoumik Sharar Chowdhury'
 author = 'Shoumik Sharar Chowdhury'
 
 # The version info for the project you're documenting, acts as replacement
@@ -82,26 +92,43 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+todo_include_todos = True
 
 
 # -- Options for HTML output -------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
+# The theme to use for HTML and HTML Help pages.
 html_theme = 'sphinx_rtd_theme'
 
-# Theme options are theme-specific and customize the look and feel of a
-# theme further.  For a list of options available for each theme, see the
-# documentation.
-#
-# html_theme_options = {}
+# Theme options are theme-specific and customize the look and feel of a theme
+html_theme_options = {
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': True,
+    'style_nav_header_background': '#2980B9',
+    # Toc options
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+# html_logo = "_static/logo.png"  # Uncomment and add your logo if you have one
+
+# The name of an image file (within the static path) to use as favicon of the
+# docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# pixels large.
+# html_favicon = "_static/favicon.ico"  # Uncomment and add your favicon if you have one
+
+# Add any paths that contain custom static files (such as style sheets) here
 html_static_path = ['_static']
+html_css_files = [
+    'custom.css',
+]
 
 #
 autosectionlabel_prefix_document = True
@@ -176,8 +203,12 @@ autodoc_default_options = {
     'undoc-members': False,
     'exclude-members': '__weakref__',
     'private-members': False,
-    'show-inheritance': True
+    'show-inheritance': True,
+    'inherited-members': True
 }
+
+# Enable todo notes
+todo_include_todos = True
 
 # Don't show type hints in the signature - they're already in the parameter list
 autodoc_typehints = 'description'
@@ -187,6 +218,24 @@ add_module_names = False
 
 # Sort members by source order
 autodoc_member_order = 'bysource'
+
+# -- Additional settings ---------------------------------------------
+# If true, show URLs in the documentation
+html_show_sourcelink = True
+
+# -- Napoleon settings ------------------------------------------------
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = True
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = True
+napoleon_use_admonition_for_notes = True
+napoleon_use_admonition_for_references = True
+napoleon_use_ivar = True
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_type_aliases = None
 
 
 
