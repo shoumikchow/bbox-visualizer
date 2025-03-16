@@ -1,10 +1,11 @@
 """Functions for drawing rectangles on images."""
 
-import cv2
-import numpy as np
 from typing import List, Tuple
 
-from ._utils import _check_and_modify_bbox, validate_bbox, validate_color
+import cv2
+import numpy as np
+
+from ._utils import _check_and_modify_bbox, _validate_color
 
 
 def draw_rectangle(
@@ -28,7 +29,7 @@ def draw_rectangle(
     Returns:
         Image with drawn rectangle
     """
-    validate_color(bbox_color)
+    _validate_color(bbox_color)
     bbox = _check_and_modify_bbox(bbox, img.shape)
 
     output = img.copy()
@@ -67,7 +68,7 @@ def draw_multiple_rectangles(
     """
     if not bboxes:
         raise ValueError("List of bounding boxes cannot be empty")
-    validate_color(bbox_color)
+    _validate_color(bbox_color)
     for bbox in bboxes:
         img = draw_rectangle(img, bbox, bbox_color, thickness, is_opaque, alpha)
     return img

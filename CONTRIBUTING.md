@@ -76,17 +76,17 @@ Ready to contribute? Here's how to set up `bbox_visualizer` for local developmen
 
 7. Format and lint your code:
     ```bash
-    # Format with black
-    uv pip run black .
+    # Format with ruff
+    uv run ruff format .
     
     # Run linting checks with ruff
-    uv pip run ruff check .
+    uv run ruff check .
     
     # Auto-fix ruff issues where possible
-    uv pip run ruff check --fix .
+    uv run ruff check --fix .
     
     # Run tests
-    uv pip run pytest
+    uv run pytest
     ```
 
 8. Commit your changes and push your branch to GitHub:
@@ -107,15 +107,14 @@ Before you submit a pull request, check that it meets these guidelines:
    * Add your new functionality into a function with a docstring
    * Update the README.md with any new usage instructions
 3. The pull request should work for Python 3.8 and above.
-4. Make sure all tests pass and the code is formatted with black and passes ruff checks.
+4. Make sure all tests pass and the code is formatted and linted with ruff.
 
 ## Development Tools
 
 This project uses modern Python development tools:
 
 * **uv**: Fast Python package installer and resolver
-* **black**: Code formatter
-* **ruff**: Fast Python linter
+* **ruff**: Fast Python linter and formatter
 * **pytest**: Testing framework
 
 All development dependencies are specified in the `pyproject.toml` file and will be installed when you install the package with the `[dev]` extra.

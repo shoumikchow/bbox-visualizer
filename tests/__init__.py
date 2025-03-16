@@ -1,1 +1,1 @@
-"""Tests for bbox-visualizer package.""" 
+"""Tests for bbox-visualizer package."""

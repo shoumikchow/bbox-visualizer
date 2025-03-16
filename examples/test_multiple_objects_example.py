@@ -7,18 +7,21 @@ This script shows how to:
 """
 
 import json
-import bbox_visualizer as bbv
+
 import cv2
+
+import bbox_visualizer as bbv
+
 
 def main():
     # Load image and annotation
-    img = cv2.imread('../images/test_images/source_multiple_cats.jpg')
+    img = cv2.imread("../images/test_images/source_multiple_cats.jpg")
     if img is None:
         print("Error: Could not load image. Please check the path.")
         return
-        
+
     try:
-        annotation = json.load(open('../images/test_images/source_multiple_cats.json'))
+        annotation = json.load(open("../images/test_images/source_multiple_cats.json"))
     except FileNotFoundError:
         print("Error: Could not load annotation file. Please check the path.")
         return
@@ -26,10 +29,10 @@ def main():
     # Extract labels and bounding boxes from annotation
     labels = []
     bboxes = []
-    for shape in annotation['shapes']:
-        labels.append(shape['label'])
-        mins = shape['points'][0]  # [xmin, ymin]
-        maxs = shape['points'][1]  # [xmax, ymax]
+    for shape in annotation["shapes"]:
+        labels.append(shape["label"])
+        mins = shape["points"][0]  # [xmin, ymin]
+        maxs = shape["points"][1]  # [xmax, ymax]
         bboxes.append(mins + maxs)  # [xmin, ymin, xmax, ymax]
 
     # Draw different visualizations
@@ -50,5 +53,6 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 if __name__ == "__main__":
-    main() 
+    main()

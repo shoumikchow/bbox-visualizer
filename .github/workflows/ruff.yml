@@ -1,0 +1,60 @@
+name: Ruff
+
+on: [push, pull_request]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Run Ruff Format Check
+        id: ruff-format
+        continue-on-error: true
+        run: |
+          ruff format --check bbox_visualizer tests examples
+          echo "format_changes=$?" >> $GITHUB_OUTPUT
+
+      - name: Run Ruff Lint Check
+        id: ruff-lint
+        continue-on-error: true
+        run: |
+          ruff check bbox_visualizer tests examples
+          echo "lint_changes=$?" >> $GITHUB_OUTPUT
+
+      - name: Format and Fix with Ruff if needed
+        if: steps.ruff-format.outputs.format_changes == '1' || steps.ruff-lint.outputs.lint_changes == '1'
+        run: |
+          ruff format bbox_visualizer tests examples
+          ruff check --fix bbox_visualizer tests examples
+        
+      - name: Create Pull Request
+        if: steps.ruff-format.outputs.format_changes == '1' || steps.ruff-lint.outputs.lint_changes == '1'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "style: format and lint code with Ruff"
+          title: "style: format and lint code with Ruff"
+          body: |
+            Auto-formatted and linted code with Ruff.
+            
+            This PR was automatically created by the Ruff GitHub Action.
+            - Formatted code with `ruff format`
+            - Fixed auto-fixable lint issues with `ruff check --fix`
+          branch: format-code-with-ruff
+          base: dev
+          delete-branch: true
+          token: ${{ secrets.GITHUB_TOKEN }} 

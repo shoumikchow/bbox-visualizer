@@ -11,6 +11,7 @@ Rectangle Drawing
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
 Label Drawing
 ~~~~~~~~~~~
@@ -19,6 +20,7 @@ Label Drawing
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
 Special Labels
 ~~~~~~~~~~~~
@@ -26,4 +28,5 @@ Special Labels
 .. automodule:: bbox_visualizer.core.flags
    :members:
    :undoc-members:
-   :show-inheritance: 
+   :show-inheritance:
+   :no-index: 
