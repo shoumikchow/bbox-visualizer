@@ -1,5 +1,41 @@
 """Internal utilities for bbox-visualizer."""
 
+import logging
+from contextlib import contextmanager
+from typing import List, Tuple
+
+# Global flag to track warning suppression state
+_warnings_suppressed = False
+
+def suppress_warnings(suppress: bool = True) -> None:
+    """Suppress or enable warning messages from bbox-visualizer.
+
+    Args:
+        suppress: If True, suppress all warnings. If False, enable warnings.
+    """
+    global _warnings_suppressed
+    _warnings_suppressed = suppress
+
+@contextmanager
+def warnings_suppressed():
+    """Context manager to temporarily suppress warnings.
+
+    Example:
+        >>> with warnings_suppressed():
+        ...     # Warnings will be suppressed in this block
+        ...     pass
+    """
+    previous_state = _warnings_suppressed
+    suppress_warnings(True)
+    try:
+        yield
+    finally:
+        suppress_warnings(previous_state)
+
+def _should_suppress_warning() -> bool:
+    """Internal function to check if warnings should be suppressed."""
+    return _warnings_suppressed
+
 from typing import List, Tuple
 
 

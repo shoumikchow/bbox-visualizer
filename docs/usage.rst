@@ -15,6 +15,24 @@ To use bbox-visualizer in a project:
     # Load an image
     image = cv2.imread('image.jpg')
 
+Warning Control
+-------------
+
+The library provides functionality to control warning messages:
+
+.. code-block:: python
+
+    # Suppress all warnings
+    bbv.suppress_warnings(True)
+
+    # Enable warnings
+    bbv.suppress_warnings(False)
+
+    # Temporarily suppress warnings using context manager
+    with bbv.warnings_suppressed():
+        # Warnings will be suppressed in this block
+        image = bbv.draw_flag_with_label(image, "Object", bbox)
+
 Drawing Rectangles
 ----------------
 
