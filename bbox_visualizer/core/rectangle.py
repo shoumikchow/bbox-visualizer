@@ -1,7 +1,5 @@
 """Functions for drawing rectangles on images."""
 
-from typing import List, Tuple
-
 import cv2
 import numpy as np
 
@@ -10,8 +8,8 @@ from ._utils import _check_and_modify_bbox, _validate_color
 
 def draw_rectangle(
     img: np.ndarray,
-    bbox: List[int],
-    bbox_color: Tuple[int, int, int] = (255, 255, 255),
+    bbox: list[int],
+    bbox_color: tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
@@ -47,8 +45,8 @@ def draw_rectangle(
 
 def draw_multiple_rectangles(
     img: np.ndarray,
-    bboxes: List[List[int]],
-    bbox_color: Tuple[int, int, int] = (255, 255, 255),
+    bboxes: list[list[int]],
+    bbox_color: tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
