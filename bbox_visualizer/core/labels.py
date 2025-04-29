@@ -1,7 +1,5 @@
 """Functions for adding text labels to bounding boxes."""
 
-from typing import List, Tuple
-
 import cv2
 import numpy as np
 
@@ -13,12 +11,12 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 def add_label(
     img: np.ndarray,
     label: str,
-    bbox: List[int],
+    bbox: list[int],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
-    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
-    text_color: Tuple[int, int, int] = (0, 0, 0),
+    text_bg_color: tuple[int, int, int] = (255, 255, 255),
+    text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
 ) -> np.ndarray:
     """Add a label to a bounding box, either above or inside it.
@@ -118,13 +116,13 @@ def add_label(
 
 def add_multiple_labels(
     img: np.ndarray,
-    labels: List[str],
-    bboxes: List[List[int]],
+    labels: list[str],
+    bboxes: list[list[int]],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
-    text_bg_color: Tuple[int, int, int] = (255, 255, 255),
-    text_color: Tuple[int, int, int] = (0, 0, 0),
+    text_bg_color: tuple[int, int, int] = (255, 255, 255),
+    text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
 ) -> np.ndarray:
     """Add multiple labels to their corresponding bounding boxes.
