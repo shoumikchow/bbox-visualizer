@@ -120,6 +120,7 @@ ignore = [
     "N802",  # Function name should be lowercase
     "N806",  # Variable name should be lowercase
     "N816",  # Variable in global scope should not be mixedCase
+    "COM812",  # Missing trailing comma in multiline collection
 ]
 fixable = ["ALL"]
 unfixable = []

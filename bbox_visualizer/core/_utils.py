@@ -6,6 +6,7 @@ from contextlib import contextmanager
 # Global flag to track warning suppression state
 _warnings_suppressed: bool = False
 
+
 def suppress_warnings(suppress: bool = True) -> None:
     """Suppress or enable warning messages from bbox-visualizer.
 
@@ -14,6 +15,7 @@ def suppress_warnings(suppress: bool = True) -> None:
     """
     global _warnings_suppressed
     _warnings_suppressed = suppress
+
 
 @contextmanager
 def warnings_suppressed():
@@ -31,9 +33,11 @@ def warnings_suppressed():
     finally:
         suppress_warnings(previous_state)
 
+
 def _should_suppress_warning() -> bool:
     """Internal function to check if warnings should be suppressed."""
     return _warnings_suppressed
+
 
 def _validate_bbox(bbox: list[int]) -> None:
     """Validate bounding box format and values.
@@ -55,6 +59,7 @@ def _validate_bbox(bbox: list[int]) -> None:
             "Invalid bounding box coordinates: x_min > x_max or y_min > y_max"
         )
 
+
 def _validate_color(color: tuple[int, int, int]) -> None:
     """Validate BGR color values.
 
@@ -66,6 +71,7 @@ def _validate_color(color: tuple[int, int, int]) -> None:
     """
     if not all(0 <= c <= 255 for c in color):
         raise ValueError("Color values must be between 0 and 255")
+
 
 def _check_and_modify_bbox(
     bbox: list[int], img_size: tuple[int, int, int], margin: int = 0
