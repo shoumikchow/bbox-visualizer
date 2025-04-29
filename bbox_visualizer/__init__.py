@@ -13,6 +13,7 @@ from .core import (
     suppress_warnings,
     warnings_suppressed,
 )
+from .core._utils import suppress_warnings, warnings_suppressed
 
 __all__ = [
     "__version__",
