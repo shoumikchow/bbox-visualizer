@@ -2,10 +2,9 @@
 
 import logging
 from contextlib import contextmanager
-from typing import List, Tuple
 
 # Global flag to track warning suppression state
-_warnings_suppressed = False
+_warnings_suppressed: bool = False
 
 def suppress_warnings(suppress: bool = True) -> None:
     """Suppress or enable warning messages from bbox-visualizer.
@@ -36,10 +35,7 @@ def _should_suppress_warning() -> bool:
     """Internal function to check if warnings should be suppressed."""
     return _warnings_suppressed
 
-from typing import List, Tuple
-
-
-def _validate_bbox(bbox: List[int]) -> None:
+def _validate_bbox(bbox: list[int]) -> None:
     """Validate bounding box format and values.
 
     Args:
@@ -59,8 +55,7 @@ def _validate_bbox(bbox: List[int]) -> None:
             "Invalid bounding box coordinates: x_min > x_max or y_min > y_max"
         )
 
-
-def _validate_color(color: Tuple[int, int, int]) -> None:
+def _validate_color(color: tuple[int, int, int]) -> None:
     """Validate BGR color values.
 
     Args:
@@ -72,10 +67,9 @@ def _validate_color(color: Tuple[int, int, int]) -> None:
     if not all(0 <= c <= 255 for c in color):
         raise ValueError("Color values must be between 0 and 255")
 
-
 def _check_and_modify_bbox(
-    bbox: List[int], img_size: Tuple[int, int, int], margin: int = 0
-) -> List[int]:
+    bbox: list[int], img_size: tuple[int, int, int], margin: int = 0
+) -> list[int]:
     """Internal function to check and adjust bounding box coordinates.
 
     .. private::
