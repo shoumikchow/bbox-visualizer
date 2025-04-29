@@ -6,7 +6,7 @@ from typing import List, Tuple
 import cv2
 import numpy as np
 
-from ._utils import _check_and_modify_bbox, _validate_color
+from ._utils import _check_and_modify_bbox, _validate_color, _should_suppress_warning
 from .labels import add_label
 from .rectangle import draw_rectangle
 
@@ -59,9 +59,10 @@ def add_T_label(
     y_top = y_bottom - label_height - 2 * padding
 
     if y_top < 0:
-        logging.warning(
-            "Labelling style 'T' going out of frame. Falling back to normal labeling."
-        )
+        if not _should_suppress_warning():
+            logging.warning(
+                "Labelling style 'T' going out of frame. Falling back to normal labeling."
+            )
         return add_label(img, label, bbox)
 
     cv2.line(img, (x_center, bbox[1]), (x_center, line_top), text_bg_color, 3)
@@ -139,9 +140,10 @@ def draw_flag_with_label(
     y_bottom = int(bbox[1] * 0.75 + bbox[3] * 0.25)
     y_top = bbox[1] - (y_bottom - bbox[1])
     if y_top < 0:
-        logging.warning(
-            "Labelling style 'Flag' going out of frame. Falling back to normal labeling."
-        )
+        if not _should_suppress_warning():
+            logging.warning(
+                "Labelling style 'Flag' going out of frame. Falling back to normal labeling."
+            )
         img = draw_rectangle(img, bbox, bbox_color=line_color)
         return add_label(img, label, bbox)
 

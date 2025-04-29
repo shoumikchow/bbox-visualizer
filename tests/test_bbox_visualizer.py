@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from bbox_visualizer.core import flags, labels, rectangle
+from bbox_visualizer.core._utils import suppress_warnings, warnings_suppressed
 
 
 @pytest.fixture
@@ -328,3 +329,32 @@ def test_color_parameters(sample_image, sample_bbox):
         flags.add_T_label(
             sample_image, "test", sample_bbox, text_bg_color=(0, 0, 300)
         )  # Invalid RGB
+
+
+def test_warning_suppression(sample_image, sample_bbox, sample_label, caplog):
+    """Test warning suppression functionality."""
+    # Test global warning suppression
+    suppress_warnings(True)
+    with caplog.at_level(logging.WARNING):
+        flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
+    assert len(caplog.records) == 0  # No warnings should be logged
+
+    # Test warning re-enabling
+    suppress_warnings(False)
+    with caplog.at_level(logging.WARNING):
+        flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
+    assert len(caplog.records) > 0  # Warnings should be logged
+    assert "Labelling style 'Flag' going out of frame" in caplog.text
+
+    # Test context manager
+    caplog.clear()
+    with warnings_suppressed():
+        with caplog.at_level(logging.WARNING):
+            flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
+    assert len(caplog.records) == 0  # No warnings should be logged
+
+    # Test warning restoration after context manager
+    with caplog.at_level(logging.WARNING):
+        flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
+    assert len(caplog.records) > 0  # Warnings should be logged again
+    assert "Labelling style 'Flag' going out of frame" in caplog.text

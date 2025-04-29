@@ -11,6 +11,7 @@ from .core import (
     draw_multiple_rectangles,
     draw_rectangle,
 )
+from .core._utils import suppress_warnings, warnings_suppressed
 
 __all__ = [
     "__version__",
@@ -22,6 +23,8 @@ __all__ = [
     "draw_multiple_flags_with_labels",
     "draw_multiple_rectangles",
     "draw_rectangle",
+    "suppress_warnings",
+    "warnings_suppressed",
 ]
 
 __author__ = """Shoumik Sharar Chowdhury"""

@@ -8,6 +8,7 @@ from .flags import (
 )
 from .labels import add_label, add_multiple_labels
 from .rectangle import draw_multiple_rectangles, draw_rectangle
+from ._utils import suppress_warnings, warnings_suppressed
 
 __all__ = [
     "add_T_label",
@@ -18,4 +19,6 @@ __all__ = [
     "draw_multiple_flags_with_labels",
     "draw_multiple_rectangles",
     "draw_rectangle",
+    "suppress_warnings",
+    "warnings_suppressed",
 ]
