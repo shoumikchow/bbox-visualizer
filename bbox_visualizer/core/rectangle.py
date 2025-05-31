@@ -26,6 +26,7 @@ def draw_rectangle(
 
     Returns:
         Image with drawn rectangle
+
     """
     _validate_color(bbox_color)
     bbox = _check_and_modify_bbox(bbox, img.shape)
@@ -63,6 +64,7 @@ def draw_multiple_rectangles(
 
     Returns:
         Image with all rectangles drawn
+
     """
     if not bboxes:
         raise ValueError("List of bounding boxes cannot be empty")

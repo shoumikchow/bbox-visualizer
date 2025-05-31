@@ -5,7 +5,7 @@ import logging
 import cv2
 import numpy as np
 
-from ._utils import _check_and_modify_bbox, _validate_color, _should_suppress_warning
+from ._utils import _check_and_modify_bbox, _should_suppress_warning, _validate_color
 from .labels import add_label
 from .rectangle import draw_rectangle
 
@@ -22,7 +22,7 @@ def add_T_label(
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
 ) -> np.ndarray:
-    """Adds a T-shaped label with a vertical line connecting to the bounding box.
+    """Add a T-shaped label with a vertical line connecting to the bounding box.
 
     The label consists of a vertical line extending from the top of the box
     and a horizontal label at the top. Falls back to regular label if there isn't
@@ -40,6 +40,7 @@ def add_T_label(
 
     Returns:
         Image with added T-shaped label
+
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
@@ -126,6 +127,7 @@ def draw_flag_with_label(
 
     Returns:
         Image with added flag label
+
     """
     _validate_color(line_color)
     _validate_color(text_bg_color)
@@ -188,7 +190,7 @@ def add_multiple_T_labels(
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
 ) -> np.ndarray:
-    """Adds multiple T-shaped labels to their corresponding bounding boxes.
+    """Add multiple T-shaped labels to their corresponding bounding boxes.
 
     Args:
         img: Input image array
@@ -200,6 +202,7 @@ def add_multiple_T_labels(
 
     Returns:
         Image with all T-shaped labels added
+
     """
     if not bboxes or not labels:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")
@@ -232,7 +235,7 @@ def draw_multiple_flags_with_labels(
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
 ) -> np.ndarray:
-    """Adds multiple flag-like labels to their corresponding bounding boxes.
+    """Add multiple flag-like labels to their corresponding bounding boxes.
 
     Args:
         img: Input image array
@@ -245,6 +248,7 @@ def draw_multiple_flags_with_labels(
 
     Returns:
         Image with all flag labels added
+
     """
     if not bboxes or not labels:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")

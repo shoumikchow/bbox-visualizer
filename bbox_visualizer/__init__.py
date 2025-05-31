@@ -1,6 +1,7 @@
 """bbox-visualizer - Different ways of visualizing objects given bounding box data."""
 
 from importlib.metadata import version
+
 from .core import (
     add_label,
     add_multiple_labels,
@@ -13,7 +14,6 @@ from .core import (
     suppress_warnings,
     warnings_suppressed,
 )
-from .core._utils import suppress_warnings, warnings_suppressed
 
 __version__ = version("bbox_visualizer")
 
