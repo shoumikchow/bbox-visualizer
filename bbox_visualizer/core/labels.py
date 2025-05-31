@@ -37,6 +37,7 @@ def add_label(
 
     Returns:
         Image with added label
+
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
@@ -140,6 +141,7 @@ def add_multiple_labels(
 
     Returns:
         Image with all labels added
+
     """
     if not bboxes or not labels:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")

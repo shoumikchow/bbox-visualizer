@@ -1,6 +1,5 @@
 """Internal utilities for bbox-visualizer."""
 
-import logging
 from contextlib import contextmanager
 
 # Global flag to track warning suppression state
@@ -12,6 +11,7 @@ def suppress_warnings(suppress: bool = True) -> None:
 
     Args:
         suppress: If True, suppress all warnings. If False, enable warnings.
+
     """
     global _warnings_suppressed
     _warnings_suppressed = suppress
@@ -19,12 +19,13 @@ def suppress_warnings(suppress: bool = True) -> None:
 
 @contextmanager
 def warnings_suppressed():
-    """Context manager to temporarily suppress warnings.
+    """Temporarily suppress warnings.
 
     Example:
         >>> with warnings_suppressed():
         ...     # Warnings will be suppressed in this block
         ...     pass
+
     """
     previous_state = _warnings_suppressed
     suppress_warnings(True)
@@ -35,7 +36,7 @@ def warnings_suppressed():
 
 
 def _should_suppress_warning() -> bool:
-    """Internal function to check if warnings should be suppressed."""
+    """Check if warnings should be suppressed."""
     return _warnings_suppressed
 
 
@@ -47,6 +48,7 @@ def _validate_bbox(bbox: list[int]) -> None:
 
     Raises:
         ValueError: If bbox is empty, has wrong length, or has invalid coordinates
+
     """
     if not bbox:
         raise ValueError("Bounding box cannot be empty")
@@ -68,6 +70,7 @@ def _validate_color(color: tuple[int, int, int]) -> None:
 
     Raises:
         ValueError: If any color component is outside [0, 255]
+
     """
     if not all(0 <= c <= 255 for c in color):
         raise ValueError("Color values must be between 0 and 255")
@@ -76,7 +79,7 @@ def _validate_color(color: tuple[int, int, int]) -> None:
 def _check_and_modify_bbox(
     bbox: list[int], img_size: tuple[int, int, int], margin: int = 0
 ) -> list[int]:
-    """Internal function to check and adjust bounding box coordinates.
+    """Check and adjust bounding box coordinates.
 
     .. private::
 
@@ -91,6 +94,7 @@ def _check_and_modify_bbox(
 
     Returns:
         Adjusted bounding box coordinates [x_min, y_min, x_max, y_max]
+
     """
     _validate_bbox(bbox)
     bbox = [value if value > 0 else margin for value in bbox]
