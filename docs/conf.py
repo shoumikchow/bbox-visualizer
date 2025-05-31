@@ -41,6 +41,7 @@ extensions = [
     'sphinx_autodoc_typehints',
     'sphinx.ext.todo',
     'myst_parser',
+    'sphinx_copybutton',
 ]
 
 # Intersphinx configuration

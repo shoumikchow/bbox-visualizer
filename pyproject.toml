@@ -1,20 +1,21 @@
 [build-system]
-requires = ["hatchling>=1.21.0"]
+requires = ["hatchling>=1.27.0", "hatch-vcs>=0.4.0", "hatch-fancy-pypi-readme>=23.1.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "bbox_visualizer"
-version = "0.2.1"
+dynamic = ["version"]
 description = "Different ways of visualizing objects given bounding box data"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     { name = "Shoumik Sharar Chowdhury", email = "shoumikchow@gmail.com" },
 ]
 keywords = ["bbox_visualizer", "computer-vision", "bounding-box", "visualization"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
@@ -45,13 +46,15 @@ docs = [
     "sphinx-rtd-theme>=2.0.0",
     "sphinx-autodoc-typehints>=1.24.0",
     "myst-parser>=2.0.0",
-    "docutils>=0.20.1"
+    "docutils>=0.20.1",
+    "sphinx-copybutton>=0.5.2"
 ]
 
 [project.urls]
 Homepage = "https://github.com/shoumikchow/bbox-visualizer"
 Repository = "https://github.com/shoumikchow/bbox-visualizer"
 Documentation = "https://bbox-visualizer.readthedocs.io"
+Issues = "https://github.com/shoumikchow/bbox-visualizer/issues"
 Changelog = "https://github.com/shoumikchow/bbox-visualizer/releases"
 
 [tool.hatch.build.targets.wheel]
@@ -61,26 +64,17 @@ packages = ["bbox_visualizer"]
 include = [
     "LICENSE",
     "README.md",
-    "AUTHORS.md",
-    "CODE_OF_CONDUCT.md",
-    "CONTRIBUTING.md",
     "bbox_visualizer/**/*.py",
-    "tests/**/*.py",
-    "docs/**/*.rst",
-    "docs/conf.py",
-    "docs/Makefile",
-    "docs/make.bat",
-    "examples/**/*.py",
-    "examples/**/*.jpg",
-    "examples/**/*.png",
-    "images/**/*.jpg",
-    "images/**/*.png",
 ]
 exclude = [
     "**/__pycache__",
     "**/.pytest_cache",
     "docs/_build",
 ]
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { version_scheme = "post-release" }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
