@@ -69,8 +69,11 @@ Ready to contribute? Here's how to set up `bbox_visualizer` for local developmen
 
 5. Create a branch for local development:
     ```bash
-    git checkout -b name-of-your-bugfix-or-feature
+    git checkout -b task/what-you-are-doing
     ```
+    `task` can be any of the following: feature, bugfix, hotfix, release, chore, refactor, test, docs, ci, build, experiment, and perf.
+
+    `feature` is for new features, `bugfix` for fixing bugs, `hotfix` for urgent production fixes, `release` for prepping releases, `chore` for maintenance tasks, `refactor` for code restructuring, `test` for test changes, `docs` for documentation updates, `ci` and `build` for pipeline or build config, `experiment` for prototypes, and `perf` for performance improvements.
 
 6. Make your changes. Don't forget to add tests!
 
@@ -93,10 +96,11 @@ Ready to contribute? Here's how to set up `bbox_visualizer` for local developmen
     ```bash
     git add .
     git commit -m "Your detailed description of your changes."
-    git push origin name-of-your-bugfix-or-feature
+    git push origin task/what-you-are-doing
     ```
 
 9. Submit a pull request through the GitHub website.
+    - When merging to dev, always use "Rebase and merge" option
 
 ## Git Workflow
 
@@ -114,44 +118,16 @@ Ready to contribute? Here's how to set up `bbox_visualizer` for local developmen
 3. Create a Pull Request from your feature branch to dev
 
 4. After your feature PR is merged to dev, create a PR from dev to master:
-   - Always use "Rebase and merge" option when merging to master
-   - This keeps the history clean and linear
+   - Always use "Create a merge commit" option when merging to master
+   - This would mean master will be 1 commit ahead of dev
 
-### Syncing Branches
-
-If GitHub shows that branches are out of sync or you can't use "Rebase and merge":
-
-1. Create a PR from master to dev on GitHub:
-   - Base branch: `dev`
-   - Compare branch: `master`
-   - Title: "Sync dev with master"
-
-2. If there are conflicts, resolve them locally:
+5. To reconcile dev and master, do the following.
     ```bash
-    # Switch to dev branch
     git checkout dev
-    
-    # Get latest changes
-    git fetch origin
-    
-    # Try to merge master (this will show conflicts)
-    git merge origin/master
-    
-    # Resolve conflicts in your editor
-    # Then commit the resolved changes
-    git add .
-    git commit -m "Resolve conflicts from master sync"
+    git pull origin master
     git push origin dev
     ```
-
-3. Merge the PR on GitHub once conflicts are resolved
-
-This workflow:
-- Maintains PR history for all changes
-- Makes branch synchronization trackable
-- Provides clear context for conflict resolutions
-- Keeps main development in dev branch
-- Maintains clean history in master
+    This will bring that merge commit into dev too
 
 ## Pull Request Guidelines
 
