@@ -2,18 +2,19 @@
 
 import cv2
 import numpy as np
+from numpy.typing import NDArray
 
 from ._utils import _check_and_modify_bbox, _validate_color
 
 
 def draw_rectangle(
-    img: np.ndarray,
+    img: NDArray[np.uint8],
     bbox: list[int],
     bbox_color: tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
-) -> np.ndarray:
+) -> NDArray[np.uint8]:
     """Draws a rectangle around an object in the image.
 
     Args:
@@ -45,13 +46,13 @@ def draw_rectangle(
 
 
 def draw_multiple_rectangles(
-    img: np.ndarray,
+    img: NDArray[np.uint8],
     bboxes: list[list[int]],
     bbox_color: tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
-) -> np.ndarray:
+) -> NDArray[np.uint8]:
     """Draws multiple rectangles on the image.
 
     Args:
