@@ -2,7 +2,6 @@
 
 from contextlib import contextmanager
 from typing import Generator
-from functools import lru_cache
 
 # Global flag to track warning suppression state
 _warnings_suppressed: bool = False
@@ -64,20 +63,18 @@ def _validate_bbox(bbox: list[int]) -> None:
         )
 
 
-@lru_cache(maxsize=128)
 def _validate_color(color: tuple[int, int, int]) -> None:
-    """Validate that a color tuple is valid BGR format.
+    """Validate BGR color values.
 
     Args:
-        color: BGR color tuple to validate
+        color: BGR color tuple (blue, green, red)
 
     Raises:
-        ValueError: If color is not a valid BGR tuple
+        ValueError: If any color component is outside [0, 255]
+
     """
-    if not isinstance(color, tuple) or len(color) != 3:
-        raise ValueError("Color must be a tuple of 3 integers (BGR)")
-    if not all(isinstance(c, int) and 0 <= c <= 255 for c in color):
-        raise ValueError("Color values must be integers between 0 and 255")
+    if not all(0 <= c <= 255 for c in color):
+        raise ValueError("Color values must be between 0 and 255")
 
 
 def _check_and_modify_bbox(
