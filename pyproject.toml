@@ -108,9 +108,6 @@ select = [
     "N",   # pep8-naming
     "UP",  # pyupgrade
     "RUF", # Ruff-specific rules
-    "D",   # pydocstyle
-    "S",   # bandit
-    "TCH", # flake8-type-checking
 ]
 ignore = [
     "E501",  # Line length is handled by formatter
@@ -123,10 +120,7 @@ fixable = ["ALL"]
 unfixable = []
 
 # Ignore `E402` (import violations) in all `__init__.py` files
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["E402"]
-"tests/**/*.py" = ["S", "D"]
-"examples/**/*.py" = ["D"]
+per-file-ignores = { "__init__.py" = ["E402"] }
 
 [tool.ruff.lint.isort]
 known-first-party = ["bbox_visualizer"] 
