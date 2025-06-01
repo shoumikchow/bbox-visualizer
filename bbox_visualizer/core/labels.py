@@ -2,6 +2,7 @@
 
 import cv2
 import numpy as np
+from numpy.typing import NDArray
 
 from ._utils import _check_and_modify_bbox, _validate_color
 
@@ -9,7 +10,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def add_label(
-    img: np.ndarray,
+    img: NDArray[np.uint8],
     label: str,
     bbox: list[int],
     size: float = 1,
@@ -18,7 +19,7 @@ def add_label(
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
-) -> np.ndarray:
+) -> NDArray[np.uint8]:
     """Add a label to a bounding box, either above or inside it.
 
     If there isn't enough space above the box, the label is placed inside.
@@ -116,7 +117,7 @@ def add_label(
 
 
 def add_multiple_labels(
-    img: np.ndarray,
+    img: NDArray[np.uint8],
     labels: list[str],
     bboxes: list[list[int]],
     size: float = 1,
@@ -125,7 +126,7 @@ def add_multiple_labels(
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
-) -> np.ndarray:
+) -> NDArray[np.uint8]:
     """Add multiple labels to their corresponding bounding boxes.
 
     Args:
