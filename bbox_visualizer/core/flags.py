@@ -4,7 +4,6 @@ import logging
 
 import cv2
 import numpy as np
-from numpy.typing import NDArray
 
 from ._utils import _check_and_modify_bbox, _should_suppress_warning, _validate_color
 from .labels import add_label
@@ -14,7 +13,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def add_T_label(
-    img: NDArray[np.uint8],
+    img: np.ndarray,
     label: str,
     bbox: list[int],
     size: float = 1,
@@ -22,7 +21,7 @@ def add_T_label(
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
-) -> NDArray[np.uint8]:
+) -> np.ndarray:
     """Add a T-shaped label with a vertical line connecting to the bounding box.
 
     The label consists of a vertical line extending from the top of the box
@@ -99,7 +98,7 @@ def add_T_label(
 
 
 def draw_flag_with_label(
-    img: NDArray[np.uint8],
+    img: np.ndarray,
     label: str,
     bbox: list[int],
     size: float = 1,
@@ -108,7 +107,7 @@ def draw_flag_with_label(
     line_color: tuple[int, int, int] = (255, 255, 255),
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
-) -> NDArray[np.uint8]:
+) -> np.ndarray:
     """Draws a flag-like label with a vertical line and text box.
 
     The flag consists of a vertical line extending from the middle of the box
@@ -184,13 +183,13 @@ def draw_flag_with_label(
 
 
 def add_multiple_T_labels(
-    img: NDArray[np.uint8],
+    img: np.ndarray,
     labels: list[str],
     bboxes: list[list[int]],
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
-) -> NDArray[np.uint8]:
+) -> np.ndarray:
     """Add multiple T-shaped labels to their corresponding bounding boxes.
 
     Args:
@@ -228,14 +227,14 @@ def add_multiple_T_labels(
 
 
 def draw_multiple_flags_with_labels(
-    img: NDArray[np.uint8],
+    img: np.ndarray,
     labels: list[str],
     bboxes: list[list[int]],
     write_label: bool = True,
     line_color: tuple[int, int, int] = (255, 255, 255),
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
-) -> NDArray[np.uint8]:
+) -> np.ndarray:
     """Add multiple flag-like labels to their corresponding bounding boxes.
 
     Args:
