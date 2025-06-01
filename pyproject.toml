@@ -50,6 +50,11 @@ docs = [
     "sphinx-copybutton>=0.5.2"
 ]
 
+examples = [
+    "notebook",
+    "matplotlib",
+]
+
 [project.urls]
 Homepage = "https://github.com/shoumikchow/bbox-visualizer"
 Repository = "https://github.com/shoumikchow/bbox-visualizer"
