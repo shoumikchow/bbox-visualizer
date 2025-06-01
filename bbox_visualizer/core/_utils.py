@@ -52,7 +52,7 @@ def _validate_bbox(bbox: list[int]) -> None:
         ValueError: If bbox is empty, has wrong length, or has invalid coordinates
 
     """
-    if bbox is None or (hasattr(bbox, '__len__') and len(bbox) == 0):
+    if not bbox:
         raise ValueError("Bounding box cannot be empty")
     if len(bbox) != 4:
         raise ValueError(
