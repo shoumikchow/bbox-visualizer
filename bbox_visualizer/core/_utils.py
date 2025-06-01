@@ -1,6 +1,7 @@
 """Internal utilities for bbox-visualizer."""
 
 from contextlib import contextmanager
+from typing import Generator
 
 # Global flag to track warning suppression state
 _warnings_suppressed: bool = False
@@ -18,7 +19,7 @@ def suppress_warnings(suppress: bool = True) -> None:
 
 
 @contextmanager
-def warnings_suppressed():
+def warnings_suppressed() -> Generator[None, None, None]:
     """Temporarily suppress warnings.
 
     Example:
