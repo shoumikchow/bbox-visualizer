@@ -3,10 +3,17 @@
 import cv2
 import numpy as np
 from numpy.typing import NDArray
+from functools import lru_cache
 
 from ._utils import _check_and_modify_bbox, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
+
+# Cache text size calculations
+@lru_cache(maxsize=128)
+def _get_text_size(label: str, size: float, thickness: int) -> tuple[tuple[int, int], int]:
+    """Get text size with caching for better performance."""
+    return cv2.getTextSize(label, font, size, thickness)
 
 
 def add_label(
@@ -44,7 +51,8 @@ def add_label(
     _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape)
 
-    (text_width, text_height), baseline = cv2.getTextSize(label, font, size, thickness)
+    # Use cached text size calculation
+    (text_width, text_height), baseline = _get_text_size(label, size, thickness)
     padding = 5  # Padding around text
 
     if top and bbox[1] - text_height > text_height:
@@ -54,7 +62,7 @@ def add_label(
 
         # Calculate background rectangle position
         bg_x1 = bbox[0]
-        bg_y1 = bbox[1] - bg_height  # Removed the gap by removing (5 * size)
+        bg_y1 = bbox[1] - bg_height
         bg_x2 = bg_x1 + bg_width
         bg_y2 = bg_y1 + bg_height
 
@@ -127,7 +135,7 @@ def add_multiple_labels(
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
 ) -> NDArray[np.uint8]:
-    """Add multiple labels to their corresponding bounding boxes.
+    """Add multiple labels to their corresponding bounding boxes using optimized operations.
 
     Args:
         img: Input image array
@@ -151,8 +159,25 @@ def add_multiple_labels(
 
     _validate_color(text_bg_color)
     _validate_color(text_color)
+    
+    # Convert bboxes to numpy array for vectorized operations
+    bboxes = np.array(bboxes)
+    
+    # Validate and modify all bboxes at once
+    bboxes = np.array([_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes])
+    
+    # Draw all labels using add_label
+    output = img.copy()
     for label, bbox in zip(labels, bboxes):
-        img = add_label(
-            img, label, bbox, size, thickness, draw_bg, text_bg_color, text_color, top
+        output = add_label(
+            output,
+            label,
+            bbox.tolist(),
+            size,
+            thickness,
+            draw_bg,
+            text_bg_color,
+            text_color,
+            top
         )
-    return img
+    return output
