@@ -53,7 +53,7 @@ def draw_multiple_rectangles(
     is_opaque: bool = False,
     alpha: float = 0.5,
 ) -> NDArray[np.uint8]:
-    """Draws multiple rectangles on the image.
+    """Draws multiple rectangles on the image using optimized vectorized operations.
 
     Args:
         img: Input image array
@@ -70,6 +70,22 @@ def draw_multiple_rectangles(
     if not bboxes:
         raise ValueError("List of bounding boxes cannot be empty")
     _validate_color(bbox_color)
+    
+    # Convert bboxes to numpy array for vectorized operations
+    bboxes = np.array(bboxes)
+    
+    # Validate and modify all bboxes at once
+    bboxes = np.array([_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes])
+    
+    # Draw all rectangles using draw_rectangle
+    output = img.copy()
     for bbox in bboxes:
-        img = draw_rectangle(img, bbox, bbox_color, thickness, is_opaque, alpha)
-    return img
+        output = draw_rectangle(
+            output,
+            bbox.tolist(),
+            bbox_color,
+            thickness,
+            is_opaque,
+            alpha
+        )
+    return output
