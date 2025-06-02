@@ -9,7 +9,6 @@ description = "Different ways of visualizing objects given bounding box data"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
-license-files = ["LICENSE"]
 authors = [
     { name = "Shoumik Sharar Chowdhury", email = "shoumikchow@gmail.com" },
 ]
@@ -87,7 +86,7 @@ testpaths = ["tests"]
 [tool.ruff]
 # General settings that apply to all Ruff functionality
 line-length = 88
-target-version = "py38"
+target-version = "py39"
 exclude = [
     "docs/*",
     "build/*",
