@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build clean-docs docs help
+.PHONY: clean clean-test clean-pyc clean-build clean-docs docs help lint format test servedocs install dev-install bump-version
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
