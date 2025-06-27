@@ -41,7 +41,7 @@ Basic rectangle drawing:
 .. code-block:: python
 
     # Single rectangle
-    bbox = (100, 100, 200, 200)
+    bbox = (100, 100, 200, 200)  # (x1, y1, x2, y2) format
     image = bbv.draw_rectangle(image, bbox)
 
     # Multiple rectangles
@@ -136,4 +136,96 @@ All functions support customization of colors and styles:
     # Display the result
     cv2.imshow('Image with bounding boxes', image)
     cv2.waitKey(0)
-    cv2.destroyAllWindows() 
+    cv2.destroyAllWindows()
+
+Common Use Cases
+--------------
+
+Object Detection Visualization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    import bbox_visualizer as bbv
+    import cv2
+    import numpy as np
+
+    # Simulate object detection results
+    detections = [
+        {"bbox": (50, 50, 150, 150), "label": "Person", "confidence": 0.95},
+        {"bbox": (200, 100, 300, 200), "label": "Car", "confidence": 0.87},
+        {"bbox": (350, 150, 450, 250), "label": "Dog", "confidence": 0.92}
+    ]
+
+    # Load image
+    image = cv2.imread('detection_image.jpg')
+    
+    # Visualize each detection
+    for det in detections:
+        bbox = det["bbox"]
+        label = f"{det['label']} ({det['confidence']:.2f})"
+        
+        # Draw rectangle and label
+        image = bbv.draw_rectangle(image, bbox, bbox_color=(0, 255, 0))
+        image = bbv.add_label(image, label, bbox)
+
+Multiple Object Classes
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    # Define color scheme for different classes
+    class_colors = {
+        "person": (0, 255, 0),    # Green
+        "car": (255, 0, 0),       # Blue
+        "dog": (0, 0, 255),       # Red
+        "cat": (255, 255, 0)      # Cyan
+    }
+
+    # Process detections with class-specific colors
+    for det in detections:
+        bbox = det["bbox"]
+        label = det["label"]
+        color = class_colors.get(label.lower(), (128, 128, 128))
+        
+        image = bbv.draw_rectangle(image, bbox, bbox_color=color)
+        image = bbv.add_label(image, label, bbox)
+
+Troubleshooting
+-------------
+
+Common Issues
+~~~~~~~~~~~~
+
+**Bounding box format errors**
+    Make sure your bounding boxes are in (x1, y1, x2, y2) format where:
+    - x1, y1: top-left corner coordinates
+    - x2, y2: bottom-right corner coordinates
+
+**Color format issues**
+    OpenCV uses BGR color format, not RGB. For example:
+    - Red: (0, 0, 255) in BGR
+    - Green: (0, 255, 0) in BGR
+    - Blue: (255, 0, 0) in BGR
+
+**Image not displaying**
+    Ensure you have a display environment or use cv2.imwrite() to save the image:
+    
+    .. code-block:: python
+    
+        cv2.imwrite('output.jpg', image)
+
+Performance Tips
+~~~~~~~~~~~~~~
+
+- For multiple objects, use the batch functions (e.g., `draw_multiple_rectangles`) instead of loops
+- Pre-allocate image arrays when possible
+- Use appropriate image formats (uint8 for most cases)
+- Consider downsampling large images for faster processing
+
+Getting Help
+-----------
+
+- Check the `examples/` directory for complete working examples
+- Review the API documentation for detailed parameter descriptions
+- Open an issue on GitHub for bugs or feature requests 
