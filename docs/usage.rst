@@ -15,6 +15,13 @@ To use bbox-visualizer in a project:
     # Load an image
     image = cv2.imread('image.jpg')
 
+    # Draw a bounding box
+    bbox = (100, 100, 200, 200)  # (x1, y1, x2, y2) format
+    image = bbv.draw_rectangle(image, bbox)
+
+    # Add a label
+    image = bbv.add_label(image, "Object", bbox)
+
 Warning Control
 -------------
 
