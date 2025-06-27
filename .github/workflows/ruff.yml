@@ -1,6 +1,9 @@
 name: Ruff
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
 
 permissions:
   contents: write
