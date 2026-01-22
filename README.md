@@ -40,6 +40,9 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 |      ![multiple flags](images/bbox_multiple_flags.jpg "Multiple flags")      | img = bbv.draw_multiple_flags_with_labels(img, labels, bboxes) |
 |      ![multiple T bbox](images/bbox_multiple_T.jpg "Multiple bounding boxes with T labels")      | img = bbv.draw_multiple_boxes(img, bboxes)<br>img = bbv.add_multiple_T_labels(img, labels, bboxes) |
 
+> **Note:** The functions `draw_rectangle` and `draw_multiple_rectangles` are also available as aliases for `draw_box` and `draw_multiple_boxes` respectively. Both naming conventions work identically.
+
+
 ## There are *optional* functions that can draw multiple bounding boxes and/or write multiple labels on the same image, but it is advisable to use the above functions in a loop in order to have full control over your visualizations.
 
 * bbv.draw_multiple_boxes(img, bboxes)
@@ -48,8 +51,6 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 * bbv.draw_multiple_flags_with_labels(img, labels, bboxes)
 
 `bboxes` and `labels` are lists in the above examples.
-
-> **Note:** The functions `draw_rectangle` and `draw_multiple_rectangles` are also available as aliases for `draw_box` and `draw_multiple_boxes` respectively. Both naming conventions work identically.
 
 
 #### Credits

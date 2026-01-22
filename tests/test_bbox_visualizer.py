@@ -48,23 +48,29 @@ def test_check_and_modify_bbox(sample_image):
     assert result[3] == sample_image.shape[0] - margin
 
 
-def test_draw_rectangle_basic(sample_image, sample_bbox):
-    """Test basic rectangle drawing functionality."""
-    result = rectangle.draw_rectangle(sample_image, sample_bbox)
+def test_draw_box_basic(sample_image, sample_bbox):
+    """Test basic box drawing functionality."""
+    result = rectangle.draw_box(sample_image, sample_bbox)
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
-    # Check if rectangle was drawn (should have some non-zero pixels)
+    # Check if box was drawn (should have some non-zero pixels)
     assert np.sum(result) > 0
 
 
-def test_draw_rectangle_opaque(sample_image, sample_bbox):
-    """Test opaque rectangle drawing."""
-    result = rectangle.draw_rectangle(
+def test_draw_box_opaque(sample_image, sample_bbox):
+    """Test opaque box drawing."""
+    result = rectangle.draw_box(
         sample_image, sample_bbox, is_opaque=True, alpha=0.5
     )
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
     assert np.sum(result) > 0
+
+
+def test_draw_box_aliases(sample_image, sample_bbox):
+    """Test that draw_rectangle and draw_box are aliases."""
+    assert rectangle.draw_box is rectangle.draw_rectangle
+    assert rectangle.draw_multiple_boxes is rectangle.draw_multiple_rectangles
 
 
 def test_add_label(sample_image, sample_bbox, sample_label, caplog):
@@ -243,10 +249,10 @@ def test_draw_flag_with_label(sample_image, sample_bbox, sample_label, caplog):
     assert result.shape == sample_image.shape
 
 
-def test_draw_multiple_rectangles(sample_image):
-    """Test drawing multiple rectangles."""
+def test_draw_multiple_boxes(sample_image):
+    """Test drawing multiple boxes."""
     bboxes = [[10, 10, 30, 30], [50, 50, 70, 70]]
-    result = rectangle.draw_multiple_rectangles(sample_image, bboxes)
+    result = rectangle.draw_multiple_boxes(sample_image, bboxes)
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
     assert np.sum(result) > 0
@@ -286,17 +292,17 @@ def test_invalid_bbox_values(sample_image):
     """Test handling of invalid bbox values."""
     # Test with empty bbox
     with pytest.raises(ValueError):
-        rectangle.draw_rectangle(sample_image, [])
+        rectangle.draw_box(sample_image, [])
 
     # Test with invalid bbox format
     with pytest.raises(ValueError):
-        rectangle.draw_rectangle(sample_image, [1, 2, 3])  # Missing one coordinate
+        rectangle.draw_box(sample_image, [1, 2, 3])  # Missing one coordinate
 
     # Test with invalid coordinate order (x_min > x_max or y_min > y_max)
     with pytest.raises(ValueError):
-        rectangle.draw_rectangle(sample_image, [50, 10, 10, 50])  # x_min > x_max
+        rectangle.draw_box(sample_image, [50, 10, 10, 50])  # x_min > x_max
     with pytest.raises(ValueError):
-        rectangle.draw_rectangle(sample_image, [10, 50, 50, 10])  # y_min > y_max
+        rectangle.draw_box(sample_image, [10, 50, 50, 10])  # y_min > y_max
 
 
 def test_empty_inputs():
@@ -305,7 +311,7 @@ def test_empty_inputs():
 
     # Test with empty lists
     with pytest.raises(ValueError):
-        rectangle.draw_multiple_rectangles(img, [])
+        rectangle.draw_multiple_boxes(img, [])
     with pytest.raises(ValueError):
         labels.add_multiple_labels(img, [], [])
     with pytest.raises(ValueError):
@@ -318,7 +324,7 @@ def test_color_parameters(sample_image, sample_bbox):
     """Test color parameter handling."""
     # Test invalid color values
     with pytest.raises(ValueError):
-        rectangle.draw_rectangle(
+        rectangle.draw_box(
             sample_image, sample_bbox, bbox_color=(300, 0, 0)
         )  # Invalid RGB
     with pytest.raises(ValueError):
