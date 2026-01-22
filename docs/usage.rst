@@ -17,7 +17,7 @@ To use bbox-visualizer in a project:
 
     # Draw a bounding box
     bbox = (100, 100, 200, 200)  # (x1, y1, x2, y2) format
-    image = bbv.draw_rectangle(image, bbox)
+    image = bbv.draw_box(image, bbox)
 
     # Add a label
     image = bbv.add_label(image, "Object", bbox)
@@ -40,23 +40,28 @@ The library provides functionality to control warning messages:
         # Warnings will be suppressed in this block
         image = bbv.draw_flag_with_label(image, "Object", bbox)
 
-Drawing Rectangles
-----------------
+Drawing Boxes
+-------------
 
-Basic rectangle drawing:
+Basic box drawing:
 
 .. code-block:: python
 
-    # Single rectangle
+    # Single box
     bbox = (100, 100, 200, 200)  # (x1, y1, x2, y2) format
-    image = bbv.draw_rectangle(image, bbox)
+    image = bbv.draw_box(image, bbox)
 
-    # Multiple rectangles
+    # Multiple boxes
     bboxes = [(100, 100, 200, 200), (300, 300, 400, 400)]
-    image = bbv.draw_multiple_rectangles(image, bboxes)
+    image = bbv.draw_multiple_boxes(image, bboxes)
 
-    # Filled rectangle with transparency
-    image = bbv.draw_rectangle(image, bbox, is_opaque=True, alpha=0.5)
+    # Filled box with transparency
+    image = bbv.draw_box(image, bbox, is_opaque=True, alpha=0.5)
+
+.. note::
+    The functions ``draw_rectangle`` and ``draw_multiple_rectangles`` are also available
+    as aliases for ``draw_box`` and ``draw_multiple_boxes`` respectively. Both naming
+    conventions work identically.
 
 Adding Labels
 -----------
@@ -109,8 +114,8 @@ All functions support customization of colors and styles:
     text_color = (0, 0, 0)    # Black
     bg_color = (255, 255, 255)  # White
 
-    # Draw rectangle with custom color
-    image = bbv.draw_rectangle(image, bbox, bbox_color=bbox_color)
+    # Draw box with custom color
+    image = bbv.draw_box(image, bbox, bbox_color=bbox_color)
 
     # Add label with custom colors
     image = bbv.add_label(
@@ -172,8 +177,8 @@ Object Detection Visualization
         bbox = det["bbox"]
         label = f"{det['label']} ({det['confidence']:.2f})"
         
-        # Draw rectangle and label
-        image = bbv.draw_rectangle(image, bbox, bbox_color=(0, 255, 0))
+        # Draw box and label
+        image = bbv.draw_box(image, bbox, bbox_color=(0, 255, 0))
         image = bbv.add_label(image, label, bbox)
 
 Multiple Object Classes
@@ -195,7 +200,7 @@ Multiple Object Classes
         label = det["label"]
         color = class_colors.get(label.lower(), (128, 128, 128))
         
-        image = bbv.draw_rectangle(image, bbox, bbox_color=color)
+        image = bbv.draw_box(image, bbox, bbox_color=color)
         image = bbv.add_label(image, label, bbox)
 
 Troubleshooting
@@ -225,7 +230,7 @@ Common Issues
 Performance Tips
 ~~~~~~~~~~~~~~
 
-- For multiple objects, use the batch functions (e.g., `draw_multiple_rectangles`) instead of loops
+- For multiple objects, use the batch functions (e.g., ``draw_multiple_boxes``) instead of loops
 - Pre-allocate image arrays when possible
 - Use appropriate image formats (uint8 for most cases)
 - Consider downsampling large images for faster processing

@@ -24,7 +24,7 @@ Get started with bbox-visualizer in just a few lines:
     
     # Draw a bounding box with label
     bbox = (100, 100, 300, 200)
-    image = bbv.draw_rectangle(image, bbox, bbox_color=(0, 255, 0))
+    image = bbv.draw_box(image, bbox, bbox_color=(0, 255, 0))
     image = bbv.add_label(image, "Object", bbox)
     
     # Display the result

@@ -89,3 +89,8 @@ def draw_multiple_rectangles(
             alpha
         )
     return output
+
+
+# Aliases for preferred naming
+draw_box = draw_rectangle
+draw_multiple_boxes = draw_multiple_rectangles
