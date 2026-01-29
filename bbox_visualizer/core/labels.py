@@ -1,9 +1,11 @@
 """Functions for adding text labels to bounding boxes."""
 
+from collections.abc import Sequence
+from functools import lru_cache
+
 import cv2
 import numpy as np
 from numpy.typing import NDArray
-from functools import lru_cache
 
 from ._utils import _check_and_modify_bbox, _validate_color
 
@@ -11,7 +13,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 # Cache text size calculations
 @lru_cache(maxsize=128)
-def _get_text_size(label: str, size: float, thickness: int) -> tuple[tuple[int, int], int]:
+def _get_text_size(label: str, size: float, thickness: int) -> tuple[Sequence[int], int]:
     """Get text size with caching for better performance."""
     return cv2.getTextSize(label, font, size, thickness)
 

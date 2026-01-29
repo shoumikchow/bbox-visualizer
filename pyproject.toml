@@ -38,6 +38,7 @@ dev = [
     "twine>=4.0.2",
     "pytest>=7.4.0",
     "ruff>=0.2.1",
+    "ty>=0.0.1a0",
 ]
 
 docs = [
@@ -133,4 +134,14 @@ unfixable = []
 "examples/**/*.py" = ["D"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["bbox_visualizer"] 
+known-first-party = ["bbox_visualizer"]
+
+[tool.ty]
+# Type checking configuration
+
+[tool.ty.environment]
+python-version = "3.9"
+
+[tool.ty.src]
+include = ["bbox_visualizer"]
+exclude = ["docs/*", "build/*", "examples/*"]
