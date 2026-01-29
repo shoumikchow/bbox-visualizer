@@ -1,4 +1,4 @@
-name: ty
+name: Type Check
 
 on:
   push:
@@ -19,5 +19,8 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
+      - name: Sync project
+        run: uv sync --extra dev
+
       - name: Run ty
-        run: uvx ty check
+        run: uv run ty check
