@@ -24,10 +24,11 @@ def warnings_suppressed() -> Generator[None, None, None]:
     """Temporarily suppress warnings.
 
     Example:
-        >>> with warnings_suppressed():
-        ...     # Warnings will be suppressed in this block
-        ...     pass
-
+        ```python
+        with warnings_suppressed():
+            # Warnings will be suppressed in this block
+            image = bbv.draw_flag_with_label(image, "Object", bbox)
+        ```
     """
     previous_state = _warnings_suppressed
     suppress_warnings(True)

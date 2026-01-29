@@ -1,0 +1,28 @@
+name: Type Check
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Sync project
+        run: uv sync --extra dev
+
+      - name: Run ty
+        run: uv run ty check
