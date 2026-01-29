@@ -2,7 +2,7 @@ name: Ruff
 
 on:
   push:
-    branches: [main, dev]
+    branches: [master, dev]
   pull_request:
 
 permissions:
