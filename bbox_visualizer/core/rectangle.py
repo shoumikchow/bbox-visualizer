@@ -53,7 +53,7 @@ def draw_multiple_rectangles(
     is_opaque: bool = False,
     alpha: float = 0.5,
 ) -> NDArray[np.uint8]:
-    """Draws multiple rectangles on the image using optimized vectorized operations.
+    """Draws multiple rectangles on the image using optimized batched operations.
 
     Args:
         img: Input image array
@@ -70,24 +70,35 @@ def draw_multiple_rectangles(
     if not bboxes:
         raise ValueError("List of bounding boxes cannot be empty")
     _validate_color(bbox_color)
-    
-    # Convert bboxes to numpy array for vectorized operations
-    bboxes = np.array(bboxes)
-    
-    # Validate and modify all bboxes at once
-    bboxes = np.array([_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes])
-    
-    # Draw all rectangles using draw_rectangle
+
+    # Validate and modify all bboxes
+    validated_bboxes = [_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes]
+
     output = img.copy()
-    for bbox in bboxes:
-        output = draw_rectangle(
-            output,
-            bbox.tolist(),
-            bbox_color,
-            thickness,
-            is_opaque,
-            alpha
-        )
+
+    if not is_opaque:
+        # Convert bboxes to contours for cv2.polylines (draws all rectangles in one call)
+        contours = [
+            np.array(
+                [
+                    [bbox[0], bbox[1]],
+                    [bbox[2], bbox[1]],
+                    [bbox[2], bbox[3]],
+                    [bbox[0], bbox[3]],
+                ],
+                dtype=np.int32,
+            )
+            for bbox in validated_bboxes
+        ]
+        cv2.polylines(output, contours, isClosed=True, color=bbox_color, thickness=thickness)
+    else:
+        # For opaque rectangles: draw all filled rectangles on one overlay,
+        # then do a single alpha blend
+        overlay = img.copy()
+        for bbox in validated_bboxes:
+            cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, -1)
+        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
+
     return output
 
 
