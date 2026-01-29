@@ -42,12 +42,8 @@ dev = [
 ]
 
 docs = [
-    "sphinx>=7.0.0",
-    "sphinx-rtd-theme>=2.0.0",
-    "sphinx-autodoc-typehints>=1.24.0",
-    "myst-parser>=2.0.0",
-    "docutils>=0.20.1",
-    "sphinx-copybutton>=0.5.2"
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.24.0",
 ]
 
 examples = [
