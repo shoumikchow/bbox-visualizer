@@ -19,9 +19,40 @@ The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
 ## Installation:
     pip install bbox-visualizer
 
-## Usage:
-    
-    import bbox_visualizer as bbv
+## Quick Start
+
+A complete example that loads an image, draws a labeled bounding box, and saves the result:
+
+```python
+import cv2
+import bbox_visualizer as bbv
+
+img = cv2.imread("path/to/image.jpg")
+
+# Bounding boxes use [x_min, y_min, x_max, y_max]
+bbox = [150, 100, 450, 300]
+label = "person"
+
+img = bbv.draw_box(img, bbox, bbox_color=(0, 255, 0))
+img = bbv.add_label(img, label, bbox)
+
+cv2.imwrite("output.jpg", img)
+```
+
+For multiple objects, use the `_multiple_` variants with parallel lists:
+
+```python
+bboxes = [[150, 100, 450, 300], [500, 50, 700, 250]]
+labels = ["person", "dog"]
+
+img = bbv.draw_multiple_boxes(img, bboxes)
+img = bbv.add_multiple_labels(img, labels, bboxes)
+```
+
+Runnable scripts live in [`examples/`](examples):
+- `quickstart.py` — minimal example on a blank canvas
+- `single_object.py` — every single-object label style
+- `multiple_objects.py` — every multi-object label style
 
 
 ![cover](images/cover.jpg)
