@@ -101,13 +101,17 @@ def draw_multiple_rectangles(
             )
             for bbox in validated_bboxes
         ]
-        cv2.polylines(output, contours, isClosed=True, color=bbox_color, thickness=thickness)
+        cv2.polylines(
+            output, contours, isClosed=True, color=bbox_color, thickness=thickness
+        )
     else:
         # For opaque rectangles: draw all filled rectangles on one overlay,
         # then do a single alpha blend
         overlay = img.copy()
         for bbox in validated_bboxes:
-            cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, -1)
+            cv2.rectangle(
+                overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, -1
+            )
         cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 
     return output

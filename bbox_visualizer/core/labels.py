@@ -11,9 +11,12 @@ from ._utils import _check_and_modify_bbox, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
+
 # Cache text size calculations
 @lru_cache(maxsize=128)
-def _get_text_size(label: str, size: float, thickness: int) -> tuple[Sequence[int], int]:
+def _get_text_size(
+    label: str, size: float, thickness: int
+) -> tuple[Sequence[int], int]:
     """Get text size with caching for better performance."""
     return cv2.getTextSize(label, font, size, thickness)
 
@@ -188,6 +191,6 @@ def add_multiple_labels(
             draw_bg,
             text_bg_color,
             text_color,
-            top
+            top,
         )
     return output

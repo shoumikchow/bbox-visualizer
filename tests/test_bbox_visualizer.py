@@ -63,9 +63,7 @@ def test_draw_box_basic(sample_image, sample_bbox):
 
 def test_draw_box_opaque(sample_image, sample_bbox):
     """Test opaque box drawing."""
-    result = rectangle.draw_box(
-        sample_image, sample_bbox, is_opaque=True, alpha=0.5
-    )
+    result = rectangle.draw_box(sample_image, sample_bbox, is_opaque=True, alpha=0.5)
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
     assert np.sum(result) > 0
