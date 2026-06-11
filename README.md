@@ -98,18 +98,4 @@ Runnable scripts live in [`examples/`](examples):
 
 > **Note:** The functions `draw_rectangle` and `draw_multiple_rectangles` are also available as aliases for `draw_box` and `draw_multiple_boxes` respectively. Both naming conventions work identically.
 
-
-## There are *optional* functions that can draw multiple bounding boxes and/or write multiple labels on the same image, but it is advisable to use the above functions in a loop in order to have full control over your visualizations.
-
-* bbv.draw_multiple_boxes(img, bboxes)
-* bbv.add_multiple_labels(img, labels, bboxes)
-* bbv.add_multiple_T_labels(img, labels, bboxes)
-* bbv.draw_multiple_flags_with_labels(img, labels, bboxes)
-
-`bboxes` and `labels` are lists in the above examples.
-
-
-#### Credits
-
-
-This package was created with Cookiecutter and the `audreyr/cookiecutter-pypackage` project template.
+> **Tip:** The `draw_multiple_*` and `add_multiple_*` functions are convenience helpers. For full control over your visualizations, call the single-box functions (`draw_box`, `add_label`, etc.) in a loop instead.
