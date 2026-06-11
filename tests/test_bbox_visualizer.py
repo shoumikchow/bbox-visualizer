@@ -4,7 +4,11 @@ import numpy as np
 import pytest
 
 from bbox_visualizer.core import flags, labels, rectangle
-from bbox_visualizer.core._utils import suppress_warnings, warnings_suppressed
+from bbox_visualizer.core._utils import (
+    _convert_bbox_to_voc,
+    suppress_warnings,
+    warnings_suppressed,
+)
 
 
 @pytest.fixture
@@ -335,6 +339,107 @@ def test_color_parameters(sample_image, sample_bbox):
         flags.add_T_label(
             sample_image, "test", sample_bbox, text_bg_color=(0, 0, 300)
         )  # Invalid RGB
+
+
+def test_convert_bbox_to_voc(sample_image):
+    """Test conversion of COCO and YOLO formats to Pascal VOC."""
+    img_shape = sample_image.shape  # (100, 100, 3)
+
+    # VOC passes through unchanged
+    assert _convert_bbox_to_voc([10, 10, 50, 50], img_shape, "voc") == [10, 10, 50, 50]
+
+    # COCO [x_min, y_min, width, height] -> VOC
+    assert _convert_bbox_to_voc([10, 10, 40, 40], img_shape, "coco") == [10, 10, 50, 50]
+
+    # YOLO [x_center, y_center, width, height] normalized -> VOC
+    assert _convert_bbox_to_voc([0.3, 0.3, 0.4, 0.4], img_shape, "yolo") == [
+        10,
+        10,
+        50,
+        50,
+    ]
+
+    # Format string is case-insensitive
+    assert _convert_bbox_to_voc([10, 10, 40, 40], img_shape, "COCO") == [10, 10, 50, 50]
+
+
+def test_convert_bbox_to_voc_invalid(sample_image):
+    """Test invalid arguments to the format conversion helper."""
+    img_shape = sample_image.shape
+
+    # Unsupported format
+    with pytest.raises(ValueError):
+        _convert_bbox_to_voc([10, 10, 50, 50], img_shape, "albumentations")
+
+    # Wrong number of coordinates
+    with pytest.raises(ValueError):
+        _convert_bbox_to_voc([10, 10, 50], img_shape, "coco")
+
+    # Negative width/height
+    with pytest.raises(ValueError):
+        _convert_bbox_to_voc([10, 10, -5, 40], img_shape, "coco")
+    with pytest.raises(ValueError):
+        _convert_bbox_to_voc([0.3, 0.3, -0.4, 0.4], img_shape, "yolo")
+
+
+def test_bbox_format_kwarg_equivalence(sample_image, sample_label):
+    """COCO and YOLO inputs should render identically to their VOC equivalent."""
+    voc = [10, 10, 50, 50]
+    coco = [10, 10, 40, 40]
+    yolo = [0.3, 0.3, 0.4, 0.4]
+
+    # draw_box
+    expected = rectangle.draw_box(sample_image, voc)
+    assert np.array_equal(
+        rectangle.draw_box(sample_image, coco, bbox_format="coco"), expected
+    )
+    assert np.array_equal(
+        rectangle.draw_box(sample_image, yolo, bbox_format="yolo"), expected
+    )
+
+    # add_label
+    expected = labels.add_label(sample_image, sample_label, voc)
+    assert np.array_equal(
+        labels.add_label(sample_image, sample_label, coco, bbox_format="coco"),
+        expected,
+    )
+    assert np.array_equal(
+        labels.add_label(sample_image, sample_label, yolo, bbox_format="yolo"),
+        expected,
+    )
+
+
+def test_bbox_format_kwarg_multiple(sample_image):
+    """Multiple-object functions should accept the bbox_format kwarg."""
+    coco_bboxes = [[10, 10, 20, 20], [50, 50, 20, 20]]
+    voc_bboxes = [[10, 10, 30, 30], [50, 50, 70, 70]]
+    labels_list = ["obj1", "obj2"]
+
+    expected = rectangle.draw_multiple_boxes(sample_image, voc_bboxes)
+    result = rectangle.draw_multiple_boxes(
+        sample_image, coco_bboxes, bbox_format="coco"
+    )
+    assert np.array_equal(result, expected)
+
+    # Smoke-test the remaining multi-object functions with the kwarg
+    assert isinstance(
+        labels.add_multiple_labels(
+            sample_image, labels_list, coco_bboxes, bbox_format="coco"
+        ),
+        np.ndarray,
+    )
+    assert isinstance(
+        flags.add_multiple_T_labels(
+            sample_image, labels_list, coco_bboxes, bbox_format="coco"
+        ),
+        np.ndarray,
+    )
+    assert isinstance(
+        flags.draw_multiple_flags_with_labels(
+            sample_image, labels_list, coco_bboxes, bbox_format="coco"
+        ),
+        np.ndarray,
+    )
 
 
 def test_warning_suppression(sample_image, sample_bbox, sample_label, caplog):

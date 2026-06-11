@@ -1,5 +1,7 @@
 """Functions for drawing rectangles on images."""
 
+from collections.abc import Sequence
+
 import cv2
 import numpy as np
 from numpy.typing import NDArray
@@ -9,28 +11,31 @@ from ._utils import _check_and_modify_bbox, _validate_color
 
 def draw_rectangle(
     img: NDArray[np.uint8],
-    bbox: list[int],
+    bbox: Sequence[float],
     bbox_color: tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Draws a rectangle around an object in the image.
 
     Args:
         img: Input image array
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox: Bounding box coordinates in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         bbox_color: BGR color tuple for the box (default: white)
         thickness: Line thickness in pixels (default: 3)
         is_opaque: If True, draws filled rectangle with transparency (default: False)
         alpha: Transparency level for filled rectangles (default: 0.5)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with drawn rectangle
 
     """
     _validate_color(bbox_color)
-    bbox = _check_and_modify_bbox(bbox, img.shape)
+    bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
 
     output = img.copy()
     if not is_opaque:
@@ -47,21 +52,24 @@ def draw_rectangle(
 
 def draw_multiple_rectangles(
     img: NDArray[np.uint8],
-    bboxes: list[list[int]],
+    bboxes: Sequence[Sequence[float]],
     bbox_color: tuple[int, int, int] = (255, 255, 255),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Draws multiple rectangles on the image using optimized batched operations.
 
     Args:
         img: Input image array
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        bboxes: List of bounding boxes, each in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         bbox_color: BGR color tuple for the boxes (default: white)
         thickness: Line thickness in pixels (default: 3)
         is_opaque: If True, draws filled rectangles with transparency (default: False)
         alpha: Transparency level for filled rectangles (default: 0.5)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with all rectangles drawn
@@ -72,7 +80,10 @@ def draw_multiple_rectangles(
     _validate_color(bbox_color)
 
     # Validate and modify all bboxes
-    validated_bboxes = [_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes]
+    validated_bboxes = [
+        _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+        for bbox in bboxes
+    ]
 
     output = img.copy()
 

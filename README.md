@@ -10,7 +10,7 @@
 
 This package helps users draw bounding boxes around objects, without doing the clumsy math that you'd need to do for positioning the labels. It also has a few different types of visualizations you can use for labeling objects after identifying them.
 
-The bounding box points are expected in the format: `(xmin, ymin, xmax, ymax)`
+By default the bounding box points are expected in Pascal VOC format: `(xmin, ymin, xmax, ymax)`. COCO and YOLO formats are also supported via the `bbox_format` keyword argument (see [Bounding box formats](#bounding-box-formats)).
 
 * Documentation: https://bbox-visualizer.readthedocs.io.
 * Free software: MIT license
@@ -48,6 +48,31 @@ labels = ["person", "dog"]
 img = bbv.draw_multiple_boxes(img, bboxes)
 img = bbv.add_multiple_labels(img, labels, bboxes)
 ```
+
+## Bounding box formats
+
+Every drawing function accepts a `bbox_format` keyword argument. The default is
+Pascal VOC.
+
+| `bbox_format` | Coordinates | Scale |
+|---------------|-------------|-------|
+| `"voc"` (default) | `[x_min, y_min, x_max, y_max]` | absolute pixels |
+| `"coco"` | `[x_min, y_min, width, height]` | absolute pixels |
+| `"yolo"` | `[x_center, y_center, width, height]` | normalized to `[0, 1]` |
+
+```python
+# COCO format: [x_min, y_min, width, height]
+img = bbv.draw_box(img, [150, 100, 300, 200], bbox_format="coco")
+
+# YOLO format: [x_center, y_center, width, height], normalized to [0, 1].
+# Image dimensions are read from the image, so no extra arguments are needed.
+img = bbv.draw_box(img, [0.5, 0.4, 0.3, 0.25], bbox_format="yolo")
+
+# Works with the multiple-object variants too
+img = bbv.draw_multiple_boxes(img, coco_bboxes, bbox_format="coco")
+```
+
+Internally all formats are converted to Pascal VOC before drawing.
 
 Runnable scripts live in [`examples/`](examples):
 - `quickstart.py` — minimal example on a blank canvas

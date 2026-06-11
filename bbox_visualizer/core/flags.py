@@ -1,6 +1,7 @@
 """Functions for drawing flag and T-shaped labels."""
 
 import logging
+from collections.abc import Sequence
 
 import cv2
 import numpy as np
@@ -16,12 +17,13 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 def add_T_label(
     img: NDArray[np.uint8],
     label: str,
-    bbox: list[int],
+    bbox: Sequence[float],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add a T-shaped label with a vertical line connecting to the bounding box.
 
@@ -32,12 +34,14 @@ def add_T_label(
     Args:
         img: Input image array
         label: Text to display
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox: Bounding box coordinates in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         size: Font size multiplier (default: 1)
         thickness: Text thickness in pixels (default: 2)
         draw_bg: Whether to draw background rectangle (default: True)
         text_bg_color: BGR color tuple for text background (default: white)
         text_color: BGR color tuple for text (default: black)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with added T-shaped label
@@ -45,7 +49,7 @@ def add_T_label(
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    bbox = _check_and_modify_bbox(bbox, img.shape)
+    bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -101,13 +105,14 @@ def add_T_label(
 def draw_flag_with_label(
     img: NDArray[np.uint8],
     label: str,
-    bbox: list[int],
+    bbox: Sequence[float],
     size: float = 1,
     thickness: int = 2,
     write_label: bool = True,
     line_color: tuple[int, int, int] = (255, 255, 255),
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Draws a flag-like label with a vertical line and text box.
 
@@ -118,13 +123,15 @@ def draw_flag_with_label(
     Args:
         img: Input image array
         label: Text to display
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox: Bounding box coordinates in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         size: Font size multiplier (default: 1)
         thickness: Text thickness in pixels (default: 2)
         write_label: Whether to draw the text label (default: True)
         line_color: BGR color tuple for the vertical line (default: white)
         text_bg_color: BGR color tuple for text background (default: white)
         text_color: BGR color tuple for text (default: black)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with added flag label
@@ -133,7 +140,7 @@ def draw_flag_with_label(
     _validate_color(line_color)
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    bbox = _check_and_modify_bbox(bbox, img.shape)
+    bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -186,20 +193,23 @@ def draw_flag_with_label(
 def add_multiple_T_labels(
     img: NDArray[np.uint8],
     labels: list[str],
-    bboxes: list[list[int]],
+    bboxes: Sequence[Sequence[float]],
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add multiple T-shaped labels to their corresponding bounding boxes.
 
     Args:
         img: Input image array
         labels: List of text labels
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        bboxes: List of bounding boxes, each in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         draw_bg: Whether to draw background rectangles (default: True)
         text_bg_color: BGR color tuple for text backgrounds (default: white)
         text_color: BGR color tuple for text (default: black)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with all T-shaped labels added
@@ -222,6 +232,7 @@ def add_multiple_T_labels(
             draw_bg=draw_bg,
             text_bg_color=text_bg_color,
             text_color=text_color,
+            bbox_format=bbox_format,
         )
 
     return img
@@ -230,22 +241,25 @@ def add_multiple_T_labels(
 def draw_multiple_flags_with_labels(
     img: NDArray[np.uint8],
     labels: list[str],
-    bboxes: list[list[int]],
+    bboxes: Sequence[Sequence[float]],
     write_label: bool = True,
     line_color: tuple[int, int, int] = (255, 255, 255),
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add multiple flag-like labels to their corresponding bounding boxes.
 
     Args:
         img: Input image array
         labels: List of text labels
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        bboxes: List of bounding boxes, each in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         write_label: Whether to draw the text labels (default: True)
         line_color: BGR color tuple for the vertical lines (default: white)
         text_bg_color: BGR color tuple for text backgrounds (default: white)
         text_color: BGR color tuple for text (default: black)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with all flag labels added
@@ -270,6 +284,7 @@ def draw_multiple_flags_with_labels(
             line_color=line_color,
             text_bg_color=text_bg_color,
             text_color=text_color,
+            bbox_format=bbox_format,
         )
 
     return img

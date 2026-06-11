@@ -21,13 +21,14 @@ def _get_text_size(label: str, size: float, thickness: int) -> tuple[Sequence[in
 def add_label(
     img: NDArray[np.uint8],
     label: str,
-    bbox: list[int],
+    bbox: Sequence[float],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add a label to a bounding box, either above or inside it.
 
@@ -37,13 +38,15 @@ def add_label(
     Args:
         img: Input image array
         label: Text to display
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox: Bounding box coordinates in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         size: Font size multiplier (default: 1)
         thickness: Text thickness in pixels (default: 2)
         draw_bg: Whether to draw background rectangle (default: True)
         text_bg_color: BGR color tuple for text background (default: white)
         text_color: BGR color tuple for text (default: black)
         top: If True, place label above box; if False, inside (default: True)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with added label
@@ -51,7 +54,7 @@ def add_label(
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    bbox = _check_and_modify_bbox(bbox, img.shape)
+    bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
 
     # Use cached text size calculation
     (text_width, text_height), baseline = _get_text_size(label, size, thickness)
@@ -129,26 +132,29 @@ def add_label(
 def add_multiple_labels(
     img: NDArray[np.uint8],
     labels: list[str],
-    bboxes: list[list[int]],
+    bboxes: Sequence[Sequence[float]],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add multiple labels to their corresponding bounding boxes using optimized operations.
 
     Args:
         img: Input image array
         labels: List of text labels
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        bboxes: List of bounding boxes, each in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         size: Font size multiplier (default: 1)
         thickness: Text thickness in pixels (default: 2)
         draw_bg: Whether to draw background rectangles (default: True)
         text_bg_color: BGR color tuple for text backgrounds (default: white)
         text_color: BGR color tuple for text (default: black)
         top: If True, place labels above boxes; if False, inside (default: True)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Image with all labels added
@@ -161,13 +167,15 @@ def add_multiple_labels(
 
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    
-    # Convert bboxes to numpy array for vectorized operations
-    bboxes = np.array(bboxes)
-    
-    # Validate and modify all bboxes at once
-    bboxes = np.array([_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes])
-    
+
+    # Validate and convert all bboxes to VOC format at once
+    bboxes = np.array(
+        [
+            _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+            for bbox in bboxes
+        ]
+    )
+
     # Draw all labels using add_label
     output = img.copy()
     for label, bbox in zip(labels, bboxes):
