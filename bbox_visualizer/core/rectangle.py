@@ -39,8 +39,17 @@ def draw_rectangle(
 
     output = img.copy()
     if not is_opaque:
+        # Shift the stroke inward so its outer edge lies on the bbox coordinates
+        # (cv2 centers the stroke on the coords, spilling outside the box and
+        # misaligning with labels drawn flush at bbox[0]). cv2's measured stroke
+        # half-width is (t+1)//2 for t > 1, not t//2.
+        shift = (thickness + 1) // 2 if thickness > 1 else 0
         cv2.rectangle(
-            output, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, thickness
+            output,
+            (bbox[0] + shift, bbox[1] + shift),
+            (bbox[2] - shift, bbox[3] - shift),
+            bbox_color,
+            thickness,
         )
     else:
         overlay = img.copy()
@@ -89,13 +98,16 @@ def draw_multiple_rectangles(
 
     if not is_opaque:
         # Convert bboxes to contours for cv2.polylines (draws all rectangles in one call)
+        # Shift the stroke inward so its outer edge lies on the bbox coordinates,
+        # matching draw_rectangle
+        shift = (thickness + 1) // 2 if thickness > 1 else 0
         contours = [
             np.array(
                 [
-                    [bbox[0], bbox[1]],
-                    [bbox[2], bbox[1]],
-                    [bbox[2], bbox[3]],
-                    [bbox[0], bbox[3]],
+                    [bbox[0] + shift, bbox[1] + shift],
+                    [bbox[2] - shift, bbox[1] + shift],
+                    [bbox[2] - shift, bbox[3] - shift],
+                    [bbox[0] + shift, bbox[3] - shift],
                 ],
                 dtype=np.int32,
             )

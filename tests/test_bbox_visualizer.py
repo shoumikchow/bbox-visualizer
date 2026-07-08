@@ -259,6 +259,54 @@ def test_draw_flag_with_label(sample_image, sample_bbox, sample_label, caplog):
     assert result.shape == sample_image.shape
 
 
+def test_label_bg_contains_text_at_size_2():
+    """Flag and T-label background rects fully contain the text at size=2."""
+    img = np.zeros((300, 300, 3), dtype=np.uint8)
+    red, green = (0, 0, 255), (0, 255, 0)
+
+    # "py" has descenders, which must also stay inside the bg
+    flag = flags.draw_flag_with_label(
+        img,
+        "py",
+        [50, 150, 250, 290],
+        size=2,
+        thickness=2,
+        line_color=red,
+        text_bg_color=red,
+        text_color=green,
+    )
+    t_label = flags.add_T_label(
+        img,
+        "py",
+        [100, 200, 200, 290],
+        size=2,
+        thickness=2,
+        text_bg_color=red,
+        text_color=green,
+    )
+    for result in (flag, t_label):
+        text = np.argwhere((result == green).all(axis=2))
+        bg = np.argwhere((result == red).all(axis=2))
+        assert len(text) > 0
+        assert text[:, 0].min() >= bg[:, 0].min()
+        assert text[:, 0].max() <= bg[:, 0].max()
+        assert text[:, 1].min() >= bg[:, 1].min()
+        assert text[:, 1].max() <= bg[:, 1].max()
+
+
+def test_fallback_uses_caller_styling(sample_image, sample_label):
+    """Fallback to normal labeling keeps the caller's colors."""
+    blue = (255, 0, 0)
+    t_result = flags.add_T_label(
+        sample_image, sample_label, [10, 5, 50, 20], text_bg_color=blue
+    )
+    flag_result = flags.draw_flag_with_label(
+        sample_image, sample_label, [10, 0, 50, 10], text_bg_color=blue
+    )
+    for result in (t_result, flag_result):
+        assert (result == blue).all(axis=2).any()
+
+
 def test_draw_multiple_boxes(sample_image):
     """Test drawing multiple boxes."""
     bboxes = [[10, 10, 30, 30], [50, 50, 70, 70]]

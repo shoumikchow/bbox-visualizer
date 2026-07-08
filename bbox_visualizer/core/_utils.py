@@ -3,8 +3,18 @@
 from collections.abc import Sequence
 from functools import lru_cache
 
+import cv2
+
 #: Bounding box formats accepted by the public API.
 SUPPORTED_BBOX_FORMATS = ("voc", "coco", "yolo")
+
+
+@lru_cache(maxsize=128)
+def _get_text_size(
+    label: str, size: float, thickness: int
+) -> tuple[Sequence[int], int]:
+    """Get text size with caching for better performance."""
+    return cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, size, thickness)
 
 
 def _validate_bbox(bbox: list[int]) -> None:

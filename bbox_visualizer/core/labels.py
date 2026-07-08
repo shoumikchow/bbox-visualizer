@@ -1,24 +1,14 @@
 """Functions for adding text labels to bounding boxes."""
 
 from collections.abc import Sequence
-from functools import lru_cache
 
 import cv2
 import numpy as np
 from numpy.typing import NDArray
 
-from ._utils import _check_and_modify_bbox, _validate_color
+from ._utils import _check_and_modify_bbox, _get_text_size, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-
-
-# Cache text size calculations
-@lru_cache(maxsize=128)
-def _get_text_size(
-    label: str, size: float, thickness: int
-) -> tuple[Sequence[int], int]:
-    """Get text size with caching for better performance."""
-    return cv2.getTextSize(label, font, size, thickness)
 
 
 def add_label(
@@ -60,76 +50,40 @@ def add_label(
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
 
-    # Use cached text size calculation
     (text_width, text_height), baseline = _get_text_size(label, size, thickness)
     padding = 5  # Padding around text
 
-    if top and bbox[1] - text_height > text_height:
-        # Calculate background rectangle dimensions
-        bg_width = text_width + 2 * padding
-        bg_height = text_height + 2 * padding
+    bg_width = text_width + 2 * padding
+    # Include the font baseline so descenders (p, q, g, ...) stay inside the bg
+    bg_height = text_height + baseline + 2 * padding
 
-        # Calculate background rectangle position
-        bg_x1 = bbox[0]
-        bg_y1 = bbox[1] - bg_height
-        bg_x2 = bg_x1 + bg_width
-        bg_y2 = bg_y1 + bg_height
+    label_above = top and bbox[1] - text_height > text_height
+    bg_x1 = bbox[0]
+    bg_y1 = bbox[1] - bg_height if label_above else bbox[1]
+    bg_x2 = bg_x1 + bg_width
+    bg_y2 = bg_y1 + bg_height
 
-        if draw_bg:
-            cv2.rectangle(
-                img,
-                (bg_x1, bg_y1),
-                (bg_x2, bg_y2),
-                text_bg_color,
-                -1,
-            )
-
-        # Center text in background rectangle
-        text_x = bg_x1 + (bg_width - text_width) // 2
-        text_y = bg_y1 + (bg_height + text_height) // 2
-
-        cv2.putText(
+    if draw_bg:
+        cv2.rectangle(
             img,
-            label,
-            (text_x, text_y),
-            font,
-            size,
-            text_color,
-            thickness,
+            (bg_x1, bg_y1),
+            (bg_x2, bg_y2),
+            text_bg_color,
+            -1,
         )
-    else:
-        # Calculate background rectangle dimensions
-        bg_width = text_width + 2 * padding
-        bg_height = text_height + 2 * padding
 
-        # Calculate background rectangle position
-        bg_x1 = bbox[0]
-        bg_y1 = bbox[1]
-        bg_x2 = bg_x1 + bg_width
-        bg_y2 = bg_y1 + bg_height
+    text_x = bg_x1 + padding
+    text_y = bg_y1 + padding + text_height  # text baseline; descenders fit below
 
-        if draw_bg:
-            cv2.rectangle(
-                img,
-                (bg_x1, bg_y1),
-                (bg_x2, bg_y2),
-                text_bg_color,
-                -1,
-            )
-
-        # Center text in background rectangle
-        text_x = bg_x1 + (bg_width - text_width) // 2
-        text_y = bg_y1 + (bg_height + text_height) // 2
-
-        cv2.putText(
-            img,
-            label,
-            (text_x, text_y),
-            font,
-            size,
-            text_color,
-            thickness,
-        )
+    cv2.putText(
+        img,
+        label,
+        (text_x, text_y),
+        font,
+        size,
+        text_color,
+        thickness,
+    )
     return img
 
 
