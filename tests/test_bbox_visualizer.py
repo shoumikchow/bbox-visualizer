@@ -517,7 +517,9 @@ def test_bbox_format_kwarg_multiple(sample_image):
             img, ["a", "b"], [[40, 80, 60, 95], [20, 80, 40, 95]]
         ),
         lambda img: flags.draw_flag_with_label(img, "test", [10, 30, 50, 70]),
-        lambda img: flags.draw_flag_with_label(img, "test", [10, 0, 50, 10]),  # fallback
+        lambda img: flags.draw_flag_with_label(
+            img, "test", [10, 0, 50, 10]
+        ),  # fallback
         lambda img: flags.draw_multiple_flags_with_labels(
             img, ["a", "b"], [[10, 30, 50, 70], [20, 40, 60, 80]]
         ),
