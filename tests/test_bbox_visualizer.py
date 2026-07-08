@@ -553,6 +553,18 @@ def test_fallback_warning_uses_module_logger(sample_image, sample_label, caplog)
         logging.getLogger("bbox_visualizer").setLevel(logging.NOTSET)
 
 
+def test_none_inputs_raise_value_error(sample_image):
+    """None bboxes/labels raise the intended ValueError, not TypeError."""
+    with pytest.raises(ValueError, match="cannot be empty"):
+        rectangle.draw_multiple_rectangles(sample_image, None)
+    with pytest.raises(ValueError, match="cannot be empty"):
+        labels.add_multiple_labels(sample_image, None, None)
+    with pytest.raises(ValueError, match="cannot be empty"):
+        flags.add_multiple_T_labels(sample_image, None, None)
+    with pytest.raises(ValueError, match="cannot be empty"):
+        flags.draw_multiple_flags_with_labels(sample_image, None, None)
+
+
 def test_numpy_array_bboxes(sample_image):
     """A numpy array of boxes works everywhere a list of boxes does."""
     bboxes = np.array([[10, 10, 30, 30], [50, 50, 70, 70]])

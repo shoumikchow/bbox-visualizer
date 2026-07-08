@@ -225,7 +225,7 @@ def add_multiple_T_labels(
 
     """
     # len() instead of truthiness: numpy arrays raise on ambiguous bool()
-    if len(bboxes) == 0 or len(labels) == 0:
+    if bboxes is None or labels is None or len(bboxes) == 0 or len(labels) == 0:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
@@ -276,7 +276,7 @@ def draw_multiple_flags_with_labels(
 
     """
     # len() instead of truthiness: numpy arrays raise on ambiguous bool()
-    if len(bboxes) == 0 or len(labels) == 0:
+    if bboxes is None or labels is None or len(bboxes) == 0 or len(labels) == 0:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
