@@ -93,7 +93,7 @@ def draw_multiple_rectangles(
     if not bboxes:
         raise ValueError("List of bounding boxes cannot be empty")
 
-    per_box_colors = len(bbox_color) > 0 and isinstance(bbox_color[0], (tuple, list))
+    per_box_colors = len(bbox_color) > 0 and isinstance(bbox_color[0], tuple | list)
     colors: list[tuple[int, int, int]]
     if per_box_colors:
         if len(bbox_color) != len(bboxes):
@@ -122,7 +122,7 @@ def draw_multiple_rectangles(
         shift = (thickness + 1) // 2 if thickness > 1 else 0
         if per_box_colors:
             # cv2.polylines batches only a single color, so draw box by box
-            for bbox, color in zip(validated_bboxes, colors):
+            for bbox, color in zip(validated_bboxes, colors, strict=True):
                 cv2.rectangle(
                     output,
                     (bbox[0] + shift, bbox[1] + shift),
@@ -152,7 +152,7 @@ def draw_multiple_rectangles(
         # For opaque rectangles: draw all filled rectangles on one overlay,
         # then do a single alpha blend
         overlay = img.copy()
-        for bbox, color in zip(validated_bboxes, colors):
+        for bbox, color in zip(validated_bboxes, colors, strict=True):
             cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, -1)
         cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 

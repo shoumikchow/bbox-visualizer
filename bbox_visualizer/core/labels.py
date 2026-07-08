@@ -134,7 +134,7 @@ def add_multiple_labels(
 
     # Draw all labels using add_label (which copies, keeping this function pure)
     output = img
-    for label, bbox in zip(labels, converted_bboxes):
+    for label, bbox in zip(labels, converted_bboxes, strict=True):
         output = add_label(
             output,
             label,

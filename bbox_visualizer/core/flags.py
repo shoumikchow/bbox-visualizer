@@ -231,7 +231,7 @@ def add_multiple_T_labels(
 
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    for label, bbox in zip(labels, bboxes):
+    for label, bbox in zip(labels, bboxes, strict=True):
         img = add_T_label(
             img,
             label,
@@ -282,7 +282,7 @@ def draw_multiple_flags_with_labels(
     _validate_color(line_color)
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    for label, bbox in zip(labels, bboxes):
+    for label, bbox in zip(labels, bboxes, strict=True):
         img = draw_flag_with_label(
             img,
             label,
