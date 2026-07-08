@@ -1,5 +1,7 @@
 # Installation
 
+bbox-visualizer requires Python 3.10 or newer.
+
 ## Recommended Installation (using uv)
 
 `uv` is an extremely fast Python package installer and resolver. To install bbox-visualizer using uv:
@@ -31,7 +33,13 @@ The source for bbox-visualizer can be downloaded from the [Github repo](https://
 You can clone the public repository:
 
 ```console
-git clone git://github.com/shoumikchow/bbox-visualizer
+git clone https://github.com/shoumikchow/bbox-visualizer.git
+```
+
+Or, if you have SSH keys set up with GitHub:
+
+```console
+git clone git@github.com:shoumikchow/bbox-visualizer.git
 ```
 
 Once you have a copy of the source, you can install it with uv (recommended):

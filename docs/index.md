@@ -31,7 +31,10 @@ cv2.waitKey(0)
 
 ## Examples
 
-Check out the Jupyter notebook examples in the `examples/` directory:
+Check out the runnable scripts and Jupyter notebooks in the `examples/` directory:
 
+- `quickstart.py` - Minimal example on a blank canvas
+- `single_object.py` - Every single-object label style
+- `multiple_objects.py` - Every multi-object label style
 - `single_object_example.ipynb` - Basic usage with single objects
 - `multiple_objects_example.ipynb` - Working with multiple bounding boxes
