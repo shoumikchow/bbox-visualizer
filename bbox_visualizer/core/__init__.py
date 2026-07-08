@@ -1,6 +1,5 @@
 """Core functionality for bbox-visualizer."""
 
-from ._utils import suppress_warnings, warnings_suppressed
 from .flags import (
     add_multiple_T_labels,
     add_T_label,
@@ -26,6 +25,4 @@ __all__ = [
     "draw_multiple_flags_with_labels",
     "draw_multiple_rectangles",
     "draw_rectangle",
-    "suppress_warnings",
-    "warnings_suppressed",
 ]

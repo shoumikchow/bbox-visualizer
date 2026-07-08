@@ -4,11 +4,7 @@ import numpy as np
 import pytest
 
 from bbox_visualizer.core import flags, labels, rectangle
-from bbox_visualizer.core._utils import (
-    _convert_bbox_to_voc,
-    suppress_warnings,
-    warnings_suppressed,
-)
+from bbox_visualizer.core._utils import _convert_bbox_to_voc
 
 
 @pytest.fixture
@@ -480,36 +476,26 @@ def test_bbox_format_kwarg_multiple(sample_image):
 def test_input_image_not_modified(sample_image, func):
     """All public functions must return a new image and leave the input untouched."""
     before = sample_image.copy()
-    with warnings_suppressed():
-        result = func(sample_image)
+    result = func(sample_image)
     assert np.array_equal(sample_image, before)
     assert result is not sample_image
 
 
-def test_warning_suppression(sample_image, sample_bbox, sample_label, caplog):
-    """Test warning suppression functionality."""
-    # Test global warning suppression
-    suppress_warnings(True)
+def test_fallback_warning_uses_module_logger(sample_image, sample_label, caplog):
+    """Fallback warning is emitted on the flags logger and silenced via logging."""
     with caplog.at_level(logging.WARNING):
         flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
-    assert len(caplog.records) == 0  # No warnings should be logged
+    assert any(
+        r.name == "bbox_visualizer.core.flags"
+        and "Labelling style 'Flag' going out of frame" in r.message
+        for r in caplog.records
+    )
 
-    # Test warning re-enabling
-    suppress_warnings(False)
-    with caplog.at_level(logging.WARNING):
-        flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
-    assert len(caplog.records) > 0  # Warnings should be logged
-    assert "Labelling style 'Flag' going out of frame" in caplog.text
-
-    # Test context manager
     caplog.clear()
-    with warnings_suppressed():
+    logging.getLogger("bbox_visualizer").setLevel(logging.ERROR)
+    try:
         with caplog.at_level(logging.WARNING):
             flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
-    assert len(caplog.records) == 0  # No warnings should be logged
-
-    # Test warning restoration after context manager
-    with caplog.at_level(logging.WARNING):
-        flags.draw_flag_with_label(sample_image, sample_label, [10, 0, 50, 10])
-    assert len(caplog.records) > 0  # Warnings should be logged again
-    assert "Labelling style 'Flag' going out of frame" in caplog.text
+        assert len(caplog.records) == 0
+    finally:
+        logging.getLogger("bbox_visualizer").setLevel(logging.NOTSET)

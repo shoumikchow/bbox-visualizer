@@ -1,50 +1,10 @@
 """Internal utilities for bbox-visualizer."""
 
-from collections.abc import Generator, Sequence
-from contextlib import contextmanager
+from collections.abc import Sequence
 from functools import lru_cache
 
 #: Bounding box formats accepted by the public API.
 SUPPORTED_BBOX_FORMATS = ("voc", "coco", "yolo")
-
-# Global flag to track warning suppression state
-_warnings_suppressed: bool = False
-
-
-def suppress_warnings(suppress: bool = True) -> None:
-    """Suppress or enable warning messages from bbox-visualizer.
-
-    Args:
-        suppress: If True, suppress all warnings. If False, enable warnings.
-
-    """
-    global _warnings_suppressed
-    _warnings_suppressed = suppress
-
-
-@contextmanager
-def warnings_suppressed() -> Generator[None, None, None]:
-    """Temporarily suppress warnings.
-
-    Example:
-        ```python
-        with warnings_suppressed():
-            # Warnings will be suppressed in this block
-            image = bbv.draw_flag_with_label(image, "Object", bbox)
-        ```
-
-    """
-    previous_state = _warnings_suppressed
-    suppress_warnings(True)
-    try:
-        yield
-    finally:
-        suppress_warnings(previous_state)
-
-
-def _should_suppress_warning() -> bool:
-    """Check if warnings should be suppressed."""
-    return _warnings_suppressed
 
 
 def _validate_bbox(bbox: list[int]) -> None:

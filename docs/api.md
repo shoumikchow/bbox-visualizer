@@ -1,11 +1,5 @@
 # API Reference
 
-## Warning Control
-
-::: bbox_visualizer.suppress_warnings
-
-::: bbox_visualizer.warnings_suppressed
-
 ## Rectangle Drawing
 
 ::: bbox_visualizer.draw_box

@@ -22,19 +22,13 @@ image = bbv.add_label(image, "Object", bbox)
 
 ## Warning Control
 
-The library provides functionality to control warning messages:
+The library logs warnings (e.g., when a label falls back to a different style)
+through Python's standard `logging` module. To silence them:
 
 ```python
-# Suppress all warnings
-bbv.suppress_warnings(True)
+import logging
 
-# Enable warnings
-bbv.suppress_warnings(False)
-
-# Temporarily suppress warnings using context manager
-with bbv.warnings_suppressed():
-    # Warnings will be suppressed in this block
-    image = bbv.draw_flag_with_label(image, "Object", bbox)
+logging.getLogger("bbox_visualizer").setLevel(logging.ERROR)
 ```
 
 ## Drawing Boxes
