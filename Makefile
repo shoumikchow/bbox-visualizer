@@ -1,4 +1,4 @@
-.PHONY: clean clean-build clean-pyc clean-test clean-docs docs help lint format test servedocs install dev-install build
+.PHONY: clean clean-build clean-pyc clean-test clean-docs docs help lint format typecheck test check servedocs install dev-install build
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -45,8 +45,13 @@ lint: ## check style and lint with ruff
 format: ## format code with ruff
 	uv run ruff format bbox_visualizer tests examples
 
+typecheck: ## type-check with ty
+	uv run ty check
+
 test: ## run tests with pytest
 	uv run pytest
+
+check: lint typecheck test ## run all CI checks (lint, typecheck, test)
 
 docs: ## build documentation with MkDocs
 	mkdocs build --strict

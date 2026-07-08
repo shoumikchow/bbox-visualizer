@@ -107,3 +107,8 @@ venv.bak/
 
 .vscode/
 uv.lock
+
+# Example script outputs
+examples/output/
+# macOS
+.DS_Store

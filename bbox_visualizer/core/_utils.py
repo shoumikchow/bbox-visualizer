@@ -1,46 +1,20 @@
 """Internal utilities for bbox-visualizer."""
 
-from contextlib import contextmanager
-from typing import Generator
+from collections.abc import Sequence
 from functools import lru_cache
 
-# Global flag to track warning suppression state
-_warnings_suppressed: bool = False
+import cv2
+
+#: Bounding box formats accepted by the public API.
+SUPPORTED_BBOX_FORMATS = ("voc", "coco", "yolo")
 
 
-def suppress_warnings(suppress: bool = True) -> None:
-    """Suppress or enable warning messages from bbox-visualizer.
-
-    Args:
-        suppress: If True, suppress all warnings. If False, enable warnings.
-
-    """
-    global _warnings_suppressed
-    _warnings_suppressed = suppress
-
-
-@contextmanager
-def warnings_suppressed() -> Generator[None, None, None]:
-    """Temporarily suppress warnings.
-
-    Example:
-        ```python
-        with warnings_suppressed():
-            # Warnings will be suppressed in this block
-            image = bbv.draw_flag_with_label(image, "Object", bbox)
-        ```
-    """
-    previous_state = _warnings_suppressed
-    suppress_warnings(True)
-    try:
-        yield
-    finally:
-        suppress_warnings(previous_state)
-
-
-def _should_suppress_warning() -> bool:
-    """Check if warnings should be suppressed."""
-    return _warnings_suppressed
+@lru_cache(maxsize=128)
+def _get_text_size(
+    label: str, size: float, thickness: int
+) -> tuple[Sequence[int], int]:
+    """Get text size with caching for better performance."""
+    return cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, size, thickness)
 
 
 def _validate_bbox(bbox: list[int]) -> None:
@@ -53,7 +27,7 @@ def _validate_bbox(bbox: list[int]) -> None:
         ValueError: If bbox is empty, has wrong length, or has invalid coordinates
 
     """
-    if bbox is None or (hasattr(bbox, '__len__') and len(bbox) == 0):
+    if bbox is None or (hasattr(bbox, "__len__") and len(bbox) == 0):
         raise ValueError("Bounding box cannot be empty")
     if len(bbox) != 4:
         raise ValueError(
@@ -65,24 +39,80 @@ def _validate_bbox(bbox: list[int]) -> None:
         )
 
 
-@lru_cache(maxsize=128)
-def _validate_color(color: tuple[int, int, int]) -> None:
-    """Validate that a color tuple is valid BGR format.
+def _validate_color(color: Sequence[int]) -> None:
+    """Validate that a color is a valid BGR sequence.
 
     Args:
-        color: BGR color tuple to validate
+        color: BGR color sequence to validate
 
     Raises:
-        ValueError: If color is not a valid BGR tuple
+        ValueError: If color is not a valid BGR sequence
+
     """
-    if not isinstance(color, tuple) or len(color) != 3:
-        raise ValueError("Color must be a tuple of 3 integers (BGR)")
+    if not hasattr(color, "__len__") or len(color) != 3:
+        raise ValueError("Color must be a sequence of 3 integers (BGR)")
     if not all(isinstance(c, int) and 0 <= c <= 255 for c in color):
         raise ValueError("Color values must be integers between 0 and 255")
 
 
+def _convert_bbox_to_voc(
+    bbox: Sequence[float],
+    img_size: tuple[int, ...],
+    bbox_format: str = "voc",
+) -> list[int]:
+    """Convert a bounding box from the given format to Pascal VOC format.
+
+    Supported input formats:
+        - ``"voc"``:  ``[x_min, y_min, x_max, y_max]`` in absolute pixels (default)
+        - ``"coco"``: ``[x_min, y_min, width, height]`` in absolute pixels
+        - ``"yolo"``: ``[x_center, y_center, width, height]`` normalized to ``[0, 1]``
+
+    Args:
+        bbox: Bounding box coordinates expressed in ``bbox_format``
+        img_size: Tuple of (height, width, channels); used to denormalize YOLO boxes
+        bbox_format: One of ``"voc"``, ``"coco"``, or ``"yolo"`` (default: ``"voc"``)
+
+    Returns:
+        Bounding box as ``[x_min, y_min, x_max, y_max]`` in absolute integer pixels
+
+    Raises:
+        ValueError: If ``bbox_format`` is unsupported or ``bbox`` is not 4 values
+
+    """
+    fmt = bbox_format.lower()
+    if fmt not in SUPPORTED_BBOX_FORMATS:
+        raise ValueError(
+            f"Unsupported bbox_format {bbox_format!r}. "
+            f"Expected one of {SUPPORTED_BBOX_FORMATS}."
+        )
+    if bbox is None or len(bbox) != 4:
+        raise ValueError("Bounding box must have exactly 4 coordinates")
+
+    if fmt == "voc":
+        x_min, y_min, x_max, y_max = bbox
+    elif fmt == "coco":
+        x_min, y_min, width, height = bbox
+        if width < 0 or height < 0:
+            raise ValueError("COCO bounding box width and height must be non-negative")
+        x_max, y_max = x_min + width, y_min + height
+    else:  # yolo
+        img_height, img_width = img_size[0], img_size[1]
+        x_center, y_center, width, height = bbox
+        if width < 0 or height < 0:
+            raise ValueError("YOLO bounding box width and height must be non-negative")
+        x_min = (x_center - width / 2) * img_width
+        y_min = (y_center - height / 2) * img_height
+        x_max = (x_center + width / 2) * img_width
+        y_max = (y_center + height / 2) * img_height
+
+    return [round(x_min), round(y_min), round(x_max), round(y_max)]
+
+
 def _check_and_modify_bbox(
-    bbox: list[int], img_size: tuple[int, int, int], margin: int = 0
+    bbox: Sequence[float],
+    img_size: tuple[int, ...],
+    margin: int = 0,
+    bbox_format: str = "voc",
 ) -> list[int]:
     """Check and adjust bounding box coordinates.
 
@@ -93,14 +123,16 @@ def _check_and_modify_bbox(
         - xmax/ymax: Set to image width/height - margin if exceeds image size
 
     Args:
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox: Bounding box coordinates expressed in ``bbox_format``
         img_size: Tuple of (height, width, channels)
         margin: Minimum distance from image edges (default: 0)
+        bbox_format: Input format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
         Adjusted bounding box coordinates [x_min, y_min, x_max, y_max]
 
     """
+    bbox = _convert_bbox_to_voc(bbox, img_size, bbox_format)
     _validate_bbox(bbox)
     bbox = [value if value > 0 else margin for value in bbox]
     bbox[2] = bbox[2] if bbox[2] < img_size[1] else img_size[1] - margin

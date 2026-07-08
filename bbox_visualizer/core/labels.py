@@ -1,33 +1,27 @@
 """Functions for adding text labels to bounding boxes."""
 
 from collections.abc import Sequence
-from functools import lru_cache
 
 import cv2
 import numpy as np
 from numpy.typing import NDArray
 
-from ._utils import _check_and_modify_bbox, _validate_color
+from ._utils import _check_and_modify_bbox, _get_text_size, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-
-# Cache text size calculations
-@lru_cache(maxsize=128)
-def _get_text_size(label: str, size: float, thickness: int) -> tuple[Sequence[int], int]:
-    """Get text size with caching for better performance."""
-    return cv2.getTextSize(label, font, size, thickness)
 
 
 def add_label(
     img: NDArray[np.uint8],
     label: str,
-    bbox: list[int],
+    bbox: Sequence[float],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add a label to a bounding box, either above or inside it.
 
@@ -37,121 +31,91 @@ def add_label(
     Args:
         img: Input image array
         label: Text to display
-        bbox: List of [x_min, y_min, x_max, y_max] coordinates
+        bbox: Bounding box coordinates in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         size: Font size multiplier (default: 1)
         thickness: Text thickness in pixels (default: 2)
         draw_bg: Whether to draw background rectangle (default: True)
         text_bg_color: BGR color tuple for text background (default: white)
         text_color: BGR color tuple for text (default: black)
         top: If True, place label above box; if False, inside (default: True)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with added label
+        New image with added label; the input image is not modified
 
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    bbox = _check_and_modify_bbox(bbox, img.shape)
+    bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+    img = img.copy()
 
-    # Use cached text size calculation
     (text_width, text_height), baseline = _get_text_size(label, size, thickness)
     padding = 5  # Padding around text
 
-    if top and bbox[1] - text_height > text_height:
-        # Calculate background rectangle dimensions
-        bg_width = text_width + 2 * padding
-        bg_height = text_height + 2 * padding
+    bg_width = text_width + 2 * padding
+    # Include the font baseline so descenders (p, q, g, ...) stay inside the bg
+    bg_height = text_height + baseline + 2 * padding
 
-        # Calculate background rectangle position
-        bg_x1 = bbox[0]
-        bg_y1 = bbox[1] - bg_height
-        bg_x2 = bg_x1 + bg_width
-        bg_y2 = bg_y1 + bg_height
+    label_above = top and bbox[1] - text_height > text_height
+    bg_x1 = bbox[0]
+    bg_y1 = bbox[1] - bg_height if label_above else bbox[1]
+    bg_x2 = bg_x1 + bg_width
+    bg_y2 = bg_y1 + bg_height
 
-        if draw_bg:
-            cv2.rectangle(
-                img,
-                (bg_x1, bg_y1),
-                (bg_x2, bg_y2),
-                text_bg_color,
-                -1,
-            )
-
-        # Center text in background rectangle
-        text_x = bg_x1 + (bg_width - text_width) // 2
-        text_y = bg_y1 + (bg_height + text_height) // 2
-
-        cv2.putText(
+    if draw_bg:
+        cv2.rectangle(
             img,
-            label,
-            (text_x, text_y),
-            font,
-            size,
-            text_color,
-            thickness,
+            (bg_x1, bg_y1),
+            (bg_x2, bg_y2),
+            text_bg_color,
+            -1,
         )
-    else:
-        # Calculate background rectangle dimensions
-        bg_width = text_width + 2 * padding
-        bg_height = text_height + 2 * padding
 
-        # Calculate background rectangle position
-        bg_x1 = bbox[0]
-        bg_y1 = bbox[1]
-        bg_x2 = bg_x1 + bg_width
-        bg_y2 = bg_y1 + bg_height
+    text_x = bg_x1 + padding
+    text_y = bg_y1 + padding + text_height  # text baseline; descenders fit below
 
-        if draw_bg:
-            cv2.rectangle(
-                img,
-                (bg_x1, bg_y1),
-                (bg_x2, bg_y2),
-                text_bg_color,
-                -1,
-            )
-
-        # Center text in background rectangle
-        text_x = bg_x1 + (bg_width - text_width) // 2
-        text_y = bg_y1 + (bg_height + text_height) // 2
-
-        cv2.putText(
-            img,
-            label,
-            (text_x, text_y),
-            font,
-            size,
-            text_color,
-            thickness,
-        )
+    cv2.putText(
+        img,
+        label,
+        (text_x, text_y),
+        font,
+        size,
+        text_color,
+        thickness,
+    )
     return img
 
 
 def add_multiple_labels(
     img: NDArray[np.uint8],
     labels: list[str],
-    bboxes: list[list[int]],
+    bboxes: Sequence[Sequence[float]],
     size: float = 1,
     thickness: int = 2,
     draw_bg: bool = True,
     text_bg_color: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     top: bool = True,
+    bbox_format: str = "voc",
 ) -> NDArray[np.uint8]:
     """Add multiple labels to their corresponding bounding boxes using optimized operations.
 
     Args:
         img: Input image array
         labels: List of text labels
-        bboxes: List of bounding boxes, each containing [x_min, y_min, x_max, y_max]
+        bboxes: List of bounding boxes, each in ``bbox_format`` (default VOC:
+            [x_min, y_min, x_max, y_max])
         size: Font size multiplier (default: 1)
         thickness: Text thickness in pixels (default: 2)
         draw_bg: Whether to draw background rectangles (default: True)
         text_bg_color: BGR color tuple for text backgrounds (default: white)
         text_color: BGR color tuple for text (default: black)
         top: If True, place labels above boxes; if False, inside (default: True)
+        bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with all labels added
+        New image with all labels added; the input image is not modified
 
     """
     if not bboxes or not labels:
@@ -161,25 +125,25 @@ def add_multiple_labels(
 
     _validate_color(text_bg_color)
     _validate_color(text_color)
-    
-    # Convert bboxes to numpy array for vectorized operations
-    bboxes = np.array(bboxes)
-    
-    # Validate and modify all bboxes at once
-    bboxes = np.array([_check_and_modify_bbox(bbox, img.shape) for bbox in bboxes])
-    
-    # Draw all labels using add_label
-    output = img.copy()
-    for label, bbox in zip(labels, bboxes):
+
+    # Validate and convert all bboxes to VOC format up front
+    converted_bboxes = [
+        _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+        for bbox in bboxes
+    ]
+
+    # Draw all labels using add_label (which copies, keeping this function pure)
+    output = img
+    for label, bbox in zip(labels, converted_bboxes, strict=True):
         output = add_label(
             output,
             label,
-            bbox.tolist(),
+            bbox,
             size,
             thickness,
             draw_bg,
             text_bg_color,
             text_color,
-            top
+            top,
         )
     return output
