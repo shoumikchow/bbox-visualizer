@@ -45,8 +45,8 @@ def add_label(
         New image with added label; the input image is not modified
 
     """
-    _validate_color(text_bg_color)
-    _validate_color(text_color)
+    text_bg_color = _validate_color(text_bg_color)
+    text_color = _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
 
@@ -57,7 +57,9 @@ def add_label(
     # Include the font baseline so descenders (p, q, g, ...) stay inside the bg
     bg_height = text_height + baseline + 2 * padding
 
-    label_above = top and bbox[1] - text_height > text_height
+    # Compare against the full background height so the label only goes above
+    # the box when the whole background fits inside the image
+    label_above = top and bbox[1] >= bg_height
     bg_x1 = bbox[0]
     bg_y1 = bbox[1] - bg_height if label_above else bbox[1]
     bg_x2 = bg_x1 + bg_width
@@ -118,13 +120,14 @@ def add_multiple_labels(
         New image with all labels added; the input image is not modified
 
     """
-    if not bboxes or not labels:
+    # len() instead of truthiness: numpy arrays raise on ambiguous bool()
+    if len(bboxes) == 0 or len(labels) == 0:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
 
-    _validate_color(text_bg_color)
-    _validate_color(text_color)
+    text_bg_color = _validate_color(text_bg_color)
+    text_color = _validate_color(text_color)
 
     # Validate and convert all bboxes to VOC format up front
     converted_bboxes = [

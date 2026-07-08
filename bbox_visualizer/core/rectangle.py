@@ -35,7 +35,7 @@ def draw_rectangle(
         New image with drawn rectangle; the input image is not modified
 
     """
-    _validate_color(bbox_color)
+    bbox_color = _validate_color(bbox_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
 
     output = img.copy()
@@ -90,7 +90,8 @@ def draw_multiple_rectangles(
         New image with all rectangles drawn; the input image is not modified
 
     """
-    if not bboxes:
+    # len() instead of truthiness: numpy arrays raise on ambiguous bool()
+    if len(bboxes) == 0:
         raise ValueError("List of bounding boxes cannot be empty")
 
     per_box_colors = len(bbox_color) > 0 and isinstance(bbox_color[0], tuple | list)
@@ -105,8 +106,7 @@ def draw_multiple_rectangles(
         colors = [tuple(color) for color in color_seq]
     else:
         colors = [cast("tuple[int, int, int]", bbox_color)] * len(bboxes)
-    for color in colors:
-        _validate_color(color)
+    colors = [_validate_color(color) for color in colors]
 
     # Validate and modify all bboxes
     validated_bboxes = [
