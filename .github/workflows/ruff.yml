@@ -18,7 +18,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Sync project
-        run: uv sync --locked --extra dev
+        run: uv sync --extra dev
 
       - name: Format and fix with Ruff
         run: |
