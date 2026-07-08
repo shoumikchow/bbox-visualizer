@@ -316,6 +316,22 @@ def test_draw_multiple_boxes(sample_image):
     assert np.sum(result) > 0
 
 
+def test_draw_multiple_boxes_per_box_colors(sample_image):
+    """A sequence of colors draws each box in its own color."""
+    bboxes = [[10, 10, 30, 30], [50, 50, 70, 70]]
+    colors = [(255, 0, 0), (0, 255, 0)]
+    result = rectangle.draw_multiple_rectangles(sample_image, bboxes, colors)
+    for color in colors:
+        assert (result == color).all(axis=2).any()
+
+
+def test_draw_multiple_boxes_color_length_mismatch(sample_image):
+    """Color list length must match the number of boxes."""
+    bboxes = [[10, 10, 30, 30], [50, 50, 70, 70]]
+    with pytest.raises(ValueError, match="must match"):
+        rectangle.draw_multiple_rectangles(sample_image, bboxes, [(255, 0, 0)])
+
+
 def test_add_multiple_labels(sample_image):
     """Test adding multiple labels."""
     bboxes = [[10, 10, 30, 30], [50, 50, 70, 70]]

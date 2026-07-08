@@ -1,6 +1,7 @@
 """Functions for drawing rectangles on images."""
 
 from collections.abc import Sequence
+from typing import cast
 
 import cv2
 import numpy as np
@@ -62,7 +63,11 @@ def draw_rectangle(
 def draw_multiple_rectangles(
     img: NDArray[np.uint8],
     bboxes: Sequence[Sequence[float]],
-    bbox_color: tuple[int, int, int] = (255, 255, 255),
+    bbox_color: tuple[int, int, int] | Sequence[tuple[int, int, int]] = (
+        255,
+        255,
+        255,
+    ),
     thickness: int = 3,
     is_opaque: bool = False,
     alpha: float = 0.5,
@@ -74,7 +79,8 @@ def draw_multiple_rectangles(
         img: Input image array
         bboxes: List of bounding boxes, each in ``bbox_format`` (default VOC:
             [x_min, y_min, x_max, y_max])
-        bbox_color: BGR color tuple for the boxes (default: white)
+        bbox_color: BGR color tuple applied to all boxes, or a sequence of
+            one color per box (default: white)
         thickness: Line thickness in pixels (default: 3)
         is_opaque: If True, draws filled rectangles with transparency (default: False)
         alpha: Transparency level for filled rectangles (default: 0.5)
@@ -86,7 +92,21 @@ def draw_multiple_rectangles(
     """
     if not bboxes:
         raise ValueError("List of bounding boxes cannot be empty")
-    _validate_color(bbox_color)
+
+    per_box_colors = len(bbox_color) > 0 and isinstance(bbox_color[0], (tuple, list))
+    colors: list[tuple[int, int, int]]
+    if per_box_colors:
+        if len(bbox_color) != len(bboxes):
+            raise ValueError(
+                f"Number of colors ({len(bbox_color)}) must match "
+                f"number of bounding boxes ({len(bboxes)})"
+            )
+        color_seq = cast("Sequence[tuple[int, int, int]]", bbox_color)
+        colors = [tuple(color) for color in color_seq]
+    else:
+        colors = [cast("tuple[int, int, int]", bbox_color)] * len(bboxes)
+    for color in colors:
+        _validate_color(color)
 
     # Validate and modify all bboxes
     validated_bboxes = [
@@ -97,33 +117,43 @@ def draw_multiple_rectangles(
     output = img.copy()
 
     if not is_opaque:
-        # Convert bboxes to contours for cv2.polylines (draws all rectangles in one call)
         # Shift the stroke inward so its outer edge lies on the bbox coordinates,
         # matching draw_rectangle
         shift = (thickness + 1) // 2 if thickness > 1 else 0
-        contours = [
-            np.array(
-                [
-                    [bbox[0] + shift, bbox[1] + shift],
-                    [bbox[2] - shift, bbox[1] + shift],
-                    [bbox[2] - shift, bbox[3] - shift],
-                    [bbox[0] + shift, bbox[3] - shift],
-                ],
-                dtype=np.int32,
+        if per_box_colors:
+            # cv2.polylines batches only a single color, so draw box by box
+            for bbox, color in zip(validated_bboxes, colors):
+                cv2.rectangle(
+                    output,
+                    (bbox[0] + shift, bbox[1] + shift),
+                    (bbox[2] - shift, bbox[3] - shift),
+                    color,
+                    thickness,
+                )
+        else:
+            # Convert bboxes to contours for cv2.polylines
+            # (draws all rectangles in one call)
+            contours = [
+                np.array(
+                    [
+                        [bbox[0] + shift, bbox[1] + shift],
+                        [bbox[2] - shift, bbox[1] + shift],
+                        [bbox[2] - shift, bbox[3] - shift],
+                        [bbox[0] + shift, bbox[3] - shift],
+                    ],
+                    dtype=np.int32,
+                )
+                for bbox in validated_bboxes
+            ]
+            cv2.polylines(
+                output, contours, isClosed=True, color=colors[0], thickness=thickness
             )
-            for bbox in validated_bboxes
-        ]
-        cv2.polylines(
-            output, contours, isClosed=True, color=bbox_color, thickness=thickness
-        )
     else:
         # For opaque rectangles: draw all filled rectangles on one overlay,
         # then do a single alpha blend
         overlay = img.copy()
-        for bbox in validated_bboxes:
-            cv2.rectangle(
-                overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), bbox_color, -1
-            )
+        for bbox, color in zip(validated_bboxes, colors):
+            cv2.rectangle(overlay, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, -1)
         cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 
     return output
