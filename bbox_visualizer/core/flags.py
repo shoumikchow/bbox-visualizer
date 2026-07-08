@@ -52,8 +52,8 @@ def add_T_label(
         New image with added T-shaped label; the input image is not modified
 
     """
-    _validate_color(text_bg_color)
-    _validate_color(text_color)
+    text_bg_color = _validate_color(text_bg_color)
+    text_color = _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
     (label_width, label_height), baseline = _get_text_size(label, size, thickness)
@@ -149,9 +149,9 @@ def draw_flag_with_label(
         New image with added flag label; the input image is not modified
 
     """
-    _validate_color(line_color)
-    _validate_color(text_bg_color)
-    _validate_color(text_color)
+    line_color = _validate_color(line_color)
+    text_bg_color = _validate_color(text_bg_color)
+    text_color = _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
     (label_width, label_height), baseline = _get_text_size(label, size, thickness)
@@ -224,13 +224,14 @@ def add_multiple_T_labels(
         New image with all T-shaped labels added; the input image is not modified
 
     """
-    if not bboxes or not labels:
+    # len() instead of truthiness: numpy arrays raise on ambiguous bool()
+    if len(bboxes) == 0 or len(labels) == 0:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
 
-    _validate_color(text_bg_color)
-    _validate_color(text_color)
+    text_bg_color = _validate_color(text_bg_color)
+    text_color = _validate_color(text_color)
     for label, bbox in zip(labels, bboxes, strict=True):
         img = add_T_label(
             img,
@@ -274,14 +275,15 @@ def draw_multiple_flags_with_labels(
         New image with all flag labels added; the input image is not modified
 
     """
-    if not bboxes or not labels:
+    # len() instead of truthiness: numpy arrays raise on ambiguous bool()
+    if len(bboxes) == 0 or len(labels) == 0:
         raise ValueError("Lists of bounding boxes and labels cannot be empty")
     if len(bboxes) != len(labels):
         raise ValueError("Number of bounding boxes must match number of labels")
 
-    _validate_color(line_color)
-    _validate_color(text_bg_color)
-    _validate_color(text_color)
+    line_color = _validate_color(line_color)
+    text_bg_color = _validate_color(text_bg_color)
+    text_color = _validate_color(text_color)
     for label, bbox in zip(labels, bboxes, strict=True):
         img = draw_flag_with_label(
             img,

@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from bbox_visualizer.core import flags, labels, rectangle
-from bbox_visualizer.core._utils import _convert_bbox_to_voc
+from bbox_visualizer.core._utils import _convert_bbox_to_voc, _get_text_size
 
 
 @pytest.fixture
@@ -551,3 +551,31 @@ def test_fallback_warning_uses_module_logger(sample_image, sample_label, caplog)
         assert len(caplog.records) == 0
     finally:
         logging.getLogger("bbox_visualizer").setLevel(logging.NOTSET)
+
+
+def test_numpy_array_bboxes(sample_image):
+    """A numpy array of boxes works everywhere a list of boxes does."""
+    bboxes = np.array([[10, 10, 30, 30], [50, 50, 70, 70]])
+    names = ["a", "b"]
+    rectangle.draw_multiple_rectangles(sample_image, bboxes)
+    labels.add_multiple_labels(sample_image, names, bboxes)
+    flags.add_multiple_T_labels(sample_image, names, bboxes)
+    flags.draw_multiple_flags_with_labels(sample_image, names, bboxes)
+
+
+def test_numpy_integer_color(sample_image, sample_bbox):
+    """Colors made of numpy integer scalars (e.g. sampled pixels) are valid."""
+    color = tuple(np.uint8(c) for c in (255, 0, 0))
+    result = rectangle.draw_rectangle(sample_image, sample_bbox, bbox_color=color)
+    assert (result == (255, 0, 0)).all(axis=2).any()
+
+
+def test_label_falls_back_inside_when_bg_does_not_fit_above(sample_image):
+    """The label goes inside the box when the full background can't fit above."""
+    (_, text_height), baseline = _get_text_size("test", 0.3, 1)
+    bg_height = text_height + baseline + 2 * 5  # mirrors add_label's padding
+    y_min = bg_height - 1  # one pixel short of fitting the background above
+    result = labels.add_label(
+        sample_image, "test", [10, y_min, 90, 90], size=0.3, thickness=1
+    )
+    assert not result[:y_min].any()

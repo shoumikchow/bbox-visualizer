@@ -1,5 +1,6 @@
 """Internal utilities for bbox-visualizer."""
 
+import numbers
 from collections.abc import Sequence
 from functools import lru_cache
 
@@ -39,11 +40,14 @@ def _validate_bbox(bbox: list[int]) -> None:
         )
 
 
-def _validate_color(color: Sequence[int]) -> None:
-    """Validate that a color is a valid BGR sequence.
+def _validate_color(color: Sequence[int]) -> tuple[int, int, int]:
+    """Validate a BGR color sequence and normalize it to a tuple of ints.
 
     Args:
         color: BGR color sequence to validate
+
+    Returns:
+        The color as a tuple of built-in ints (cv2 rejects numpy scalars)
 
     Raises:
         ValueError: If color is not a valid BGR sequence
@@ -51,8 +55,12 @@ def _validate_color(color: Sequence[int]) -> None:
     """
     if not hasattr(color, "__len__") or len(color) != 3:
         raise ValueError("Color must be a sequence of 3 integers (BGR)")
-    if not all(isinstance(c, int) and 0 <= c <= 255 for c in color):
+    # numbers.Integral also admits numpy integer scalars, e.g. colors
+    # sampled from image pixels (np.uint8)
+    if not all(isinstance(c, numbers.Integral) and 0 <= c <= 255 for c in color):
         raise ValueError("Color values must be integers between 0 and 255")
+    b, g, r = (int(c) for c in color)
+    return (b, g, r)
 
 
 def _convert_bbox_to_voc(
