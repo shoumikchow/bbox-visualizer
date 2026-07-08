@@ -52,6 +52,21 @@ img = bbv.draw_multiple_boxes(img, bboxes)
 img = bbv.add_multiple_labels(img, labels, bboxes)
 ```
 
+`draw_multiple_boxes` also accepts one color per box:
+
+```python
+img = bbv.draw_multiple_boxes(img, bboxes, bbox_color=[(0, 255, 0), (0, 0, 255)])
+```
+
+The library logs fallback warnings (e.g., when a label doesn't fit) through
+Python's `logging` module. To silence them:
+
+```python
+import logging
+
+logging.getLogger("bbox_visualizer").setLevel(logging.ERROR)
+```
+
 ## Bounding box formats
 
 Every drawing function accepts a `bbox_format` keyword argument. The default is

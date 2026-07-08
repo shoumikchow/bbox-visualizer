@@ -20,6 +20,10 @@ image = bbv.draw_box(image, bbox)
 image = bbv.add_label(image, "Object", bbox)
 ```
 
+!!! note
+    All functions return a new image and never modify the input image, so keep
+    the return value (as above) rather than relying on in-place changes.
+
 ## Warning Control
 
 The library logs warnings (e.g., when a label falls back to a different style)
@@ -43,6 +47,9 @@ image = bbv.draw_box(image, bbox)
 # Multiple boxes
 bboxes = [(100, 100, 200, 200), (300, 300, 400, 400)]
 image = bbv.draw_multiple_boxes(image, bboxes)
+
+# Multiple boxes with one color per box
+image = bbv.draw_multiple_boxes(image, bboxes, bbox_color=[(0, 255, 0), (0, 0, 255)])
 
 # Filled box with transparency
 image = bbv.draw_box(image, bbox, is_opaque=True, alpha=0.5)
