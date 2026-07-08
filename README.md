@@ -39,6 +39,9 @@ img = bbv.add_label(img, label, bbox)
 cv2.imwrite("output.jpg", img)
 ```
 
+All functions return a new image and never modify the input image, so keep
+the return value (as above) rather than relying on in-place changes.
+
 For multiple objects, use the `_multiple_` variants with parallel lists:
 
 ```python

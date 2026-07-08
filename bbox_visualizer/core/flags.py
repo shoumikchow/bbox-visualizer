@@ -44,12 +44,13 @@ def add_T_label(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with added T-shaped label
+        New image with added T-shaped label; the input image is not modified
 
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+    img = img.copy()
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -134,13 +135,14 @@ def draw_flag_with_label(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with added flag label
+        New image with added flag label; the input image is not modified
 
     """
     _validate_color(line_color)
     _validate_color(text_bg_color)
     _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+    img = img.copy()
     (label_width, label_height), baseline = cv2.getTextSize(
         label, font, size, thickness
     )
@@ -212,7 +214,7 @@ def add_multiple_T_labels(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with all T-shaped labels added
+        New image with all T-shaped labels added; the input image is not modified
 
     """
     if not bboxes or not labels:
@@ -262,7 +264,7 @@ def draw_multiple_flags_with_labels(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with all flag labels added
+        New image with all flag labels added; the input image is not modified
 
     """
     if not bboxes or not labels:

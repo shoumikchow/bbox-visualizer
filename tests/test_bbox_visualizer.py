@@ -90,16 +90,28 @@ def test_add_label(sample_image, sample_bbox, sample_label, caplog):
     assert result.shape == sample_image.shape
     assert np.sum(result) > 0
 
-    # Test with draw_bg=False for both top and bottom positions
+    # Test with draw_bg=False for both top and bottom positions.
+    # Default text color is black, invisible on the black test image,
+    # so use white to verify something was drawn.
     result = labels.add_label(
-        sample_image, sample_label, bbox_with_space, draw_bg=False, top=True
+        sample_image,
+        sample_label,
+        bbox_with_space,
+        draw_bg=False,
+        text_color=(255, 255, 255),
+        top=True,
     )
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
     assert np.sum(result) > 0
 
     result = labels.add_label(
-        sample_image, sample_label, bbox_with_space, draw_bg=False, top=False
+        sample_image,
+        sample_label,
+        bbox_with_space,
+        draw_bg=False,
+        text_color=(255, 255, 255),
+        top=False,
     )
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
@@ -438,6 +450,40 @@ def test_bbox_format_kwarg_multiple(sample_image):
         ),
         np.ndarray,
     )
+
+
+@pytest.mark.parametrize(
+    "func",
+    [
+        lambda img: rectangle.draw_rectangle(img, [10, 30, 50, 70]),
+        lambda img: rectangle.draw_rectangle(img, [10, 30, 50, 70], is_opaque=True),
+        lambda img: rectangle.draw_multiple_rectangles(
+            img, [[10, 30, 50, 70], [20, 40, 60, 80]]
+        ),
+        lambda img: labels.add_label(img, "test", [10, 30, 50, 70]),
+        lambda img: labels.add_label(img, "test", [10, 5, 50, 20]),  # fallback: inside
+        lambda img: labels.add_multiple_labels(
+            img, ["a", "b"], [[10, 30, 50, 70], [20, 40, 60, 80]]
+        ),
+        lambda img: flags.add_T_label(img, "test", [40, 80, 60, 95]),
+        lambda img: flags.add_T_label(img, "test", [10, 5, 50, 20]),  # fallback
+        lambda img: flags.add_multiple_T_labels(
+            img, ["a", "b"], [[40, 80, 60, 95], [20, 80, 40, 95]]
+        ),
+        lambda img: flags.draw_flag_with_label(img, "test", [10, 30, 50, 70]),
+        lambda img: flags.draw_flag_with_label(img, "test", [10, 0, 50, 10]),  # fallback
+        lambda img: flags.draw_multiple_flags_with_labels(
+            img, ["a", "b"], [[10, 30, 50, 70], [20, 40, 60, 80]]
+        ),
+    ],
+)
+def test_input_image_not_modified(sample_image, func):
+    """All public functions must return a new image and leave the input untouched."""
+    before = sample_image.copy()
+    with warnings_suppressed():
+        result = func(sample_image)
+    assert np.array_equal(sample_image, before)
+    assert result is not sample_image
 
 
 def test_warning_suppression(sample_image, sample_bbox, sample_label, caplog):

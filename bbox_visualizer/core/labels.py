@@ -52,12 +52,13 @@ def add_label(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with added label
+        New image with added label; the input image is not modified
 
     """
     _validate_color(text_bg_color)
     _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+    img = img.copy()
 
     # Use cached text size calculation
     (text_width, text_height), baseline = _get_text_size(label, size, thickness)
@@ -160,7 +161,7 @@ def add_multiple_labels(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with all labels added
+        New image with all labels added; the input image is not modified
 
     """
     if not bboxes or not labels:
@@ -179,8 +180,8 @@ def add_multiple_labels(
         ]
     )
 
-    # Draw all labels using add_label
-    output = img.copy()
+    # Draw all labels using add_label (which copies, keeping this function pure)
+    output = img
     for label, bbox in zip(labels, converted_bboxes):
         output = add_label(
             output,

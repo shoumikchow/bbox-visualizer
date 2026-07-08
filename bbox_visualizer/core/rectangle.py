@@ -31,7 +31,7 @@ def draw_rectangle(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with drawn rectangle
+        New image with drawn rectangle; the input image is not modified
 
     """
     _validate_color(bbox_color)
@@ -72,7 +72,7 @@ def draw_multiple_rectangles(
         bbox_format: Input bbox format, one of "voc", "coco", "yolo" (default: "voc")
 
     Returns:
-        Image with all rectangles drawn
+        New image with all rectangles drawn; the input image is not modified
 
     """
     if not bboxes:
