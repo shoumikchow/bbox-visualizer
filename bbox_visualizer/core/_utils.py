@@ -39,19 +39,18 @@ def _validate_bbox(bbox: list[int]) -> None:
         )
 
 
-@lru_cache(maxsize=128)
-def _validate_color(color: tuple[int, int, int]) -> None:
-    """Validate that a color tuple is valid BGR format.
+def _validate_color(color: Sequence[int]) -> None:
+    """Validate that a color is a valid BGR sequence.
 
     Args:
-        color: BGR color tuple to validate
+        color: BGR color sequence to validate
 
     Raises:
-        ValueError: If color is not a valid BGR tuple
+        ValueError: If color is not a valid BGR sequence
 
     """
-    if not isinstance(color, tuple) or len(color) != 3:
-        raise ValueError("Color must be a tuple of 3 integers (BGR)")
+    if not hasattr(color, "__len__") or len(color) != 3:
+        raise ValueError("Color must be a sequence of 3 integers (BGR)")
     if not all(isinstance(c, int) and 0 <= c <= 255 for c in color):
         raise ValueError("Color values must be integers between 0 and 255")
 

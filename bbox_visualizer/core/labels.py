@@ -126,13 +126,11 @@ def add_multiple_labels(
     _validate_color(text_bg_color)
     _validate_color(text_color)
 
-    # Validate and convert all bboxes to VOC format at once
-    converted_bboxes = np.array(
-        [
-            _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
-            for bbox in bboxes
-        ]
-    )
+    # Validate and convert all bboxes to VOC format up front
+    converted_bboxes = [
+        _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
+        for bbox in bboxes
+    ]
 
     # Draw all labels using add_label (which copies, keeping this function pure)
     output = img
@@ -140,7 +138,7 @@ def add_multiple_labels(
         output = add_label(
             output,
             label,
-            bbox.tolist(),
+            bbox,
             size,
             thickness,
             draw_bg,

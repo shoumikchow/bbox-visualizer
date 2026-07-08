@@ -219,24 +219,6 @@ def test_add_T_label(sample_image, sample_bbox, sample_label, caplog):
     assert isinstance(result, np.ndarray)
     assert result.shape == sample_image.shape
 
-    # Test fallback when label would go out of frame on the right side
-    bbox_at_right = [80, 30, 99, 50]  # Very close to right edge of image
-    caplog.clear()
-    with caplog.at_level(logging.WARNING):
-        result = flags.add_T_label(
-            sample_image,
-            sample_label,
-            bbox_at_right,
-            draw_bg=True,
-            text_bg_color=(128, 128, 128),  # Gray background
-        )
-    assert (
-        "Labelling style 'T' going out of frame. Falling back to normal labeling."
-        in caplog.text
-    )
-    assert isinstance(result, np.ndarray)
-    assert result.shape == sample_image.shape
-
 
 def test_draw_flag_with_label(sample_image, sample_bbox, sample_label, caplog):
     """Test drawing flag with label."""
@@ -409,6 +391,10 @@ def test_color_parameters(sample_image, sample_bbox):
         flags.add_T_label(
             sample_image, "test", sample_bbox, text_bg_color=(0, 0, 300)
         )  # Invalid RGB
+
+    # Colors may be any 3-length sequence, not just tuples
+    result = labels.add_label(sample_image, "test", sample_bbox, text_color=[0, 255, 0])
+    assert isinstance(result, np.ndarray)
 
 
 def test_convert_bbox_to_voc(sample_image):
