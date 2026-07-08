@@ -91,7 +91,7 @@ def draw_multiple_rectangles(
 
     """
     # len() instead of truthiness: numpy arrays raise on ambiguous bool()
-    if len(bboxes) == 0:
+    if bboxes is None or len(bboxes) == 0:
         raise ValueError("List of bounding boxes cannot be empty")
 
     per_box_colors = len(bbox_color) > 0 and isinstance(bbox_color[0], tuple | list)
