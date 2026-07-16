@@ -4,18 +4,19 @@ on:
   push:
     branches: [master, dev]
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   autofix:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
 
       - name: Sync project
         run: uv sync --extra dev
@@ -26,7 +27,7 @@ jobs:
           uv run ruff check --fix bbox_visualizer tests examples
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@4e1beaa7521e8b457b572c090b25bd3db56bf1c5 # v5.0.3
         with:
           commit-message: "style: format and lint code with Ruff"
           title: "style: format and lint code with Ruff"
