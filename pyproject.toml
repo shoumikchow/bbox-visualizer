@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-    "opencv-python>=4.1.0.25",
+    "opencv-python>=4.8.1.78",
     "numpy>=1.19.0",
 ]
 
