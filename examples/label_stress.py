@@ -67,7 +67,9 @@ def render_sizes() -> None:
 def main() -> None:
     OUT_DIR.mkdir(exist_ok=True)
     render("top", lambda img, label, bbox: bbv.add_label(img, label, bbox))
-    render("inside", lambda img, label, bbox: bbv.add_label(img, label, bbox, top=False))
+    render(
+        "inside", lambda img, label, bbox: bbv.add_label(img, label, bbox, top=False)
+    )
     render("t", lambda img, label, bbox: bbv.add_T_label(img, label, bbox))
     render(
         "flag",
