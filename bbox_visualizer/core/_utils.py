@@ -22,7 +22,9 @@ def _get_ink_metrics(label: str, size: float, thickness: int) -> tuple[int, int,
 
     Returns:
         (width, ascent, descent): advance width, and ink extents above and
-        below the text baseline, in pixels.
+        below the text baseline, in pixels. ``descent`` is negative when all
+        ink sits above the baseline (e.g. ``"-"``); ``ascent + descent`` is
+        always the total ink height.
 
     """
     (width, height), baseline = cv2.getTextSize(
