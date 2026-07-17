@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 from numpy.typing import NDArray
 
-from ._utils import _check_and_modify_bbox, _get_text_size, _validate_color
+from ._utils import _check_and_modify_bbox, _get_ink_metrics, _validate_color
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -50,12 +50,12 @@ def add_label(
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
 
-    (text_width, text_height), baseline = _get_text_size(label, size, thickness)
+    text_width, ascent, descent = _get_ink_metrics(label, size, thickness)
     padding = 5  # Padding around text
 
     bg_width = text_width + 2 * padding
-    # Include the font baseline so descenders (p, q, g, ...) stay inside the bg
-    bg_height = text_height + baseline + 2 * padding
+    # Size the bg from measured ink so it hugs the text on all sides
+    bg_height = ascent + descent + 2 * padding
 
     # Compare against the full background height so the label only goes above
     # the box when the whole background fits inside the image
@@ -75,7 +75,7 @@ def add_label(
         )
 
     text_x = bg_x1 + padding
-    text_y = bg_y1 + padding + text_height  # text baseline; descenders fit below
+    text_y = bg_y1 + padding + ascent  # text baseline; descenders fit below
 
     cv2.putText(
         img,

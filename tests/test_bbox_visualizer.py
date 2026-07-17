@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from bbox_visualizer.core import flags, labels, rectangle
-from bbox_visualizer.core._utils import _convert_bbox_to_voc, _get_text_size
+from bbox_visualizer.core._utils import _convert_bbox_to_voc, _get_ink_metrics
 
 
 @pytest.fixture
@@ -584,8 +584,8 @@ def test_numpy_integer_color(sample_image, sample_bbox):
 
 def test_label_falls_back_inside_when_bg_does_not_fit_above(sample_image):
     """The label goes inside the box when the full background can't fit above."""
-    (_, text_height), baseline = _get_text_size("test", 0.3, 1)
-    bg_height = text_height + baseline + 2 * 5  # mirrors add_label's padding
+    _, ascent, descent = _get_ink_metrics("test", 0.3, 1)
+    bg_height = ascent + descent + 2 * 5  # mirrors add_label's padding
     y_min = bg_height - 1  # one pixel short of fitting the background above
     result = labels.add_label(
         sample_image, "test", [10, y_min, 90, 90], size=0.3, thickness=1

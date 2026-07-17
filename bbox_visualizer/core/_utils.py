@@ -5,17 +5,39 @@ from collections.abc import Sequence
 from functools import lru_cache
 
 import cv2
+import numpy as np
 
 #: Bounding box formats accepted by the public API.
 SUPPORTED_BBOX_FORMATS = ("voc", "coco", "yolo")
 
 
 @lru_cache(maxsize=128)
-def _get_text_size(
-    label: str, size: float, thickness: int
-) -> tuple[Sequence[int], int]:
-    """Get text size with caching for better performance."""
-    return cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, size, thickness)
+def _get_ink_metrics(label: str, size: float, thickness: int) -> tuple[int, int, int]:
+    """Measure the actual ink extents of rendered text.
+
+    cv2.getTextSize reports the font's nominal ascent, which overshoots the
+    tallest glyphs by a few pixels and by much more for lowercase-only text,
+    leaving label backgrounds visibly bottom-heavy. Render the text once on a
+    scratch canvas and measure what it really covers.
+
+    Returns:
+        (width, ascent, descent): advance width, and ink extents above and
+        below the text baseline, in pixels.
+
+    """
+    (width, height), baseline = cv2.getTextSize(
+        label, cv2.FONT_HERSHEY_SIMPLEX, size, thickness
+    )
+    pad = thickness + 2
+    canvas = np.zeros((height + 2 * (baseline + pad), width + 2 * pad), dtype=np.uint8)
+    baseline_y = height + baseline + pad
+    cv2.putText(
+        canvas, label, (pad, baseline_y), cv2.FONT_HERSHEY_SIMPLEX, size, 255, thickness
+    )
+    rows = np.flatnonzero(canvas.any(axis=1))
+    if rows.size == 0:  # blank label: fall back to nominal metrics
+        return width, height, baseline
+    return width, baseline_y - int(rows[0]), int(rows[-1]) - baseline_y
 
 
 def _validate_bbox(bbox: list[int]) -> None:

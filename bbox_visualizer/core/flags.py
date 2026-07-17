@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 from numpy.typing import NDArray
 
-from ._utils import _check_and_modify_bbox, _get_text_size, _validate_color
+from ._utils import _check_and_modify_bbox, _get_ink_metrics, _validate_color
 from .labels import add_label
 from .rectangle import draw_rectangle
 
@@ -56,7 +56,7 @@ def add_T_label(
     text_color = _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
-    (label_width, label_height), baseline = _get_text_size(label, size, thickness)
+    label_width, ascent, descent = _get_ink_metrics(label, size, thickness)
     padding = 5  # Padding around text
 
     # draw vertical line
@@ -65,7 +65,7 @@ def add_T_label(
 
     # draw rectangle with label
     y_bottom = y_top
-    y_top = y_bottom - (label_height + baseline + 2 * padding)
+    y_top = y_bottom - (ascent + descent + 2 * padding)
 
     if y_top < 0:
         logger.warning(
@@ -86,8 +86,8 @@ def add_T_label(
 
     # Calculate background rectangle dimensions
     bg_width = label_width + 2 * padding
-    # Include the font baseline so descenders (p, q, g, ...) stay inside the bg
-    bg_height = label_height + baseline + 2 * padding
+    # Size the bg from measured ink so it hugs the text on all sides
+    bg_height = ascent + descent + 2 * padding
 
     # Calculate background rectangle position
     bg_x1 = x_center - (bg_width // 2)
@@ -99,7 +99,7 @@ def add_T_label(
         cv2.rectangle(img, (bg_x1, bg_y1), (bg_x2, bg_y2), text_bg_color, -1)
 
     text_x = bg_x1 + padding
-    text_y = bg_y1 + padding + label_height  # text baseline; descenders fit below
+    text_y = bg_y1 + padding + ascent  # text baseline; descenders fit below
 
     cv2.putText(
         img,
@@ -154,7 +154,7 @@ def draw_flag_with_label(
     text_color = _validate_color(text_color)
     bbox = _check_and_modify_bbox(bbox, img.shape, bbox_format=bbox_format)
     img = img.copy()
-    (label_width, label_height), baseline = _get_text_size(label, size, thickness)
+    label_width, ascent, descent = _get_ink_metrics(label, size, thickness)
 
     x_center = (bbox[0] + bbox[2]) // 2
     y_bottom = int(bbox[1] * 0.75 + bbox[3] * 0.25)
@@ -177,19 +177,21 @@ def draw_flag_with_label(
     start_point = (x_center, y_top)
     end_point = (x_center, y_bottom)
 
-    cv2.line(img, start_point, end_point, line_color, 3)
+    # Start the pole 2px below the flag top: cv2 caps the 3px stroke ~2px
+    # past the endpoint, which would poke above the flag background
+    cv2.line(img, (x_center, y_top + 2), end_point, line_color, 3)
 
     # write label
     if write_label:
         padding = 5  # Padding around text
         bg_x2 = start_point[0] + label_width + 2 * padding
-        # Include the font baseline so descenders (p, q, g, ...) stay inside the bg
-        bg_y2 = start_point[1] + label_height + baseline + 2 * padding
+        # Size the bg from measured ink so it hugs the text on all sides
+        bg_y2 = start_point[1] + ascent + descent + 2 * padding
         cv2.rectangle(img, start_point, (bg_x2, bg_y2), text_bg_color, -1)
         cv2.putText(
             img,
             label,
-            (start_point[0] + padding, start_point[1] + padding + label_height),
+            (start_point[0] + padding, start_point[1] + padding + ascent),
             font,
             size,
             text_color,
