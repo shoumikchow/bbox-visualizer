@@ -158,7 +158,9 @@ def draw_flag_with_label(
 
     x_center = (bbox[0] + bbox[2]) // 2
     y_bottom = int(bbox[1] * 0.75 + bbox[3] * 0.25)
-    y_top = bbox[1] - (y_bottom - bbox[1])
+    # Rise height/4 above the box, but at least T_LINE_LENGTH so the pole
+    # stays visible on small boxes
+    y_top = bbox[1] - max(y_bottom - bbox[1], T_LINE_LENGTH)
     if y_top < 0:
         logger.warning(
             "Labelling style 'Flag' going out of frame. Falling back to normal labeling."
