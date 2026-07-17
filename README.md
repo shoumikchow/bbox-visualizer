@@ -96,6 +96,7 @@ Runnable scripts live in [`examples/`](examples):
 - `quickstart.py` — minimal example on a blank canvas
 - `single_object.py` — every single-object label style
 - `multiple_objects.py` — every multi-object label style
+- `label_stress.py` — awkward label strings through every style, for eyeballing label layout
 
 
 ![cover](images/cover.jpg)
